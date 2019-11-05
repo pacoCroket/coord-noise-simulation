@@ -6,15 +6,16 @@ let tempPixels = [];
 let clickOrigin;
 let isMultiPixelDraw = false;
 let isAnimationOn = true;
-let isBitScale = true;
+let isByteScale = true;
 let isMousePressedOnCanvas = false;
 
 let zOffset = 0;
 let speed = 0.01;
 let scale = 0.05;
+let drift = 0.02;
 
 // layout of DOM elements
-const btnSpacing = 25;
+const btnSpacing = 30;
 const padding = 16;
 
 function preload() {
@@ -22,7 +23,8 @@ function preload() {
 }
 
 function setup() {
-	cnv = createCanvas(windowWidth, windowHeight);
+	cnv = createCanvas(windowWidth-200, windowHeight);
+	cnv.position(200, 0);
 	colorMode(HSB, 1);
 	background(0.2);
 	rectMode(CENTER);
@@ -67,7 +69,7 @@ function setup() {
 	toggleAniCbox.position(padding, padding + btnSpacing*7);
 	toggleAniCbox.mouseClicked(toggleAni);	
 	// checkbox for single or multiple pixel drawing
-	bitScaleCbox = createCheckbox('Scale output to [0, 255]', isBitScale);
+	bitScaleCbox = createCheckbox('Scale output to [0, 255]', isByteScale);
 	bitScaleCbox.position(padding, padding + btnSpacing*8);
 	bitScaleCbox.changed(toggleBitScale);
 	// label explaining SHIFT for deleting TODO
@@ -117,7 +119,7 @@ function draw() {
 	for (var i = 0; i < pixels.length; i++) {		
 		let p = pixels[i];
 		if (isAnimationOn) {	
-			let color = [((2*noise(p.pos.x * scale / 50, p.pos.y * scale / 50, zOffset))%1), 1, 1]; //HSV
+			let color = [((2*noise(p.pos.x * scale / 50 + drift, p.pos.y * scale / 50 - 2*drift, zOffset)+drift)%1), 1, 1]; //HSV
 			p.setColor(color);
 		}
 		p.show();
@@ -129,6 +131,7 @@ function draw() {
 	}
 
 	zOffset += speed;
+	drift += speed / 8;
 }
 
 function mouseClicked() {
@@ -203,7 +206,36 @@ function loadLayout() {
 }
 
 function saveLayout() {
+	let out = [];
+	let scaleFactor = 1;
+	
+	let xMin = 0;
+	let yMin = 0;
 
+	if (isByteScale) {
+		let xMax = 0;
+		let yMax = 0;
+		xMin = width;
+		yMin = height;
+
+		for (var i = 0; i < pixels.length; i++) {
+			if (pixels[i].pos.x > xMax) xMax = pixels[i].pos.x;
+			if (pixels[i].pos.y > yMax) yMax = pixels[i].pos.y;
+			if (pixels[i].pos.x < xMin) xMin = pixels[i].pos.x;
+			if (pixels[i].pos.y < yMin) yMin = pixels[i].pos.y;
+		}
+
+		scaleFactor = max(xMax-xMin, yMax-yMin) / 255;
+	}
+
+	for (var i = 0; i < pixels.length; i++) {
+		out.push([pixels[i].id,
+			((pixels[i].pos.x - xMin) / scaleFactor).toFixed(0),
+			((pixels[i].pos.y - yMin) / scaleFactor).toFixed(0)].join(', '));
+	}
+
+	console.log("Here is the generated output:");
+	console.log('{' + out.join('}, {') + '}');
 }
 
 function toggleAni() {
@@ -215,7 +247,7 @@ function toggleMultiPixelDraw() {
 }
 
 function toggleBitScale() {
-	isBitScale = this.checked();
+	isByteScale = this.checked();
 }
 
 // function setPixelSize() {
