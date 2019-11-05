@@ -7,6 +7,11 @@ let clickOrigin;
 let isMultiPixelDraw = false;
 let isAnimationOn = true;
 let isBitScale = true;
+let isMousePressedOnCanvas = false;
+
+let zOffset = 0;
+let speed = 0.01;
+let scale = 0.05;
 
 // layout of DOM elements
 const btnSpacing = 25;
@@ -18,10 +23,11 @@ function preload() {
 
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
-	background(40);
-	colorMode(HSB, 100);
+	colorMode(HSB, 1);
+	background(0.2);
 	rectMode(CENTER);
 	textAlign(CENTER, CENTER);
+	imageMode(CENTER);
 	textSize(16);
 
 	// mouse events over canvas element
@@ -48,7 +54,7 @@ function setup() {
 	saveLayoutBtn = createButton('Save layout');
 	saveLayoutBtn.position(padding, padding + btnSpacing*4);
 	saveLayoutBtn.mouseClicked(saveLayout);	
-	// pixel size slider
+	// pixel size slider TODO make name
 	pixelSizeSlider = createSlider(2, 150, pixelSize, 0);
 	pixelSizeSlider.position(padding, padding + btnSpacing*5);
 	// pixelSizeSlider.mousePressed(setPixelSize);
@@ -57,42 +63,72 @@ function setup() {
 	multiDrawCbox.position(padding, padding + btnSpacing*6);
 	multiDrawCbox.changed(toggleMultiPixelDraw);
 	// toggle for animation
-	toggleAniCbox = createCheckbox('Animation On');
+	toggleAniCbox = createCheckbox('Animation On', isAnimationOn);
 	toggleAniCbox.position(padding, padding + btnSpacing*7);
 	toggleAniCbox.mouseClicked(toggleAni);	
 	// checkbox for single or multiple pixel drawing
 	bitScaleCbox = createCheckbox('Scale output to [0, 255]', isBitScale);
 	bitScaleCbox.position(padding, padding + btnSpacing*8);
 	bitScaleCbox.changed(toggleBitScale);
+	// label explaining SHIFT for deleting TODO
+	// pixel size slider TODO make name
+	speedSlider = createSlider(0, 0.05, speed, 0.001);
+	speedSlider.position(padding, padding + btnSpacing*9);
+	// pixel size slider TODO make name
+	scaleSlider = createSlider(0, 0.1, scale, 0.001);
+	scaleSlider.position(padding, padding + btnSpacing*10);
 }
 
 function draw() {
-	background(40);
+	background(0.2);
 
 	if (backImg) {
-		image(backImg, 0, 0, width, height);
+		image(backImg, width/2, height/2, width, height);
 	}
 	// update pixel Size
 	pixelSize = pixelSizeSlider.value();
+	speed = speedSlider.value();
+	scale = scaleSlider.value();
 
 	// update position of tempPixels
-	if (mouseIsPressed && tempPixels.length > 0) {
+	if (isMousePressedOnCanvas) {
 		if (isMultiPixelDraw) {
-			// TODO
-		} else {
+			tempPixels = [];
+			let diff = p5.Vector.sub(createVector(mouseX, mouseY), clickOrigin);
+			let dist = diff.mag();
+			for (j = 0; j < dist / pixelSize; j++) {
+				let pos = p5.Vector.add(clickOrigin, diff.copy().setMag(dist*j/pixelSize*2));
+				tempPixels[j] = new Pixel(pos, pixels.length + j);
+			}
+		} else if (tempPixels.length > 0) {
 			tempPixels[0].pos = createVector(mouseX, mouseY);
 		}
 	}
+	
+	// delete mode
+	if (mouseIsPressed && keyIsPressed && keyCode == SHIFT) {
+		let id = getPixelClicked(createVector(mouseX, mouseY));
+		if (id != null) {				
+			removePixel(id);
+		}
+	} 
 
-	// show existing pixels
-	for (var i = 0; i < pixels.length; i++) {
-		pixels[i].show();
+	// update and show existing pixels
+	for (var i = 0; i < pixels.length; i++) {		
+		let p = pixels[i];
+		if (isAnimationOn) {	
+			let color = [noise(p.pos.x * scale, p.pos.y * scale, zOffset), 1, 1]; //HSV
+			p.setColor(color);
+		}
+		p.show();
 	}
 
 	// show temp pixels
 	for (var i = 0; i < tempPixels.length; i++) {
 		tempPixels[i].show();
 	}
+
+	zOffset += speed;
 }
 
 function mouseClicked() {
@@ -100,6 +136,9 @@ function mouseClicked() {
 }
 
 function canvasMousePresssed() {
+	isMousePressedOnCanvas = true;
+	if (keyIsPressed && keyCode == SHIFT) return;
+
 	clickOrigin = createVector(mouseX, mouseY);
 	let pixelClicked = getPixelClicked(clickOrigin); // number within pixels
 
@@ -113,23 +152,32 @@ function canvasMousePresssed() {
 }
 
 function canvasMouseReleased() {
+	if (keyIsPressed && keyCode == SHIFT) return;
+
 	clickOrigin = null;
 	if (isMultiPixelDraw) {
 		pixels = pixels.concat(tempPixels);
 	} else {
+		// put the pixel back in id position
 		pixels.splice(tempPixels[0].id, 0, tempPixels[0]);
 	}
 	tempPixels = [];
 }
 
 function canvasDoubleClicked() {
+	if (keyIsPressed && keyCode == SHIFT) return;
+
 	clickOrigin = createVector(mouseX, mouseY);	
 	let pixelClicked = getPixelClicked(clickOrigin); // number within pixels
 
 	if (pixelClicked != null) {
 		// remove this pixel
-		pixels.splice(pixelClicked, 1);
+		removePixel(pixelClicked);
 	} 
+}
+
+function removePixel(id) {
+	pixels.splice(id, 1);
 	// update id of all pixels 
 	for (var i = 0; i < pixels.length; i++) {
 		pixels[i].id = i;
@@ -144,6 +192,10 @@ function getPixelClicked(pos) {
 		}
 	}
 	return pixelClicked;
+}
+
+function mouseReleased() {
+	isMousePressedOnCanvas = false;
 }
 
 function loadLayout() {

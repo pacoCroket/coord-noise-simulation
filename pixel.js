@@ -1,7 +1,7 @@
 class Pixel {
     constructor(pos_, id_) {
         this.pos = pos_;
-        this.color = [0, 0, 100];
+        this.color = [0, 0, 1];
         this.id = id_;
     }
 
