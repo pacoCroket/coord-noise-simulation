@@ -97,7 +97,7 @@ function draw() {
 			let diff = p5.Vector.sub(createVector(mouseX, mouseY), clickOrigin);
 			let dist = diff.mag();
 			for (j = 0; j < dist / pixelSize; j++) {
-				let pos = p5.Vector.add(clickOrigin, diff.copy().setMag(dist*j/pixelSize*2));
+				let pos = p5.Vector.add(clickOrigin, diff.copy().setMag(j*pixelSize));
 				tempPixels[j] = new Pixel(pos, pixels.length + j);
 			}
 		} else if (tempPixels.length > 0) {
@@ -117,7 +117,7 @@ function draw() {
 	for (var i = 0; i < pixels.length; i++) {		
 		let p = pixels[i];
 		if (isAnimationOn) {	
-			let color = [noise(p.pos.x * scale, p.pos.y * scale, zOffset), 1, 1]; //HSV
+			let color = [((2*noise(p.pos.x * scale / 50, p.pos.y * scale / 50, zOffset))%1), 1, 1]; //HSV
 			p.setColor(color);
 		}
 		p.show();
