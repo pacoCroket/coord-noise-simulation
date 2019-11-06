@@ -229,13 +229,15 @@ function saveLayout() {
 	}
 
 	for (var i = 0; i < pixels.length; i++) {
-		out.push([pixels[i].id,
+		out.push([
 			((pixels[i].pos.x - xMin) / scaleFactor).toFixed(0),
-			((pixels[i].pos.y - yMin) / scaleFactor).toFixed(0)].join(', '));
+			((pixels[i].pos.y - yMin) / scaleFactor).toFixed(0),
+			''
+		].join(', '));
 	}
 
 	console.log("Here is the generated output:");
-	console.log('{' + out.join('}, {') + '}');
+	console.log('{{' + out.join('}, {') + '}}');
 }
 
 function toggleAni() {
