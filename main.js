@@ -17,6 +17,7 @@ let drift = 0.02;
 // layout of DOM elements
 const btnSpacing = 30;
 const padding = 16;
+let colItems = -1;
 
 function preload() {
 
@@ -27,7 +28,7 @@ function setup() {
 	cnv.position(200, 0);
 	colorMode(HSB, 1);
 	background(0.2);
-	rectMode(CENTER);
+	// rectMode(CENTER);
 	textAlign(CENTER, CENTER);
 	imageMode(CENTER);
 	textSize(16);
@@ -39,50 +40,70 @@ function setup() {
 
 	// upload image button
 	uploadImgBtn = createFileInput(handleFile);
-	uploadImgBtn.position(padding, padding);
+	uploadImgBtn.position(padding, nextUnderPos());
 	// remove image button
 	removeImgBtn = createButton('Remove image');
-	removeImgBtn.position(padding, padding + btnSpacing);
+	removeImgBtn.position(padding, nextUnderPos());
 	removeImgBtn.mouseClicked(removeImg);
 	// regex input/output
 	inputField = createInput();
-	inputField.position(padding, padding + btnSpacing*2);
+	inputField.position(padding, nextUnderPos());
 	inputField.attribute('text', '/regex/')
 	// load layout button
 	loadLayoutBtn = createButton('Load layout');
-	loadLayoutBtn.position(padding, padding + btnSpacing*3);
+	loadLayoutBtn.position(padding, nextUnderPos());
 	loadLayoutBtn.mouseClicked(loadLayout);
 	// save layout button
 	saveLayoutBtn = createButton('Save layout');
-	saveLayoutBtn.position(padding, padding + btnSpacing*4);
+	saveLayoutBtn.position(padding, nextUnderPos());
 	saveLayoutBtn.mouseClicked(saveLayout);	
 	// pixel size slider TODO make name
+	lbl3 = createP('Pixel size:');
+	lbl3.position(padding,  nextUnderPos());
 	pixelSizeSlider = createSlider(2, 150, pixelSize, 0);
-	pixelSizeSlider.position(padding, padding + btnSpacing*5);
+	pixelSizeSlider.position(padding, nextUnderPos());
 	// pixelSizeSlider.mousePressed(setPixelSize);
 	// checkbox for single or multiple pixel drawing
 	multiDrawCbox = createCheckbox('Multi pixel draw', isMultiPixelDraw);
-	multiDrawCbox.position(padding, padding + btnSpacing*6);
+	multiDrawCbox.position(padding, nextUnderPos());
 	multiDrawCbox.changed(toggleMultiPixelDraw);
 	// toggle for animation
-	toggleAniCbox = createCheckbox('Animation On', isAnimationOn);
-	toggleAniCbox.position(padding, padding + btnSpacing*7);
+	toggleAniCbox = createCheckbox('Noise2Color mapping On', isAnimationOn);
+	toggleAniCbox.position(padding, nextUnderPos());
 	toggleAniCbox.mouseClicked(toggleAni);	
 	// checkbox for single or multiple pixel drawing
 	bitScaleCbox = createCheckbox('Scale output to [0, 255]', isByteScale);
-	bitScaleCbox.position(padding, padding + btnSpacing*8);
+	bitScaleCbox.position(padding, nextUnderPos());
 	bitScaleCbox.changed(toggleBitScale);
 	// label explaining SHIFT for deleting TODO
+	lbl1 = createP('Speed:');
+	lbl1.position(padding, nextUnderPos());
 	// pixel size slider TODO make name
 	speedSlider = createSlider(0, 0.05, speed, 0.001);
-	speedSlider.position(padding, padding + btnSpacing*9);
+	speedSlider.position(padding, nextUnderPos());
 	// pixel size slider TODO make name
+	lbl2 = createP('Noise scale:');
+	lbl2.position(padding, nextUnderPos());
 	scaleSlider = createSlider(0, 0.1, scale, 0.001);
-	scaleSlider.position(padding, padding + btnSpacing*10);
+	scaleSlider.position(padding, nextUnderPos());
+	
+	// TODO
+	// fill(0);
+	// text('The idea here is to \n paint the position of your \n LEDs in ther order and \n then get an custom output \n to copy into your code. \n These can be mapped to 2D or 3D noise values.',
+	// -padding, nextUnderPos(), 100, 1000);
+	// lbl4.position();
+}
+
+function nextUnderPos() {
+	colItems++;
+	return padding + colItems*btnSpacing;
 }
 
 function draw() {
 	background(0.2);
+	fill(1);
+	text('The idea here is to paint the position of your LEDs in thier order and then get a custom output to copy into your code. These can be mapped to 2D or 3D noise values.',
+	padding, padding, 350);
 
 	if (backImg) {
 		image(backImg, width/2, height/2, width, height);
