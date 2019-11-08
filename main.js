@@ -19,6 +19,8 @@ const btnSpacing = 30;
 const padding = 16;
 let colItems = -1;
 
+let imageScaling = 1;
+
 function preload() {
 
 }
@@ -38,7 +40,7 @@ function setup() {
 	cnv.mouseReleased(canvasMouseReleased);	
 	cnv.doubleClicked(canvasDoubleClicked);
 
-	// upload image button
+	// upload image button TODO
 	uploadImgBtn = createFileInput(handleFile);
 	uploadImgBtn.position(padding, nextUnderPos());
 	// remove image button
@@ -48,11 +50,11 @@ function setup() {
 	// regex input/output
 	inputField = createInput();
 	inputField.position(padding, nextUnderPos());
-	inputField.attribute('text', '/regex/')
+	inputField.attribute('text', '/regex/');
 	// load layout button
-	loadLayoutBtn = createButton('Load layout');
-	loadLayoutBtn.position(padding, nextUnderPos());
-	loadLayoutBtn.mouseClicked(loadLayout);
+	// loadLayoutBtn = createButton('Load layout');
+	// loadLayoutBtn.position(padding, nextUnderPos());
+	// loadLayoutBtn.mouseClicked(loadLayout);
 	// save layout button
 	saveLayoutBtn = createButton('Save layout');
 	saveLayoutBtn.position(padding, nextUnderPos());
@@ -102,11 +104,11 @@ function nextUnderPos() {
 function draw() {
 	background(0.2);
 	fill(1);
-	text('The idea here is to paint the position of your LEDs in thier order and then get a custom output to copy into your code. These can be mapped to 2D or 3D noise values.',
-	padding, padding, 350);
+	text('The idea here is to paint the position of your LEDs in thier order and then copy the coordinates into your code from a custom output (printed in the browser\'s console). These can be mapped to 2D or 3D noise values. Click to add an LED, double click to delete. Hold SHIFT for deleting too.',
+	padding, padding, 450);
 
 	if (backImg) {
-		image(backImg, width/2, height/2, width, height);
+		image(backImg, width/2, height/2);
 	}
 	// update pixel Size
 	pixelSize = pixelSizeSlider.value();
@@ -252,8 +254,7 @@ function saveLayout() {
 	for (var i = 0; i < pixels.length; i++) {
 		out.push([
 			((pixels[i].pos.x - xMin) / scaleFactor).toFixed(0),
-			((pixels[i].pos.y - yMin) / scaleFactor).toFixed(0),
-			''
+			((pixels[i].pos.y - yMin) / scaleFactor).toFixed(0)
 		].join(', '));
 	}
 
@@ -280,8 +281,12 @@ function toggleBitScale() {
 function handleFile(file) {
 	print(file);
 	if (file.type === 'image') {
-		backImg = createImg(file.data, '');
-		backImg.hide();
+		backImg = loadImage(file.data);
+		backImg.resize(0, height);
+		// backImg.hide();
+		// imageScaling = min(backImg.width/width, backImg.height/height);
+		// console.log(backImg.width)
+		// console.log(width)
 	} else {
 		backImg = null;
 	}
