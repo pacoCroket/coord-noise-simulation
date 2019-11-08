@@ -108,6 +108,7 @@ function draw() {
 	padding, padding, 450);
 
 	if (backImg) {
+		backImg.resize(0, height);
 		image(backImg, width/2, height/2);
 	}
 	// update pixel Size
@@ -282,11 +283,6 @@ function handleFile(file) {
 	print(file);
 	if (file.type === 'image') {
 		backImg = loadImage(file.data);
-		backImg.resize(0, height);
-		// backImg.hide();
-		// imageScaling = min(backImg.width/width, backImg.height/height);
-		// console.log(backImg.width)
-		// console.log(width)
 	} else {
 		backImg = null;
 	}
