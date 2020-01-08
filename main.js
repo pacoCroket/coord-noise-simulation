@@ -26,8 +26,8 @@ function preload() {
 }
 
 function setup() {
-	cnv = createCanvas(windowWidth-200, windowHeight);
-	cnv.position(200, 0);
+	cnv = createCanvas(windowWidth-220, windowHeight);
+	cnv.position(220, 0);
 	colorMode(HSB, 1);
 	background(0.2);
 	// rectMode(CENTER);
@@ -43,14 +43,21 @@ function setup() {
 	// upload image button TODO
 	uploadImgBtn = createFileInput(handleFile);
 	uploadImgBtn.position(padding, nextUnderPos());
+
+	// let uploadImgBtn = select('uploadImgBtn');
+	// console.log({uploadImgBtn})
+	// uploadImgBtn.mousePressed(handleFile);
+	// uploadImgBtn.class("myButton");
 	// remove image button
 	removeImgBtn = createButton('Remove image');
+	// removeImgBtn.class("myButton");
 	removeImgBtn.position(padding, nextUnderPos());
 	removeImgBtn.mouseClicked(removeImg);
 	// regex input/output
-	inputField = createInput();
-	inputField.position(padding, nextUnderPos());
-	inputField.attribute('text', '/regex/');
+	regexOutField = createInput();
+	regexOutField.position(padding, nextUnderPos());
+	regexOutField.attribute('text', '/regex/');
+	// inputField.class("inputField");
 	// load layout button
 	// loadLayoutBtn = createButton('Load layout');
 	// loadLayoutBtn.position(padding, nextUnderPos());
@@ -59,6 +66,7 @@ function setup() {
 	saveLayoutBtn = createButton('Save layout');
 	saveLayoutBtn.position(padding, nextUnderPos());
 	saveLayoutBtn.mouseClicked(saveLayout);	
+	// saveLayoutBtn.class("myButton");
 	// pixel size slider TODO make name
 	lbl3 = createP('Pixel size:');
 	lbl3.position(padding,  nextUnderPos());
@@ -88,6 +96,12 @@ function setup() {
 	lbl2.position(padding, nextUnderPos());
 	scaleSlider = createSlider(0, 0.1, scale, 0.001);
 	scaleSlider.position(padding, nextUnderPos());
+	// add set number of leds	
+	ledCountField = createInput();
+	ledCountField.position(padding, nextUnderPos());
+	addLedsBtn = createButton('Add # leds');
+	addLedsBtn.position(padding, nextUnderPos());	
+	addLedsBtn.mouseClicked(addLedsCount);	
 	
 	// TODO
 	// fill(0);
@@ -227,6 +241,11 @@ function mouseReleased() {
 
 function loadLayout() {
 
+}
+
+function addLedsCount() {
+	let ledCount = ledCountField.text;
+	console.log(ledCount);
 }
 
 function saveLayout() {
