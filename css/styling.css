@@ -1,4 +1,13 @@
+/* import fonts from front.css */
+@import url(fonts.css);
+
+/* CSS variables */
+@import url(_variables.css);
+/* @import url(_global.css); */
+
+html,
 body {
+    box-sizing: border-box;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
@@ -6,7 +15,7 @@ body {
 
 /* start navigation */
 .header-area .main-menu .navbar .navbar-brand {
-    padding: 0 2rem 0 5rem;
+    padding: 0 1rem 0 5rem;
 }
 
 .header-area .main-menu .navbar {
@@ -21,14 +30,14 @@ body {
 }
 
 .header-area .main-menu .nav-item .nav-link {
-    font: normal 500 16px/12px var(--roboto);
+    font: normal 500 16px/12px Arial;
     text-transform: uppercase;
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1.5rem;
     color: var(--title-color);
 }
 
 .header-area .main-menu .navbar a:hover {
-    font: normal 700 20px/12px var(--roboto);
+    font: normal 700 20px/12px Arial;
     background: var(--gradient-color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -44,43 +53,93 @@ body {
 
 /* end navigation */
 
-/* start sketch */
-.sketch {
-    position: absolute;
+/* workspace */
+.workspace {
     height: 100%;
-    width: 100%;
-    border: 0;
-    /* top: 0; right: 0; bottom: 0; left: 0; */
-    /* border: 15px solid orange */
+    width: auto;
+    padding: 0;
+}
+
+.sketch {
+    height: auto;
 }
 
 /* end sketch */
 
 /* start config area */
 
-.myButton {
-    box-shadow: 0px 10px 14px -7px #276873;
-    background: linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
-    background-color: #599bb3;
-    border-radius: 8px;
-    display: inline-block;
-    cursor: pointer;
-    color: #ffffff;
-    font-family: Arial;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 4px 32px;
-    text-decoration: none;
-    text-shadow: 0px 1px 0px #3d768a;
+.configArea {
+    height: auto;
 }
-.myButton:hover {
-    background: linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
-    background-color: #408c99;
+
+.cnfBtn {
+    padding: 0.3rem 1rem;
+    margin: 0.2rem 1rem;
+    font: normal 500 16px/20px var(--roboto);
+    position: relative;
+    border: 3px solid transparent;
+    border-radius: 10px;
+
+    background: var(--gradient-color);
+    background-clip: padding-box;
+    color: whitesmoke;
+    transition: background 0.6s ease;
+    box-shadow: var(--box-shadow);
 }
-.myButton:active {
+.cnfBtn:hover {
+    background: white;
+    background-clip: padding-box;
+    color: black;
+}
+.cnfBtn:active {
     position: relative;
     top: 1px;
 }
+
+.cnfBtn::after {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    background: var(--gradient-color);
+    content: "";
+    z-index: -1;
+    border-radius: 8px;
+}
+
+.slider {
+    padding: 0.3rem 1rem;
+    margin: 0.5rem 1rem;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
 
 .inputField {
     box-shadow: 0px 10px 14px -7px #276873;
@@ -136,7 +195,7 @@ body {
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .topnav a:not(:first-child) {
         display: none;
     }
@@ -144,10 +203,10 @@ body {
         float: right;
         display: block;
     }
-}
+} */
 
 /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .topnav.responsive {
         position: relative;
     }
@@ -161,19 +220,4 @@ body {
         display: block;
         text-align: left;
     }
-}
-
-.row {
-    display: flex;
-}
-
-.formRow {
-    margin: 4px 8px;
-}
-
-.column1 {
-    flex: 15%;
-}
-.column2 {
-    flex: 100%;
-}
+} */

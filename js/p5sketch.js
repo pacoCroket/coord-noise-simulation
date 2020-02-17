@@ -21,9 +21,12 @@ let colItems = -1;
 
 let imageScaling = 1;
 
+// DOM elements
+let pixelSizeSlider;
+
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
-	cnv.parent('#sketch');
+	cnv.parent('#Sketch');
 	resizeCanvas(windowWidth, windowHeight);
 	colorMode(HSB, 1);
 	background(0.2);
@@ -37,68 +40,71 @@ function setup() {
 	cnv.mouseReleased(canvasMouseReleased);	
 	cnv.doubleClicked(canvasDoubleClicked);
 
-	// upload image button TODO
-	uploadImgBtn = createFileInput(handleFile);
-	uploadImgBtn.position(padding, nextUnderPos());
+	pixelSizeSlider = select('#PixelSizeSlider');
+	console.log("pixelSizeSlider");
 
-	// let uploadImgBtn = select('uploadImgBtn');
-	// console.log({uploadImgBtn})
-	// uploadImgBtn.mousePressed(handleFile);
-	// uploadImgBtn.class("myButton");
-	// remove image button
-	removeImgBtn = createButton('Remove image');
-	// removeImgBtn.class("myButton");
-	removeImgBtn.position(padding, nextUnderPos());
-	removeImgBtn.mouseClicked(removeImg);
-	// regex input/output
-	regexOutField = createInput();
-	regexOutField.position(padding, nextUnderPos());
-	regexOutField.attribute('text', '/regex/');
-	// inputField.class("inputField");
-	// load layout button
-	// loadLayoutBtn = createButton('Load layout');
-	// loadLayoutBtn.position(padding, nextUnderPos());
-	// loadLayoutBtn.mouseClicked(loadLayout);
-	// save layout button
-	saveLayoutBtn = createButton('Save layout');
-	saveLayoutBtn.position(padding, nextUnderPos());
+	// upload image button TODO
+	// uploadImgBtn = createFileInput(handleFile);
+	// uploadImgBtn.position(padding, nextUnderPos());
+
+	// // let uploadImgBtn = select('uploadImgBtn');
+	// // console.log({uploadImgBtn})
+	// // uploadImgBtn.mousePressed(handleFile);
+	// // uploadImgBtn.class("myButton");
+	// // remove image button
+	// removeImgBtn = createButton('Remove image');
+	// // removeImgBtn.class("myButton");
+	// removeImgBtn.position(padding, nextUnderPos());
+	// removeImgBtn.mouseClicked(removeImg);
+	// // regex input/output
+	// regexOutField = createInput();
+	// regexOutField.position(padding, nextUnderPos());
+	// regexOutField.attribute('text', '/regex/');
+	// // inputField.class("inputField");
+	// // load layout button
+	// // loadLayoutBtn = createButton('Load layout');
+	// // loadLayoutBtn.position(padding, nextUnderPos());
+	// // loadLayoutBtn.mouseClicked(loadLayout);
+	// // save layout button
+	saveLayoutBtn = select('#PrintBtn');
+	// saveLayoutBtn.position(padding, nextUnderPos());
 	saveLayoutBtn.mouseClicked(saveLayout);	
-	// saveLayoutBtn.class("myButton");
-	// pixel size slider TODO make name
-	lbl3 = createP('Pixel size:');
-	lbl3.position(padding,  nextUnderPos());
-	pixelSizeSlider = createSlider(2, 150, pixelSize, 0);
-	pixelSizeSlider.position(padding, nextUnderPos());
-	// pixelSizeSlider.mousePressed(setPixelSize);
-	// checkbox for single or multiple pixel drawing
-	multiDrawCbox = createCheckbox('Multi pixel draw', isMultiPixelDraw);
-	multiDrawCbox.position(padding, nextUnderPos());
-	multiDrawCbox.changed(toggleMultiPixelDraw);
-	// toggle for animation
-	toggleAniCbox = createCheckbox('Noise2Color mapping On', isAnimationOn);
-	toggleAniCbox.position(padding, nextUnderPos());
-	toggleAniCbox.mouseClicked(toggleAni);	
-	// checkbox for single or multiple pixel drawing
-	bitScaleCbox = createCheckbox('Scale output to [0, 255]', isByteScale);
-	bitScaleCbox.position(padding, nextUnderPos());
-	bitScaleCbox.changed(toggleBitScale);
-	// label explaining SHIFT for deleting TODO
-	lbl1 = createP('Speed:');
-	lbl1.position(padding, nextUnderPos());
-	// pixel size slider TODO make name
-	speedSlider = createSlider(0, 0.05, speed, 0.001);
-	speedSlider.position(padding, nextUnderPos());
-	// pixel size slider TODO make name
-	lbl2 = createP('Noise scale:');
-	lbl2.position(padding, nextUnderPos());
-	scaleSlider = createSlider(0, 0.1, scale, 0.001);
-	scaleSlider.position(padding, nextUnderPos());
-	// add set number of leds	
-	ledCountField = createInput();
-	ledCountField.position(padding, nextUnderPos());
-	addLedsBtn = createButton('Add # leds');
-	addLedsBtn.position(padding, nextUnderPos());	
-	addLedsBtn.mouseClicked(addLedsCount);	
+	// // saveLayoutBtn.class("myButton");
+	// // pixel size slider TODO make name
+	// lbl3 = createP('Pixel size:');
+	// lbl3.position(padding,  nextUnderPos());
+	// pixelSizeSlider = createSlider(2, 150, pixelSize, 0);
+	// pixelSizeSlider.position(padding, nextUnderPos());
+	// // pixelSizeSlider.mousePressed(setPixelSize);
+	// // checkbox for single or multiple pixel drawing
+	// multiDrawCbox = createCheckbox('Multi pixel draw', isMultiPixelDraw);
+	// multiDrawCbox.position(padding, nextUnderPos());
+	// multiDrawCbox.changed(toggleMultiPixelDraw);
+	// // toggle for animation
+	// toggleAniCbox = createCheckbox('Noise2Color mapping On', isAnimationOn);
+	// toggleAniCbox.position(padding, nextUnderPos());
+	// toggleAniCbox.mouseClicked(toggleAni);	
+	// // checkbox for single or multiple pixel drawing
+	// bitScaleCbox = createCheckbox('Scale output to [0, 255]', isByteScale);
+	// bitScaleCbox.position(padding, nextUnderPos());
+	// bitScaleCbox.changed(toggleBitScale);
+	// // label explaining SHIFT for deleting TODO
+	// lbl1 = createP('Speed:');
+	// lbl1.position(padding, nextUnderPos());
+	// // pixel size slider TODO make name
+	// speedSlider = createSlider(0, 0.05, speed, 0.001);
+	// speedSlider.position(padding, nextUnderPos());
+	// // pixel size slider TODO make name
+	// lbl2 = createP('Noise scale:');
+	// lbl2.position(padding, nextUnderPos());
+	// scaleSlider = createSlider(0, 0.1, scale, 0.001);
+	// scaleSlider.position(padding, nextUnderPos());
+	// // add set number of leds	
+	// ledCountField = createInput();
+	// ledCountField.position(padding, nextUnderPos());
+	// addLedsBtn = createButton('Add # leds');
+	// addLedsBtn.position(padding, nextUnderPos());	
+	// addLedsBtn.mouseClicked(addLedsCount);	
 	
 	// TODO
 	// fill(0);
@@ -123,9 +129,10 @@ function draw() {
 		image(backImg, width/2, height/2);
 	}
 	// update pixel Size
-	pixelSize = pixelSizeSlider.value();
-	speed = speedSlider.value();
-	scale = scaleSlider.value();
+	// pixelSize = pixelSizeSlider.value();
+	// speed = speedSlider.value();
+	// scale = scaleSlider.value();
+	speed, scale = 10;
 
 	// update position of tempPixels
 	if (isMousePressedOnCanvas) {

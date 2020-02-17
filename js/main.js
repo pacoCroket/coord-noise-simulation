@@ -4,3 +4,7 @@ $(document).ready(function(){
     // $("#footer").load("footer.html"); 
 
 });
+
+$('#Workspace').ready(function() {
+    $("#Sketch").load("p5sketch.html");
+});
