@@ -1,50 +1,99 @@
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Perlin Noise Editor</title>
 
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="styling.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
+        <!-- bootstrap, jquery -->
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"
+        ></script>
 
-<body>
-  <div class="topnav" id="myTopnav">
-    <a class="active" href="#home">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
-    <a href="#help">Help</a>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-      <i class="fa fa-bars"></i>
-    </a>
-  </div>
+        <!-- styling -->
+        <link rel="stylesheet" href="styling.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-  <!-- <div class="row">
+        <!-- p5.js library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+
+        <!-- custom js -->
+        <script src="js/main.js"></script>
+    </head>
+
+    <body>
+        <!-- header area -->
+        <div id="header"></div>
+        <!-- end header area -->
+        <!-- NAV -->
+        <!-- <div class="topnav" id="myTopnav">
+            <a class="active" href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+            <a href="#help">Help</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div> -->
+        <!-- END NAV -->
+
+        <div class="row">
+            <div class="column felx configArea">
+                <button id="AsciiToggle">ASCII Toggle</button>
+                <button id="VideoToggle">Video Toggle</button>
+                <button id="InvertToggle">Invert Toggle</button>
+                <button id="SkeletonToggle">Skeleton Toggle</button>
+                <button id="MicToggle">Mic Toggle</button>
+                <button id="MirrorToggle">Mirror Toggle</button>
+            </div>
+            <div class="column sketch" id="sketch"></div>
+        </div>
+
+        <!-- <div class="row">
     <div class="column1">
       <button class="formRow" id="uploadImgBtn"> Select Background </button>
       <button class="formRow" id="removeImgBtn"> Remove Background </button>
     </div>
     <div class="column2">       -->
-      <iframe id="canvas" class="screenFiller" scrolling="no" frameborder="0" src=""></iframe>
-    <!-- </div>
+        <!-- <iframe id="canvas" class="screenFiller" scrolling="no" frameborder="0" src=""></iframe> -->
+        <!-- </div>
   </div> -->
-  
 
-  <script>
-    /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-    function myFunction() {
-      var x = document.getElementById("myTopnav");
-      if (x.className === "topnav") {
-        x.className += " responsive";
-      } else {
-        x.className = "topnav";
-      }
-    }
+        <script>
+            /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+            function myFunction() {
+                var x = document.getElementById("myTopnav");
+                if (x.className === "topnav") {
+                    x.className += " responsive";
+                } else {
+                    x.className = "topnav";
+                }
+            }
 
-    // wait for DOM to load before running sketch
-    window.addEventListener('DOMContentLoaded', (event) => {
-      document.getElementById("canvas").setAttribute("src", "p5_program.html");
-    });
-  </script>
-        
-</body>
+            // wait for DOM to load before running sketch
+            // window.addEventListener("DOMContentLoaded", event => {
+            //     document.getElementById("sketch").setAttribute("src", "p5_program.html");
+            // });
+        </script>
+        <script language="javascript" type="text/javascript" src="js/pixel.js" defer></script>
+        <script language="javascript" type="text/javascript" src="js/p5sketch.js" defer></script>
+    </body>
 </html>

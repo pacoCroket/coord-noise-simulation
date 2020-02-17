@@ -21,16 +21,13 @@ let colItems = -1;
 
 let imageScaling = 1;
 
-function preload() {
-
-}
-
 function setup() {
-	cnv = createCanvas(windowWidth-220, windowHeight);
-	cnv.position(220, 0);
+	cnv = createCanvas(windowWidth, windowHeight);
+	cnv.parent('#sketch');
+	resizeCanvas(windowWidth, windowHeight);
 	colorMode(HSB, 1);
 	background(0.2);
-	// rectMode(CENTER);
+
 	textAlign(CENTER, CENTER);
 	imageMode(CENTER);
 	textSize(16);
