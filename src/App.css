@@ -9,15 +9,15 @@ body {
 }
 
 .App {
-  min-height: 100%;
+  height: 93vh;
 }
 
 .App-header {
   background-color: #282c34;
-  display: flex;
-  flex-direction: column;
+  display: inline-block;
+  /* flex-direction: column; */
   align-items: center;
-  justify-content: left;
+  /* justify-content: left; */
   font-size: calc(10px + 2vmin);
   color: white;
   height: 93vh;
@@ -89,13 +89,22 @@ body {
 /* End EditTools */
 /* canvas */
 .canvas {
-  background: darkgray;
+  background: none;
   max-height: 100%;
+  position: fixed;
+  display: flex;
+  border: none;
+  /* background: none; */
+  width: 100%;
+  height: auto;
+  padding: 0;
+  margin: 0;
 }
 
 .led {
   width: 50px;
   height: 50px;
+  z-index: -2 !important;
   margin: 0;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -126,5 +135,6 @@ code {
   background: none;
   background-clip: padding-box;
   transition: background 0.6s ease;
-  box-shadow: dimgray;
+  box-shadow: dimgray;  
+  font-size: 2rem;
 }

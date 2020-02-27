@@ -45,15 +45,15 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar id="NavBar"></NavBar>
-        <header className="App-header">
+        <header className="App-header h-100">
           <div className="container workspace mr-auto">
             {/* TODO snap workspace to bottom */}
             <div className="row mx-1"> 
-              <div className="col-md-auto p-0">
+              <div className="col-md-auto p-0 h-100">
                 <EditTools tooling={this.state.tooling} onImgAdded={this.onImgAdded}></EditTools>
               </div>
               {/* TODO vertical divider */}
-              <div className="col p-0">
+              <div className="col p-0 h-100">
                 <Canvas leds={this.state.leds} tooling={this.state.tooling} img={this.state.backImg}></Canvas>
               </div>
             </div>
