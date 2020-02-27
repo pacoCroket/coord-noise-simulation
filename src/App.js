@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import NavBar from "./components/NavBar";
-import EditTools from "./components/EditTools";
+import EditTools from "./components/EditTools.js";
+import Canvas from "./components/Canvas.js";
 
 class App extends Component {
   state = {
     backImg: "logo512.png",
-    isPainting: true,
-    isDeleting: false,
+    tooling: {
+      isPainting: true,
+      isErasing: false
+    },
     leds: [
       {
         id: 1,
@@ -19,6 +21,16 @@ class App extends Component {
         id: 2,
         x: 43,
         y: 45
+      },
+      {
+        id: 3,
+        x: 105,
+        y: 15
+      },
+      {
+        id: 4,
+        x: 180,
+        y: 35
       }
     ]
   };
@@ -26,15 +38,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar></NavBar>
+        <NavBar id="NavBar"></NavBar>
         <header className="App-header">
-          <div className="container workspace">
-            <div className="row">
+          <div className="container workspace mx-auto">
+            {/* TODO snap workspace to bottom */}
+            <div className="row" style={{height: '94vh'}}> 
               <div className="col-2">
-                <EditTools></EditTools>
+                <EditTools tooling={this.state.tooling}></EditTools>
               </div>
               <div className="col-10 canvas">
-                <img src={logo} className="App-logo" alt="logo" />
+                <Canvas leds={this.state.leds} tooling={this.state.tooling}></Canvas>
               </div>
             </div>
           </div>

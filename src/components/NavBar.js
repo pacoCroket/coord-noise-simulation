@@ -46,12 +46,12 @@ class NavBar extends Component {
         </div>
 
         {/* Center */}
-        <div class="mx-auto order-0">
-          <a class="navbar-brand mx-auto" href="#">
+        <div className="mx-auto order-0">
+          <a className="navbar-brand mx-auto" href="#">
             Paco Croket
           </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-            <span class="navbar-toggler-icon"></span>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+            <span className="navbar-toggler-icon"></span>
           </button>
         </div>
 

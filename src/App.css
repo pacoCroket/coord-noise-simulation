@@ -5,23 +5,27 @@ body {
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+.App {  
+  min-height: 100%;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 100%;
 }
 
 /* NavBar */
 .user-profile {
-  margin-right: 0; 
+  margin-right: 0;
 }
 
 /* End NavBar */
@@ -29,6 +33,12 @@ body {
 .workspace {
   padding: 0;
   margin: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  
+  height: 100%;
 }
 
 /* End Workspace */
@@ -41,7 +51,6 @@ body {
 }
 
 #uploadImg {
-
 }
 
 /* End EditTools */
@@ -50,32 +59,38 @@ body {
   background: darkgray;
 }
 
+.led {
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background: firebrick;
+  text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -o-user-select: none;
+}
+
 /* End canvas */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.myButton {
-	box-shadow: 0px 10px 14px -7px #276873;
-	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
-	background-color:#599bb3;
-	border-radius:8px;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:14px;
-	font-weight:bold;
-	padding:4px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #3d768a;
-}
-.myButton:hover {
-	background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
-	background-color:#408c99;
-}
-.myButton:active {
-	position:relative;
-	top:1px;
+.button {
+  /* width: 50px;
+  height: 50px; */
+  padding: 0.8rem 1rem;
+  margin: 0.4rem 1rem;
+  position: relative;
+  border: 2px solid;
+  border-radius: 10px;
+  background: cornsilk;
+  background-clip: padding-box;
+  transition: background 0.6s ease;
+  box-shadow: dimgray;
 }
