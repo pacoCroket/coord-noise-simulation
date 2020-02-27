@@ -31,9 +31,9 @@ export default class EditTools extends Component {
         <div className="Card">
           <Dropzone onImgAdded={this.props.onImgAdded} />
         </div>
-        <button className="btn button" id="isPaiting" onClick={this.uploadImg}>
+        {/* <button className="btn button" id="isPaiting" onClick={this.uploadImg}>
           <i className="fas fa-file-upload"></i>
-        </button>
+        </button> */}
         <button className="btn button" id="isPaiting" onClick={this.setIsPainting} style={this.getStyle(isPainting)}>
           <i className="fas fa-paint-brush"></i>
         </button>
