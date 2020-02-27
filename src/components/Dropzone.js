@@ -9,16 +9,20 @@ export default class Dropzone extends Component {
   openFileDialog = () => {
     if (this.props.disabled) return;
     this.fileInputRef.current.click();
-  }
+  };
 
-  onFilesAdded = (evt) => {
+  onFilesAdded = evt => {
     if (this.props.disabled) return;
-    const files = evt.target.files;
-    if (this.props.onFilesAdded) {
-      console.log(files.item(0));
-      
-    }
-  }
+    const img = evt.target.files.item(0);
+    this.props.onImgAdded(img);
+
+    var reader = new FileReader();
+    console.log(reader);
+    reader.onload = e => {
+      document.getElementById("canvas").src = e.target.result;
+    };
+    reader.readAsDataURL(img);
+  };
 
   render() {
     return (

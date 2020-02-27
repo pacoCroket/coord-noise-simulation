@@ -6,6 +6,7 @@ export default class Canvas extends Component {
   render() {
     return (
       <div className="canvas">
+        <img src="" id="canvas"></img>
         {this.props.leds.map(led => (
           <Led led={led} key={led.id}></Led>
         ))}
@@ -15,7 +16,7 @@ export default class Canvas extends Component {
 }
 
 Canvas.propTypes = {
-//   backImg: PropTypes.object.isRequired,
+  backImg: PropTypes.object.isRequired,
   tooling: PropTypes.object.isRequired,
   leds: PropTypes.array.isRequired
 };

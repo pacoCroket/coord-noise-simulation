@@ -6,7 +6,7 @@ import Canvas from "./components/Canvas.js";
 
 class App extends Component {
   state = {
-    backImg: "logo512.png",
+    backImg: '',
     tooling: {
       isPainting: true,
       isErasing: false
@@ -35,6 +35,12 @@ class App extends Component {
     ]
   };
 
+  onImgAdded = (img) => {
+    this.state.backImg = img;
+    console.log(this.state.backImg)
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -44,11 +50,11 @@ class App extends Component {
             {/* TODO snap workspace to bottom */}
             <div className="row mx-1"> 
               <div className="col-md-auto p-0">
-                <EditTools tooling={this.state.tooling}></EditTools>
+                <EditTools tooling={this.state.tooling} onImgAdded={this.onImgAdded}></EditTools>
               </div>
               {/* TODO vertical divider */}
               <div className="col p-0">
-                <Canvas leds={this.state.leds} tooling={this.state.tooling}></Canvas>
+                <Canvas leds={this.state.leds} tooling={this.state.tooling} img={this.state.backImg}></Canvas>
               </div>
             </div>
           </div>

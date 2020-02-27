@@ -29,7 +29,7 @@ export default class EditTools extends Component {
       <div className="editTools d-flex flex-column">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card">
-          <Dropzone onFilesAdded={console.log} />
+          <Dropzone onImgAdded={this.props.onImgAdded} />
         </div>
         <button className="btn button" id="isPaiting" onClick={this.uploadImg}>
           <i className="fas fa-file-upload"></i>
