@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 export default class Canvas extends Component {
   render() {
     return (
-      <div className="canvas">
-        <img src="" id="canvas">
+      <div className="canvas container">
+        <img src="" className="backImg" id="canvas">
             
         </img>
         {this.props.leds.map(led => (
@@ -18,7 +18,7 @@ export default class Canvas extends Component {
 }
 
 Canvas.propTypes = {
-  backImg: PropTypes.object.isRequired,
+  backImg: PropTypes.object,
   tooling: PropTypes.object.isRequired,
   leds: PropTypes.array.isRequired
 };
