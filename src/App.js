@@ -42,11 +42,12 @@ class App extends Component {
         <header className="App-header">
           <div className="container workspace mr-auto">
             {/* TODO snap workspace to bottom */}
-            <div className="row"> 
-              <div className="col-2">
+            <div className="row mx-1"> 
+              <div className="col-md-auto p-0">
                 <EditTools tooling={this.state.tooling}></EditTools>
               </div>
-              <div className="col-10">
+              {/* TODO vertical divider */}
+              <div className="col p-0">
                 <Canvas leds={this.state.leds} tooling={this.state.tooling}></Canvas>
               </div>
             </div>

@@ -8,7 +8,7 @@ body {
   /* overflow: hidden; */
 }
 
-.App {  
+.App {
   min-height: 100%;
 }
 
@@ -19,7 +19,7 @@ body {
   align-items: center;
   justify-content: left;
   font-size: calc(10px + 2vmin);
-  color: white;  
+  color: white;
   height: 93vh;
   position: relative;
   width: 100%;
@@ -43,18 +43,54 @@ body {
 /* EditTools */
 
 .editTools {
+  padding: 1rem 0;
   color: #282c34;
   background-color: aliceblue;
-  min-height: 100%;
+  max-height: 100%;
+}
+
+.FileInput {
+  display: none;
+}
+
+.Card {
+  background-color: none;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08); */
+  box-sizing: border-box;
+}
+
+.Dropzone {
+  height: 100px;
+  width: 100px;
+  background-color: #fff;
+  border: 2px dashed rgb(187, 186, 186);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.Icon {
+  opacity: 0.3;
+  height: 64px;
+  width: 64px;
 }
 
 #uploadImg {
+  width: 100px;
 }
 
 /* End EditTools */
 /* canvas */
 .canvas {
   background: darkgray;
+  max-height: 100%;
 }
 
 .led {
@@ -87,7 +123,7 @@ code {
   position: relative;
   border: 2px solid;
   border-radius: 10px;
-  background: cornsilk;
+  background: none;
   background-clip: padding-box;
   transition: background 0.6s ease;
   box-shadow: dimgray;
