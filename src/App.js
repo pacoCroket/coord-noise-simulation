@@ -29,7 +29,7 @@ class App extends Component {
       },
       {
         id: 4,
-        x: 180,
+        x: 250,
         y: 35
       }
     ]
@@ -40,13 +40,13 @@ class App extends Component {
       <div className="App">
         <NavBar id="NavBar"></NavBar>
         <header className="App-header">
-          <div className="container workspace mx-auto">
+          <div className="container workspace mr-auto">
             {/* TODO snap workspace to bottom */}
-            <div className="row" style={{height: '94vh'}}> 
+            <div className="row"> 
               <div className="col-2">
                 <EditTools tooling={this.state.tooling}></EditTools>
               </div>
-              <div className="col-10 canvas">
+              <div className="col-10">
                 <Canvas leds={this.state.leds} tooling={this.state.tooling}></Canvas>
               </div>
             </div>

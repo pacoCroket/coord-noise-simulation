@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 export default class Canvas extends Component {
   render() {
     return (
-      <div>
+      <div className="canvas">
         {this.props.leds.map(led => (
           <Led led={led} key={led.id}></Led>
         ))}
