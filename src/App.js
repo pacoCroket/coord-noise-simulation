@@ -5,11 +5,15 @@ import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
 
 class App extends Component {
+  static paintModes = {
+    paint: "paint",
+    erase: "erase"
+  };
+
   state = {
-    backImg: '',
+    backImg: "",
     tooling: {
-      isPainting: true,
-      isErasing: false
+      paintMode: App.paintModes.paint
     },
     leds: [
       {
@@ -35,11 +39,14 @@ class App extends Component {
     ]
   };
 
-  onImgAdded = (img) => {
+  onImgAdded = img => {
     this.state.backImg = img;
-    console.log(this.state.backImg)
-  }
+    console.log(this.state.backImg);
+  };
 
+  paintModeChanged = paintMode => {
+    console.log(paintMode)
+  };
 
   render() {
     return (
@@ -48,11 +55,15 @@ class App extends Component {
         <header className="App-header h-100">
           <div className="container workspace mr-auto">
             {/* TODO snap workspace to bottom */}
-            <div className="row mx-1"> 
+            <div className="row mx-1">
               <div className="col-md-auto p-0 h-100">
-                <EditTools tooling={this.state.tooling} onImgAdded={this.onImgAdded}></EditTools>
+                <EditTools
+                  tooling={this.state.tooling}
+                  onImgAdded={this.onImgAdded}
+                  paintModeChanged={this.paintModeChanged}
+                ></EditTools>
               </div>
-              {/* TODO vertical divider */}              
+              {/* TODO vertical divider */}
               <div className="col-1 p-0 h-100"></div>
               <div className="col p-0 h-100">
                 <Canvas leds={this.state.leds} tooling={this.state.tooling} img={this.state.backImg}></Canvas>
