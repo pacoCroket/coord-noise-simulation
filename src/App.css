@@ -5,11 +5,11 @@ body {
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .App {
-  height: 93vh;
+  height: 100vh;
 }
 
 .App-header {

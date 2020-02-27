@@ -52,7 +52,8 @@ class App extends Component {
               <div className="col-md-auto p-0 h-100">
                 <EditTools tooling={this.state.tooling} onImgAdded={this.onImgAdded}></EditTools>
               </div>
-              {/* TODO vertical divider */}
+              {/* TODO vertical divider */}              
+              <div className="col-1 p-0 h-100"></div>
               <div className="col p-0 h-100">
                 <Canvas leds={this.state.leds} tooling={this.state.tooling} img={this.state.backImg}></Canvas>
               </div>
