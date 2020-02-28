@@ -3,7 +3,7 @@ import "./App.css";
 import NavBar from "./components/NavBar";
 import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
   static paintModes = {
@@ -15,6 +15,9 @@ class App extends Component {
     backImg: "",
     tooling: {
       paintMode: App.paintModes.paint
+    },
+    displayProps: {
+      ledSize: 50
     },
     leds: [
       {
@@ -35,7 +38,12 @@ class App extends Component {
       {
         id: 4,
         x: 250,
-        y: 35
+        y: 0
+      },
+      {
+        id: 5,
+        x: 500,
+        y: 300
       }
     ]
   };
@@ -47,7 +55,7 @@ class App extends Component {
 
   paintModeChanged = paintMode => {
     this.state.tooling.paintMode = paintMode;
-    console.log('app.js ' + paintMode)
+    console.log("app.js " + paintMode);
   };
 
   render() {
@@ -55,7 +63,7 @@ class App extends Component {
       <div className="App">
         <NavBar id="NavBar"></NavBar>
         <header className="App-header h-100">
-          <div className="container-fluid workspace px-5">
+          <div className="container-fluid workspace px-5 py-4">
             {/* TODO snap workspace to bottom */}
             <div className="row mx-auto">
               <div className="col-md-auto p-0 h-100">
@@ -68,7 +76,12 @@ class App extends Component {
               {/* TODO vertical divider */}
               <div className="col-1 p-0 h-100"></div>
               <div className="col p-0 h-100">
-                <Canvas leds={this.state.leds} tooling={this.state.tooling} img={this.state.backImg}></Canvas>
+                <Canvas
+                  leds={this.state.leds}
+                  tooling={this.state.tooling}
+                  img={this.state.backImg}
+                  displayProps={this.state.displayProps}
+                ></Canvas>
               </div>
             </div>
           </div>

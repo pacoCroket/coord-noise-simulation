@@ -3,19 +3,20 @@ import PropTypes from "prop-types";
 
 export default class Led extends Component {
   getStyle = () => {
-    return { transform: `translate(${this.props.led.x}px, ${this.props.led.y}px)`, };
+    return { left: `${this.props.led.x - this.props.ledSize/2}px`, top: `${this.props.led.y - this.props.ledSize/2}px`,
+            width: this.props.ledSize, height: this.props.ledSize };
   };
 
-  clicked = (e) => {
-      console.log(e)
-      this.props.led.x = e.clientX;
-      this.props.led.y = e.clientY;
-  }
+  clicked = e => {
+    console.log(e);
+    this.props.led.x = e.clientX;
+    this.props.led.y = e.clientY;
+  };
 
   render() {
     return (
       <div className="led" style={this.getStyle()} onMouseDown={this.clicked}>
-        <p>{this.props.led.id}</p>
+        <p className="m-0">{this.props.led.id}</p>
       </div>
     );
   }

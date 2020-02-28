@@ -23,7 +23,7 @@ export default class Canvas extends Component {
         //   style={this.setStyle}
         ></img>
         {this.props.leds.map(led => (
-          <Led led={led} key={led.id}></Led>
+          <Led led={led} key={led.id} ledSize={this.props.displayProps.ledSize}></Led>
         ))}
       </div>
     );
