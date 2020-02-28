@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Draggable from "./Draggable";
 
 export default class Led extends Component {
   getStyle = () => {
-    return { left: `${this.props.led.x - this.props.ledSize/2}px`, top: `${this.props.led.y - this.props.ledSize/2}px`,
-            width: this.props.ledSize, height: this.props.ledSize };
+    return { width: this.props.ledSize, height: this.props.ledSize };
   };
 
   clicked = e => {
@@ -15,9 +15,11 @@ export default class Led extends Component {
 
   render() {
     return (
-      <div className="led" style={this.getStyle()} onMouseDown={this.clicked}>
-        <p className="m-0">{this.props.led.id}</p>
-      </div>
+      <Draggable className="m-0">
+        <div className="led m-0" style={this.getStyle()}>
+          <p className="m-0">{this.props.led.id}</p>
+        </div>
+      </Draggable>
     );
   }
 }

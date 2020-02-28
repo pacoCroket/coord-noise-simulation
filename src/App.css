@@ -119,7 +119,7 @@ body {
 }
 
 .led {
-  position: absolute;
+  display: block;
   z-index: 999 !important;
   margin: 0;
   -webkit-border-radius: 50%;
