@@ -3,6 +3,7 @@ import "./App.css";
 import NavBar from "./components/NavBar";
 import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
   static paintModes = {
@@ -46,6 +47,7 @@ class App extends Component {
 
   paintModeChanged = paintMode => {
     this.state.tooling.paintMode = paintMode;
+    console.log('app.js ' + paintMode)
   };
 
   render() {
@@ -53,9 +55,9 @@ class App extends Component {
       <div className="App">
         <NavBar id="NavBar"></NavBar>
         <header className="App-header h-100">
-          <div className="container workspace mr-auto">
+          <div className="container-fluid workspace px-5">
             {/* TODO snap workspace to bottom */}
-            <div className="row mx-1">
+            <div className="row mx-auto">
               <div className="col-md-auto p-0 h-100">
                 <EditTools
                   tooling={this.state.tooling}

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default class Led extends Component {
   getStyle = () => {
-    return { transform: `translate(${this.props.led.x}px, ${this.props.led.y}px)` };
+    return { transform: `translate(${this.props.led.x}px, ${this.props.led.y}px)`, };
   };
 
   clicked = (e) => {
