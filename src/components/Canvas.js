@@ -14,13 +14,14 @@ export default class Canvas extends Component {
 
   render() {
     const { ledSize } = this.props.displayProps;
-    const { imgSize } = this.props.backImg;
+    const { imgUrl, imgSize } = this.props.backImg;
+    const { paintMode } = this.props.tooling;
 
     return (
       <div className="d-flex canvas">
           {/* TODO fit img to screen for all cases */}
         <img
-          src="https://via.placeholder.com/1200x200"
+          src={imgUrl}
           className="img-fluid"
           id="canvas"
           alt="reference leds"
@@ -30,6 +31,7 @@ export default class Canvas extends Component {
           <Draggable
             className="mx-auto"
             key={led.id}
+            paintMode={paintMode}
             led={led}
             imgSize={imgSize}
             ledSize={ledSize}

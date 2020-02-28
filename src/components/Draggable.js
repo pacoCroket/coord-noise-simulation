@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled, { css } from "styled-components";
+import App from "../App";
 
 export default class Draggable extends Component {
   state = {
@@ -23,6 +24,9 @@ export default class Draggable extends Component {
   handleMouseDown = ({ clientX, clientY }) => {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
+
+    // Skip if paintMode is 'erase'
+    if (this.props.paintMode === App.paintModes.erase) return;
 
     if (this.props.onDragStart) {
       this.props.onDragStart();
@@ -63,6 +67,7 @@ export default class Draggable extends Component {
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
 
+    // if paintMode == 'erase', this LED will be erased and this function returned
     if (this.props.clickedLed(this.props.led.id)) return;
 
     this.setState(
@@ -96,14 +101,13 @@ export default class Draggable extends Component {
   };
 
   render() {
-    const { children } = this.props;
-    const { xLim, yLim } = this.props.imgSize;
+    const { x, y } = this.props.imgSize;
 
     return (
       <div
         className="led"
         onMouseDown={this.handleMouseDown}
-        style={this.getStyle(xLim, yLim, this.props.ledSize)}
+        style={this.getStyle(x, y, this.props.ledSize)}
       >
         <p className="m-0">{this.props.led.id}</p>
       </div>

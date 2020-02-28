@@ -14,7 +14,7 @@ class App extends Component {
 
   state = {
     backImg: {
-      imgUrl: "",
+      imgUrl: "https://via.placeholder.com/1200x200",
       imgSize: { x: 1200, y: 200 }
     },
     tooling: {
@@ -57,18 +57,31 @@ class App extends Component {
     ]
   };
 
-  onImgAdded = img => {
-    this.state.backImg = img;
-    console.log(this.state.backImg);
+  onImgAdded = (img, imgUrl) => {
+    // console.log(img);
+    this.setState({
+      backImg: {
+        imgUrl,
+        imgSize: { x: 1200, y: 200 }
+      }
+    });
+    // document.getElementById("canvas").src = imgUrl;
   };
 
   paintModeChanged = paintMode => {
-    this.state.tooling.paintMode = paintMode;
-    console.log("app.js " + paintMode);
+    this.setState({ tooling: { paintMode } });
   };
 
-  addLed = ({ clientX, clientY }) => {
-    this.setState();
+  addLed = ({ x, y }) => {
+    // do nothing if paintMode == 'erase'
+    if (this.state.tooling.paintMode === App.paintModes.erase) return;
+    const newLed = {
+      id: `${this.state.leds.length + 1}`,
+      x,
+      y
+    };
+
+    this.setState({ leds: [...this.state.leds, newLed] });
   };
 
   clickedLed = id => {
@@ -76,7 +89,7 @@ class App extends Component {
     if (this.state.tooling.paintMode === App.paintModes.erase) {
       this.setState({ leds: [...this.state.leds.filter(led => led.id != id)] });
       // return true if this LED was deleted
-      return true
+      return true;
     }
   };
 
