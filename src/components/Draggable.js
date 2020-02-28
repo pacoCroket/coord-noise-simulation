@@ -80,18 +80,27 @@ export default class Draggable extends Component {
     );
   };
 
-  getStyle = () => {
-    return { transform: `translate(${this.state.translateX}px, ${this.state.translateY}px)`, cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
-    opacity: `${this.state.isDragging? "0.8":'1'}` };
+  getStyle = (xLim, yLim, ledSize) => {
+    //   limit the x and y between 0 and size of the image
+    let x = this.state.translateX < 0 ? 0 : this.state.translateX > xLim ? xLim : this.state.translateX;
+    let y = this.state.translateY < 0 ? 0 : this.state.translateY > yLim ? yLim : this.state.translateY;
+    return {
+      transform: `translate(${x - ledSize / 2}px, ${y - ledSize / 2}px)`,
+      cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
+      opacity: `${this.state.isDragging ? "0.8" : "1"}`,
+      width: ledSize,
+      height: ledSize
+    };
   };
 
   render() {
     const { children } = this.props;
+    const { xLim, yLim } = this.props.imgSize;
     // const { translateX, translateY, isDragging } = this.state;
 
     return (
-      <div onMouseDown={this.handleMouseDown} style={this.getStyle()}>
-        {children}
+      <div className="led" onMouseDown={this.handleMouseDown} style={this.getStyle(xLim, yLim, this.props.ledSize)}>
+        <p className="m-0">{this.props.led.id}</p>
       </div>
     );
   }

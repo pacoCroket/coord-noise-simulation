@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Draggable from "./Draggable";
 
 export default class Led extends Component {
   getStyle = () => {
@@ -15,11 +14,9 @@ export default class Led extends Component {
 
   render() {
     return (
-      <Draggable className="m-0">
-        <div className="led m-0" style={this.getStyle()}>
-          <p className="m-0">{this.props.led.id}</p>
-        </div>
-      </Draggable>
+      <div className="led m-0" style={this.getStyle()}>
+        <p className="m-0">{this.props.led.id}</p>
+      </div>
     );
   }
 }

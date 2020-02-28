@@ -119,7 +119,7 @@ body {
 }
 
 .led {
-  display: block;
+  position: absolute;
   z-index: 999 !important;
   margin: 0;
   -webkit-border-radius: 50%;
@@ -128,7 +128,6 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.253);
   background: firebrick;
   text-align: center;
-  margin: auto;
 }
 
 /* End canvas */

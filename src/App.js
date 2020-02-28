@@ -13,7 +13,10 @@ class App extends Component {
   };
 
   state = {
-    backImg: "",
+    backImg: {
+      imgUrl: "",
+      imgSize: { x: 1200, y: 600 }
+    },
     tooling: {
       paintMode: App.paintModes.paint
     },
@@ -80,7 +83,7 @@ class App extends Component {
                 <Canvas
                   leds={this.state.leds}
                   tooling={this.state.tooling}
-                  img={this.state.backImg}
+                  backImg={this.state.backImg}
                   displayProps={this.state.displayProps}
                 ></Canvas>
               </div>
