@@ -17,17 +17,24 @@ export default class Canvas extends Component {
     const { imgSize } = this.props.backImg;
 
     return (
-      <div className="container canvas mx-0 p-0">
+      <div className="d-flex canvas">
+          {/* TODO fit img to screen for all cases */}
         <img
-          src="https://via.placeholder.com/1200x600"
-          className="backImg"
+          src="https://via.placeholder.com/1200x200"
+          className="img-fluid"
           id="canvas"
           alt="reference leds"
-          //   style={this.setStyle}
+          onClick={this.props.addLed}
         ></img>
         {this.props.leds.map(led => (
-          <Draggable className="mx-auto" key={led.id} led={led} imgSize={imgSize} ledSize={ledSize}>
-          </Draggable>
+          <Draggable
+            className="mx-auto"
+            key={led.id}
+            led={led}
+            imgSize={imgSize}
+            ledSize={ledSize}
+            clickedLed={this.props.clickedLed}
+          ></Draggable>
         ))}
       </div>
     );

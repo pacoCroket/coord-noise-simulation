@@ -15,19 +15,24 @@ class App extends Component {
   state = {
     backImg: {
       imgUrl: "",
-      imgSize: { x: 1200, y: 600 }
+      imgSize: { x: 1200, y: 200 }
     },
     tooling: {
-      paintMode: App.paintModes.paint
+      paintMode: App.paintModes.erase
     },
     displayProps: {
       ledSize: 50
     },
     leds: [
       {
+        id: 0,
+        x: 800,
+        y: 150
+      },
+      {
         id: 1,
-        x: 12,
-        y: 34
+        x: 43,
+        y: 45
       },
       {
         id: 2,
@@ -62,6 +67,19 @@ class App extends Component {
     console.log("app.js " + paintMode);
   };
 
+  addLed = ({ clientX, clientY }) => {
+    this.setState();
+  };
+
+  clickedLed = id => {
+    console.log(id);
+    if (this.state.tooling.paintMode === App.paintModes.erase) {
+      this.setState({ leds: [...this.state.leds.filter(led => led.id != id)] });
+      // return true if this LED was deleted
+      return true
+    }
+  };
+
   render() {
     return (
       <div className="App">
@@ -70,7 +88,7 @@ class App extends Component {
           <div className="container-fluid workspace px-5 py-4">
             {/* TODO snap workspace to bottom */}
             <div className="row mx-auto">
-              <div className="col-md-auto p-0 h-100">
+              <div className="col-md-auto p-0">
                 <EditTools
                   tooling={this.state.tooling}
                   onImgAdded={this.onImgAdded}
@@ -78,13 +96,15 @@ class App extends Component {
                 ></EditTools>
               </div>
               {/* TODO vertical divider */}
-              <div className="col-1 p-0 h-100"></div>
-              <div className="col p-0 h-100">
+              <div className="col-1 p-0"></div>
+              <div className="col p-0 my-auto">
                 <Canvas
                   leds={this.state.leds}
                   tooling={this.state.tooling}
                   backImg={this.state.backImg}
                   displayProps={this.state.displayProps}
+                  addLed={this.addLed}
+                  clickedLed={this.clickedLed}
                 ></Canvas>
               </div>
             </div>

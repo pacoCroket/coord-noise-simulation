@@ -16,7 +16,6 @@ export default class EditTools extends Component {
       tooling: { paintMode },
       paintModeChanged
     } = this.props;
-    console.log(paintMode);
 
     return (
       <div className="d-flex flex-column editTools">
@@ -26,14 +25,14 @@ export default class EditTools extends Component {
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto">
-          <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="options" defaultValue={1}>
+          <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="toolbar">
             <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.paint)}>
               <i className="fas fa-paint-brush"></i>
             </Button>
             <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.line)}>
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
-            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.erase)}>
+            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.erase)} active>
               <i className="fas fa-eraser"></i>
             </Button>
           </ToggleButtonGroup>

@@ -98,12 +98,14 @@ body {
 /* canvas */
 .canvas {
   background: none;
-  max-height: 100%;
-  /* display: flex; */
-  border: none;
+  border: 2px solid black;
+  /* max-height: 100%; */
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: center; */
   /* background: none; */
   width: 100%;
-  height: auto;
+  /* height: 200px; */
   padding: 0;
   margin: 0;
 }
