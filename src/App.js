@@ -45,7 +45,7 @@ class App extends Component {
   };
 
   paintModeChanged = paintMode => {
-    console.log(paintMode)
+    this.state.tooling.paintMode = paintMode;
   };
 
   render() {
