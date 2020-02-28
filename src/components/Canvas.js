@@ -36,6 +36,7 @@ export default class Canvas extends Component {
             imgSize={imgSize}
             ledSize={ledSize}
             clickedLed={this.props.clickedLed}
+            setLed={this.props.setLed}
           ></Draggable>
         ))}
       </div>

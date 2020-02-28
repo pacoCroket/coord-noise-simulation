@@ -84,10 +84,33 @@ class App extends Component {
     this.setState({ leds: [...this.state.leds, newLed] });
   };
 
+  setLed = led2set => {
+    console.log(led2set)
+    this.setState({
+      leds: [
+        ...this.state.leds.map(led => {
+          if (led.id === led2set.id) {
+            led = led2set;
+          }
+          return led;
+        })
+      ]
+    });
+  };
+
   clickedLed = id => {
-    console.log(id);
+    // remove if on 'erase' paintMode
     if (this.state.tooling.paintMode === App.paintModes.erase) {
-      this.setState({ leds: [...this.state.leds.filter(led => led.id != id)] });
+      this.setState({ leds: [...this.state.leds.filter(led => led.id !== id)] });
+      // update ID of all LEDs to maintain continuity
+      this.state.leds.forEach((led, index) => {
+        led.id = index;
+      });
+
+      this.setState({
+        leds: [...this.state.leds]
+      });
+
       // return true if this LED was deleted
       return true;
     }
@@ -118,6 +141,7 @@ class App extends Component {
                   displayProps={this.state.displayProps}
                   addLed={this.addLed}
                   clickedLed={this.clickedLed}
+                  setLed={this.setLed}
                 ></Canvas>
               </div>
             </div>
