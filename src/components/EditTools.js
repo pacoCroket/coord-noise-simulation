@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Dropzone from "./Dropzone";
-import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown , ButtonToolbar} from "react-bootstrap";
+import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown, ButtonToolbar } from "react-bootstrap";
 import App from "../App";
 
 export default class EditTools extends Component {
@@ -26,31 +26,18 @@ export default class EditTools extends Component {
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto">
-          <ToggleButtonGroup className="mx-auto px-2" vertical type="radio" name="options" defaultValue={1}>
-            <Button className="toolbox-btn" 
-          onClick={paintModeChanged.bind(this, App.paintModes.paint)}><i className="fas fa-paint-brush"></i></Button>
-            <Button className="toolbox-btn" 
-          onClick={paintModeChanged.bind(this, App.paintModes.erase)}><i className="fas fa-eraser"></i></Button>
+          <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="options" defaultValue={1}>
+            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.paint)}>
+              <i className="fas fa-paint-brush"></i>
+            </Button>
+            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.line)}>
+              <i className="fas fa-sort-numeric-down"></i>
+            </Button>
+            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.erase)}>
+              <i className="fas fa-eraser"></i>
+            </Button>
           </ToggleButtonGroup>
         </ButtonToolbar>
-
-        {/* <button
-          className="btn button"
-          id="isPaiting"
-          onClick={paintModeChanged.bind(this, App.paintModes.paint)}
-          style={this.getStyle(paintMode === App.paintModes.paint)}
-        >
-          
-        </button>
-        <button
-          className="btn button"
-          id="isErase"
-          onClick={paintModeChanged.bind(this, App.paintModes.erase)}
-          style={this.getStyle(paintMode === App.paintModes.erase)}
-        >
-          <i className="fas fa-eraser"></i>
-        </button> */}
-
       </div>
     );
   }
