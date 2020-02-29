@@ -42,16 +42,17 @@ export default class Canvas extends Component {
   handleMouseDown = ({ clientX, clientY }) => {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
-    const { x, y } = this.getRelativePos({ clientX, clientY });
 
-    if (this.props.tooling.paintMode !== App.paintModes.erase)
+    if (this.props.tooling.paintMode !== App.paintModes.erase && !this.state.isDraggingLed) {
+      const { x, y } = this.getRelativePos({ clientX, clientY });
       this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
+    }
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
     this.setState({ isDragging: true });
 
-    if (this.state.tempLeds[0]) {
+    if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativePos({ clientX, clientY });
 
       // append new Leds to tempLeds and update their pos
@@ -71,7 +72,6 @@ export default class Canvas extends Component {
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
-
       } else if (this.props.tooling.paintMode === App.paintModes.paint) {
         this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
       }
@@ -83,7 +83,7 @@ export default class Canvas extends Component {
     window.removeEventListener("mouseup", this.handleMouseUp);
 
     // add the single first tempLed if paintMode === 'paint'
-    if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed) {
+    if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
       this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
     } else if (this.props.tooling.paintMode === App.paintModes.line) {
       // add all of tempLeds
@@ -97,7 +97,11 @@ export default class Canvas extends Component {
     // this.setState({ isDragging: false});
   };
 
-  onDragStart = () => this.setState({ isDraggingLed: true });
+  onDragStart = () => {
+    this.setState({ isDraggingLed: true });
+    // also update it within this render loop
+    this.state.isDraggingLed = true;
+  };
   // unelegant way of letting 'isDragging' stick for a bit longer
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
