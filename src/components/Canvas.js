@@ -23,6 +23,21 @@ export default class Canvas extends Component {
     };
   };
 
+  static fraction2CanvasScale = (fractionX, fractionY) => {
+    // this method takes fractional values and rescales them in the canvas
+    const {canvasWidth, canvasHeight} = this.getCanvasSize();
+    return {xScaled: fractionX*canvasWidth, yScaled: fractionY*canvasHeight}
+  }
+
+  static canvasScale2Fraction = (x, y) => {    
+    const {canvasWidth, canvasHeight} = this.getCanvasSize();
+    return {fractionX: x/canvasWidth, fractionY: y/canvasHeight}
+  }
+
+  handleResize = (e) => {
+    console.log(e.target)
+  }
+
   getRelativePos = ({ clientX, clientY }) => {
     const { cx, cy } = Canvas.getCanvasPos();
     const x = clientX - cx;
@@ -84,11 +99,16 @@ export default class Canvas extends Component {
 
     // add the single first tempLed if paintMode === 'paint'
     if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
-      this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
+      // scale position to fraction within the canvas
+      const {fractionX, fractionY} = Canvas.canvasScale2Fraction(this.state.tempLeds[0].x, this.state.tempLeds[0].y);
+
+      this.props.addLed({ x: fractionX, y: fractionY});
     } else if (this.props.tooling.paintMode === App.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach(led => {
-        this.props.addLed({ x: led.x, y: led.y });
+        const {fractionX, fractionY} = Canvas.canvasScale2Fraction(led.x, led.y);
+
+        this.props.addLed({ x: fractionX, y: fractionY });
       });
     }
 
@@ -111,7 +131,7 @@ export default class Canvas extends Component {
     const { paintMode } = this.props.tooling;
 
     return (
-      <div className="d-flex canvas" onMouseDown={this.handleMouseDown}>
+      <div className="d-flex canvas" onMouseDown={this.handleMouseDown} onResize={this.handleResize}>
         {/* TODO fit img to screen for all cases */}
 
         <img src={imgUrl} className="img-fluid backImg" id="canvas" alt="reference for leds"></img>
