@@ -10,6 +10,11 @@ export default class EditTools extends Component {
 
   getActive = btnName => btnName === this.props.tooling.paintMode
 
+  handleChange = event => {
+    const { value } = event.target;
+    this.props.paintModeChanged(value);
+  }
+
   render() {
     const { paintModeChanged } = this.props;
 
@@ -25,27 +30,27 @@ export default class EditTools extends Component {
           <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="toolbar">
             <Button
               className="btn btn-primary toolbox-btn"
-              name="paint"
+              value={App.paintModes.paint}
               id="paintBtn"
-              onClick={event => paintModeChanged(App.paintModes.paint)}
+              onClick={this.handleChange}
               active={this.getActive(App.paintModes.paint)}
             >
               <i className="fas fa-paint-brush"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              name="line"
+              value={App.paintModes.line}
               id="lineBtn"
-              onClick={event => paintModeChanged(App.paintModes.line)}
+              onClick={this.handleChange}
               active={this.getActive(App.paintModes.line)}
             >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              name="erase"
+              value={App.paintModes.erase}
               id="eraseBtn"
-              onClick={event => paintModeChanged(App.paintModes.erase)}
+              onClick={this.handleChange}
               active={this.getActive(App.paintModes.erase)}
             >
               <i className="fas fa-eraser"></i>

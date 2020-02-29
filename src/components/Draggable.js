@@ -3,15 +3,18 @@ import styled, { css } from "styled-components";
 import App from "../App";
 
 export default class Draggable extends Component {
-  state = {
-    isDragging: false,
+  constructor(props) {
+    super();
+    this.state = {
+      isDragging: false,
 
-    originalX: 0,
-    originalY: 0,
+      originalX: 0,
+      originalY: 0,
 
-    lastTranslateX: 0,
-    lastTranslateY: 0
-  };
+      lastTranslateX: props.led.x,
+      lastTranslateY: props.led.y
+    };
+  }
 
   componentWillUnmount() {
     window.removeEventListener("mousemove", this.handleMouseMove);
@@ -24,7 +27,7 @@ export default class Draggable extends Component {
       this.props.clickedLed(this.props.led.id);
       return;
     }
-    
+
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
