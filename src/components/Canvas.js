@@ -23,6 +23,13 @@ export default class Canvas extends Component {
     };
   };
 
+  getRelativePos = ({ clientX, clientY }) => {
+    const { cx, cy } = Canvas.getCanvasPos();
+    const x = clientX - cx;
+    const y = clientY - cy;
+    return { x, y };
+  };
+
   setStyle = () => {
     console.log(document.getElementById("canvas").height());
     if (document.getElementById("canvas").height() > document.getElementById("canvas").width()) {
@@ -35,35 +42,39 @@ export default class Canvas extends Component {
   handleMouseDown = ({ clientX, clientY }) => {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
-    const { cx, cy } = Canvas.getCanvasPos();
-    const x = clientX - cx;
-    const y = clientY - cy;
+    const { x, y } = this.getRelativePos({ clientX, clientY });
 
     if (this.props.tooling.paintMode !== App.paintModes.erase)
-      this.setState({ tempLeds: [{ id: 0, x, y }] });
+      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
     this.setState({ isDragging: true });
 
-    // append new Leds to tempLeds and update their pos
-    if (this.props.tooling.paintMode === App.paintModes.line && this.state.tempLeds[0]) {
-      const { cx, cy } = Canvas.getCanvasPos();
-      const dX = clientX - cx - this.state.tempLeds[0].x;
-      const dY = clientY - cy - this.state.tempLeds[0].y;
-      const dist = Math.sqrt(dX * dX + dY * dY);
-      const fittingCount = dist / this.props.displayProps.ledSize;
-      let tempLeds = [];
+    if (this.state.tempLeds[0]) {
+      const { x, y } = this.getRelativePos({ clientX, clientY });
 
-      // fit LEDs between original mouseDown and current position
-      for (var j = 0; j < fittingCount; j++) {
-        let fract = (j * this.props.displayProps.ledSize) / dist;
-        let x = this.state.tempLeds[0].x + dX * fract;
-        let y = this.state.tempLeds[0].y + dY * fract;
-        tempLeds.push({ id: this.props.leds.length+j, x, y });
-        // this.props.addLed({x, y});
+      // append new Leds to tempLeds and update their pos
+      if (this.props.tooling.paintMode === App.paintModes.line) {
+        const dX = x - this.state.tempLeds[0].x;
+        const dY = y - this.state.tempLeds[0].y;
+        const dist = Math.sqrt(dX * dX + dY * dY);
+        const fittingCount = dist / this.props.displayProps.ledSize;
+        let tempLeds = [];
+
+        // fit LEDs between original mouseDown and current mouse position
+        for (var j = 0; j < fittingCount; j++) {
+          let fract = (j * this.props.displayProps.ledSize) / dist;
+          let newX = this.state.tempLeds[0].x + dX * fract;
+          let newY = this.state.tempLeds[0].y + dY * fract;
+          tempLeds.push({ id: this.props.leds.length + j, x: newX, y: newY });
+        }
+        // add the calculated leds to state
+        this.setState({ tempLeds });
+
+      } else if (this.props.tooling.paintMode === App.paintModes.paint) {
+        this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
       }
-      this.setState({ tempLeds });
     }
   };
 
