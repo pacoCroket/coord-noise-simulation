@@ -46,22 +46,27 @@ export default class Canvas extends Component {
     this.setState({ isDragging: true });
 
     // append new Leds to tempLeds and update their pos
-    if (this.props.tooling.paintMode === App.paintModes.line) {
+    if (this.props.tooling.paintMode === App.paintModes.line && this.state.tempLeds[0]) {
+      console.log(this.state.tempLeds);
+
       const { cx, cy } = Canvas.getCanvasPos();
-      let dX = clientX - cx - this.state.tempLeds[0].x;
-      let dY = clientY - cy - this.state.tempLeds[0].y;
-      let dist = Math.sqrt(dX * dX + dY * dY);
+      const dX = clientX - cx - this.state.tempLeds[0].x;
+      const dY = clientY - cy - this.state.tempLeds[0].y;
+      const dist = Math.sqrt(dX * dX + dY * dY);
+      const fittingCount = dist / this.props.displayProps.ledSize;
       let tempLeds = [];
 
-      for (var j = 0; j < dist / this.props.displayProps.ledSize; j++) {
-        let fract = j * this.props.displayProps.ledSize;
+      // fit LEDs between original mouseDown and current position
+      for (var j = 0; j < fittingCount; j++) {
+        let fract = (j * this.props.displayProps.ledSize) / dist;
         let x = this.state.tempLeds[0].x + dX * fract;
         let y = this.state.tempLeds[0].y + dY * fract;
         tempLeds.push({ id: j, x, y });
         // this.props.addLed({x, y});
       }
+      console.log(tempLeds);
 
-      this.setState({ tempLeds: [...tempLeds] });
+      this.setState({ tempLeds });
     }
   };
 
@@ -75,13 +80,13 @@ export default class Canvas extends Component {
     } else if (this.props.tooling.paintMode === App.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach(led => {
-        this.props.addLed({x: led.x, y:led.y})
-      })
+        this.props.addLed({ x: led.x, y: led.y });
+      });
     }
 
     // remove tempLeds
-    // this.setState({ isDragging: false, tempLeds: [] });
-    this.setState({ isDragging: false});
+    this.setState({ isDragging: false, tempLeds: [] });
+    // this.setState({ isDragging: false});
   };
 
   onDragStart = () => this.setState({ isDraggingLed: true });
