@@ -15,8 +15,8 @@ class App extends Component {
 
   state = {
     backImg: {
-      imgUrl: "https://via.placeholder.com/1200x200",
-      imgSize: { x: 1200, y: 200 }
+      imgUrl: "https://via.placeholder.com/800x200",
+      imgSize: { x: 800, y: 200 }
     },
     tooling: {
       paintMode: App.paintModes.paint

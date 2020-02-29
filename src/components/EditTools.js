@@ -2,22 +2,21 @@ import React, { Component } from "react";
 import Dropzone from "./Dropzone";
 import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown, ButtonToolbar } from "react-bootstrap";
 import App from "../App";
+import PropTypes from "prop-types";
 
 export default class EditTools extends Component {
   constructor() {
     super();
   }
 
-  getActive = btnName => btnName === this.props.tooling.paintMode
+  getActive = btnName => btnName === this.props.tooling.paintMode;
 
   handleChange = event => {
     const { value } = event.target;
     this.props.paintModeChanged(value);
-  }
+  };
 
   render() {
-    const { paintModeChanged } = this.props;
-
     return (
       <div className="d-flex flex-column editTools">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
@@ -61,3 +60,9 @@ export default class EditTools extends Component {
     );
   }
 }
+
+EditTools.propTypes = {
+  tooling: PropTypes.object.isRequired,
+  onImgAdded: PropTypes.func.isRequired,
+  paintModeChanged: PropTypes.func.isRequired
+};

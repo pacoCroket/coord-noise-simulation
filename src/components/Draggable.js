@@ -31,6 +31,7 @@ export default class Draggable extends Component {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
+    // tell canvas that we are dragging something
     if (this.props.onDragStart) {
       this.props.onDragStart();
     }
