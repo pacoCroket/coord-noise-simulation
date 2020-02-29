@@ -16,28 +16,12 @@ export default class Canvas extends Component {
     };
   };
 
-  static getCanvasSize = () => {
-    return {
-      canvasWidth: document.getElementById("canvas").width,
-      canvasHeight: document.getElementById("canvas").height
-    };
-  };
-
-  static fraction2CanvasScale = (fractionX, fractionY) => {
-    // this method takes fractional values and rescales them in the canvas
-    const {canvasWidth, canvasHeight} = this.getCanvasSize();
-    return {xScaled: fractionX*canvasWidth, yScaled: fractionY*canvasHeight}
-  }
-
-  static canvasScale2Fraction = (x, y) => {    
-    const {canvasWidth, canvasHeight} = this.getCanvasSize();
-    return {fractionX: x/canvasWidth, fractionY: y/canvasHeight}
-  }
-
-  getRelativePos = ({ clientX, clientY }) => {
+  getRelativeFractionPos = ({ clientX, clientY }) => {
     const { cx, cy } = Canvas.getCanvasPos();
-    const x = clientX - cx;
-    const y = clientY - cy;
+    // scale x and y to be fractions of the image
+    const { width, height } = this.props.backImg.imgSize;
+    const x = (clientX - cx) / width;
+    const y = (clientY - cy) / height;
     return { x, y };
   };
 
@@ -50,12 +34,18 @@ export default class Canvas extends Component {
     }
   };
 
+  setLed = (led) => {    
+    // TODO this led could be already relative to the canvas, not window
+    const { x, y } = this.getRelativeFractionPos({ clientX: led.x, clientY: led.y });
+    this.props.setLed(x, y);
+  }
+
   handleMouseDown = ({ clientX, clientY }) => {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
     if (this.props.tooling.paintMode !== App.paintModes.erase && !this.state.isDraggingLed) {
-      const { x, y } = this.getRelativePos({ clientX, clientY });
+      const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
       this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
     }
   };
@@ -64,7 +54,7 @@ export default class Canvas extends Component {
     this.setState({ isDragging: true });
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
-      const { x, y } = this.getRelativePos({ clientX, clientY });
+      const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
 
       // append new Leds to tempLeds and update their pos
       if (this.props.tooling.paintMode === App.paintModes.line) {
@@ -95,7 +85,6 @@ export default class Canvas extends Component {
 
     // add the single first tempLed if paintMode === 'paint'
     if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
-      
       this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
     } else if (this.props.tooling.paintMode === App.paintModes.line) {
       // add all of tempLeds
@@ -106,7 +95,6 @@ export default class Canvas extends Component {
 
     // remove tempLeds
     this.setState({ isDragging: false, tempLeds: [] });
-    // this.setState({ isDragging: false});
   };
 
   onDragStart = () => {
@@ -117,9 +105,9 @@ export default class Canvas extends Component {
   // unelegant way of letting 'isDragging' stick for a bit longer
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
-  handleImgageLoad = (e) => {
+  handleImgageLoad = e => {
     this.props.onImgLoaded(e.target);
-  }
+  };
 
   render() {
     const { ledSize } = this.props.displayProps;
@@ -142,7 +130,7 @@ export default class Canvas extends Component {
             imgSize={imgSize}
             ledSize={ledSize}
             clickedLed={this.props.clickedLed}
-            setLed={this.props.setLed}
+            setLed={this.setLed}
             onDragStart={this.onDragStart}
             onDragEnd={this.onDragEnd}
           ></Draggable>

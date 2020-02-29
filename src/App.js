@@ -48,7 +48,7 @@ class App extends Component {
   addLed = ({ x, y }) => {
     // do nothing if paintMode == 'erase'
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
-
+    
     this.setState(prevState => {
       const newLed = { id: this.state.leds.length, x, y };
       return { leds: [...prevState.leds, newLed] };
@@ -56,10 +56,10 @@ class App extends Component {
   };
 
   setLed = led2set => {
-    const { width, height } = this.state.backImg.imgSize;
+    const { x, y } = led2set;
 
-    led2set.x = led2set.x < 0 ? 0 : led2set.x > width ? width : led2set.x;
-    led2set.y = led2set.y < 0 ? 0 : led2set.y > height ? height : led2set.y;
+    led2set.x = x < 0 ? 0 : x > 1 ? 1 : x;
+    led2set.y = y < 0 ? 0 : y > 1 ? 1 : y;
 
     this.setState(prevState => {
       const updatedLeds = prevState.leds.map(led => {

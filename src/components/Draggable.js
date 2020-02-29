@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Canvas from "./Canvas"
+import Canvas from "./Canvas";
 import App from "../App";
 
 export default class Draggable extends Component {
@@ -52,8 +52,9 @@ export default class Draggable extends Component {
     }
 
     this.setState(
-      function(prevState) {
+      prevState => {
         let led2set = this.props.led;
+
         led2set.x = clientX - prevState.originalX + prevState.lastTranslateX;
         led2set.y = clientY - prevState.originalY + prevState.lastTranslateY;
         this.props.setLed(led2set);
@@ -93,10 +94,10 @@ export default class Draggable extends Component {
   getStyle = () => {
     const { x, y } = this.props.led;
     const { ledSize } = this.props;
-    // const {xScaled, yScaled} = Canvas.fraction2CanvasScale(x, y);
+    const { width, height } = this.props.imgSize;
 
     return {
-      transform: `translate(${x - ledSize / 2}px, ${y - ledSize / 2}px)`,
+      transform: `translate(${x * width - ledSize / 2}px, ${y * height - ledSize / 2}px)`,
       cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
       opacity: `${this.state.isDragging ? "0.8" : "1"}`,
       width: ledSize,
