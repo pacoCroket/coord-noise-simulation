@@ -53,8 +53,10 @@ class App extends Component {
   };
 
   setLed = led2set => {
-    led2set.x = led2set.x < 0 ? 0 : led2set.x > this.state.backImg.imgSize.x ? this.state.backImg.imgSize.x : led2set.x;
-    led2set.y = led2set.y < 0 ? 0 : led2set.y > this.state.backImg.imgSize.y ? this.state.backImg.imgSize.y : led2set.y;
+    const {canvasWidth, canvasHeight} = Canvas.getCanvasSize();
+    
+    led2set.x = led2set.x < 0 ? 0 : led2set.x > canvasWidth ? canvasWidth : led2set.x;
+    led2set.y = led2set.y < 0 ? 0 : led2set.y > canvasHeight ? canvasHeight : led2set.y;
 
     this.setState(prevState => {
       const updatedLeds = prevState.leds.map(led => {

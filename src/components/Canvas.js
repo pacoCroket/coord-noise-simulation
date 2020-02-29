@@ -18,8 +18,8 @@ export default class Canvas extends Component {
 
   static getCanvasSize = () => {
     return {
-      cw: document.getElementById("canvas").width,
-      ch: document.getElementById("canvas").height
+      canvasWidth: document.getElementById("canvas").width,
+      canvasHeight: document.getElementById("canvas").height
     };
   };
 
