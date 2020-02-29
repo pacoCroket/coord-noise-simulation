@@ -28,14 +28,14 @@ export default class Canvas extends Component {
     const { paintMode } = this.props.tooling;
 
     return (
-      <div className="d-flex canvas">
+      <div className="d-flex canvas" 
+      onDoubleClick={this.handleDoubleClick}>
           {/* TODO fit img to screen for all cases */}
         <img
           src={imgUrl}
-          className="img-fluid"
+          className="img-fluid backImg"
           id="canvas"
-          alt="reference leds"
-          onDoubleClick={this.handleDoubleClick}
+          alt="reference for leds"
         ></img>
         {this.props.leds.map(led => (
           <Draggable

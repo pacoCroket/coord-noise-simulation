@@ -47,8 +47,8 @@ class App extends Component {
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
 
     this.setState(prevState => {
-      const newLed = { id: this.state.leds.length + 1, x, y };
-      return {leds: [...prevState.leds, newLed]}
+      const newLed = { id: this.state.leds.length, x, y };
+      return { leds: [...prevState.leds, newLed] };
     });
   };
 
@@ -71,14 +71,13 @@ class App extends Component {
   clickedLed = id => {
     // remove if on 'erase' paintMode
     if (this.state.tooling.paintMode === App.paintModes.erase) {
-      this.setState({ leds: [...this.state.leds.filter(led => led.id !== id)] });
-      // update ID of all LEDs to maintain continuity
-      this.state.leds.forEach((led, index) => {
-        led.id = index;
-      });
-
-      this.setState({
-        leds: [...this.state.leds]
+      this.setState(prevState => {
+        const updatedLeds = prevState.leds.filter(led => led.id !== id);
+        // update ID of all LEDs to maintain continuity
+        updatedLeds.forEach((led, index) => {
+          led.id = index;
+        });
+        return { leds: updatedLeds };
       });
 
       // return true if this LED was deleted
@@ -91,7 +90,7 @@ class App extends Component {
       <div className="App">
         <NavBar id="NavBar"></NavBar>
         <header className="App-header h-100">
-          <div className="container-fluid workspace px-5 py-4">
+          <div className="container-fluid workspace noSel px-5 py-4">
             {/* TODO snap workspace to bottom */}
             <div className="row mx-auto">
               <div className="col-md-auto p-0">

@@ -19,11 +19,14 @@ export default class Draggable extends Component {
   }
 
   handleMouseDown = ({ clientX, clientY }) => {
+    // Skip if paintMode is 'erase'
+    if (this.props.paintMode === App.paintModes.erase) {
+      this.props.clickedLed(this.props.led.id);
+      return;
+    }
+    
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
-
-    // Skip if paintMode is 'erase'
-    if (this.props.paintMode === App.paintModes.erase) return;
 
     if (this.props.onDragStart) {
       this.props.onDragStart();
@@ -65,9 +68,6 @@ export default class Draggable extends Component {
   handleMouseUp = () => {
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
-
-    // if paintMode == 'erase', this LED will be erased and this function returned
-    if (this.props.clickedLed(this.props.led.id)) return;
 
     this.setState(
       {

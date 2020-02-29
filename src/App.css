@@ -37,11 +37,6 @@ body {
   max-height: 100%;
   margin: 0 4rem;
   padding: 0;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -o-user-select: none;
 }
 
 /* End Workspace */
@@ -111,13 +106,7 @@ body {
 }
 
 .backImg {
-  display: flex;
-  position: absolute;
-  background-size: 100% 100%;
-  width: 100%;
-  max-width: auto;
-  height: auto;
-  min-height: 100%;
+  pointer-events: none;
 }
 
 .led {
@@ -149,5 +138,13 @@ code {
 .toolbox-btn {
   height: 80px;
   font-size: 100%;
+}
+
+.noSel {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -o-user-select: none;
 }
 
