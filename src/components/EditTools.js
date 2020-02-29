@@ -4,6 +4,11 @@ import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown, Butto
 import App from "../App";
 
 export default class EditTools extends Component {
+  constructor() {
+    super();
+  }
+
+  getActive = btnName => btnName === this.props.tooling.paintMode
 
   render() {
     const { paintModeChanged } = this.props;
@@ -22,7 +27,8 @@ export default class EditTools extends Component {
               className="btn btn-primary toolbox-btn"
               name="paint"
               id="paintBtn"
-              onClick={paintModeChanged.bind(this, App.paintModes.paint)}
+              onClick={event => paintModeChanged(App.paintModes.paint)}
+              active={this.getActive(App.paintModes.paint)}
             >
               <i className="fas fa-paint-brush"></i>
             </Button>
@@ -30,7 +36,8 @@ export default class EditTools extends Component {
               className="btn btn-primary toolbox-btn"
               name="line"
               id="lineBtn"
-              onClick={paintModeChanged.bind(this, App.paintModes.line)}
+              onClick={event => paintModeChanged(App.paintModes.line)}
+              active={this.getActive(App.paintModes.line)}
             >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
@@ -38,7 +45,8 @@ export default class EditTools extends Component {
               className="btn btn-primary toolbox-btn"
               name="erase"
               id="eraseBtn"
-              onClick={paintModeChanged.bind(this, App.paintModes.erase)}
+              onClick={event => paintModeChanged(App.paintModes.erase)}
+              active={this.getActive(App.paintModes.erase)}
             >
               <i className="fas fa-eraser"></i>
             </Button>
