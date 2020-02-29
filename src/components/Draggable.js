@@ -44,12 +44,13 @@ export default class Draggable extends Component {
       return;
     }
 
-    this.setState( function(prevState) {
+    this.setState(
+      function(prevState) {
         let led2set = this.props.led;
         led2set.x = clientX - prevState.originalX + prevState.lastTranslateX;
         led2set.y = clientY - prevState.originalY + prevState.lastTranslateY;
         this.props.setLed(led2set);
-    },
+      },
       () => {
         if (onDrag) {
           onDrag({
@@ -85,11 +86,10 @@ export default class Draggable extends Component {
     );
   };
 
-  getStyle = (xLim, yLim, ledSize) => {
-    //   limit the x and y between 0 and size of the image
-    let x = this.props.led.x < 0 ? 0 : this.props.led.x > xLim ? xLim : this.props.led.x;
-    let y = this.props.led.y < 0 ? 0 : this.props.led.y > yLim ? yLim : this.props.led.y;
-    
+  getStyle = () => {
+    const { x, y } = this.props.led;
+    const { ledSize } = this.props;
+
     return {
       transform: `translate(${x - ledSize / 2}px, ${y - ledSize / 2}px)`,
       cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
@@ -100,25 +100,10 @@ export default class Draggable extends Component {
   };
 
   render() {
-    const { x, y } = this.props.imgSize;
-
     return (
-      <div
-        className="led"
-        onMouseDown={this.handleMouseDown}
-        style={this.getStyle(x, y, this.props.ledSize)}
-      >
+      <div className="led" onMouseDown={this.handleMouseDown} style={this.getStyle()}>
         <p className="m-0">{this.props.led.id}</p>
       </div>
     );
   }
 }
-
-const Container = styled.div.attrs({
-  style: ({ x, y, isDragging }) => ({
-    left: `${x}px`,
-    top: `${y}px`,
-    cursor: `${isDragging ? "grabbing" : "grab"}`,
-    opacity: `${isDragging && "0.8"}`
-  })
-});

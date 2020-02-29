@@ -39,7 +39,6 @@ export default class EditTools extends Component {
               name="erase"
               id="eraseBtn"
               onClick={paintModeChanged.bind(this, App.paintModes.erase)}
-              active
             >
               <i className="fas fa-eraser"></i>
             </Button>
