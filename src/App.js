@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import leds from "./data/ledsData"
+import leds from "./data/ledsData";
 
 class App extends Component {
   static paintModes = {
@@ -19,7 +19,7 @@ class App extends Component {
       imgSize: { x: 1200, y: 200 }
     },
     tooling: {
-      paintMode: App.paintModes.erase
+      paintMode: App.paintModes.paint
     },
     displayProps: {
       ledSize: 50
@@ -42,32 +42,29 @@ class App extends Component {
     this.setState({ tooling: { paintMode } });
   };
 
-  addLed = e => {
-    console.log(e);
+  addLed = ({ x, y }) => {
     // do nothing if paintMode == 'erase'
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
-    const newLed = {
-      id: `${this.state.leds.length + 1}`,
-      x: 0,
-      y: 0
-    };
 
-    this.setState({ leds: [...this.state.leds, newLed] });
+    this.setState(prevState => {
+      const newLed = { id: this.state.leds.length + 1, x, y };
+      return {leds: [...prevState.leds, newLed]}
+    });
   };
 
   setLed = led2set => {
     led2set.x = led2set.x < 0 ? 0 : led2set.x > this.state.backImg.imgSize.x ? this.state.backImg.imgSize.x : led2set.x;
     led2set.y = led2set.y < 0 ? 0 : led2set.y > this.state.backImg.imgSize.y ? this.state.backImg.imgSize.y : led2set.y;
-    
-    this.setState({
-      leds: [
-        ...this.state.leds.map(led => {
-          if (led.id === led2set.id) {
-            led = led2set;
-          }
-          return led;
-        })
-      ]
+
+    this.setState(prevState => {
+      const updatedLeds = prevState.leds.map(led => {
+        if (led.id === led2set.id) {
+          led = led2set;
+        }
+        return led;
+      });
+
+      return { leds: updatedLeds };
     });
   };
 

@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import Draggable from "./Draggable";
 
 export default class Canvas extends Component {
+    constructor() {
+        super();
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    }
   setStyle = () => {
     console.log(document.getElementById("canvas").height());
     if (document.getElementById("canvas").height() > document.getElementById("canvas").width()) {
@@ -11,6 +15,12 @@ export default class Canvas extends Component {
       return { width: 100 + "%", height: "auto" };
     }
   };
+
+  handleDoubleClick = ({ clientX, clientY }) => {
+      const x = clientX - document.getElementById("canvas").getBoundingClientRect().left;
+      const y = clientY - document.getElementById("canvas").getBoundingClientRect().top;
+    this.props.addLed({ x , y });
+  }
 
   render() {
     const { ledSize } = this.props.displayProps;
@@ -25,7 +35,7 @@ export default class Canvas extends Component {
           className="img-fluid"
           id="canvas"
           alt="reference leds"
-          onDoubleClick={this.props.addLed.bind(this)}
+          onDoubleClick={this.handleDoubleClick}
         ></img>
         {this.props.leds.map(led => (
           <Draggable
