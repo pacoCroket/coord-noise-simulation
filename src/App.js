@@ -16,7 +16,7 @@ class App extends Component {
   state = {
     backImg: {
       imgUrl: "https://via.placeholder.com/800x200",
-      imgSize: { x: 800, y: 200 }
+      imgSize: { width: 800, height: 200 }
     },
     tooling: {
       paintMode: App.paintModes.paint
@@ -27,15 +27,18 @@ class App extends Component {
     leds: leds
   };
 
-  onImgAdded = (img, imgUrl) => {
-    // console.log(img);
-    this.setState({
-      backImg: {
-        imgUrl,
-        imgSize: { x: 1200, y: 200 }
-      }
+  onImgAdded = imgUrl => {
+    this.setState(prevState => {
+      prevState.backImg.imgUrl = imgUrl;
+      return prevState;
     });
-    // document.getElementById("canvas").src = imgUrl;
+  };
+
+  onImgLoaded = img => {
+    this.setState(prevState => {
+      prevState.backImg.imgSize = { width: img.width, height: img.height };
+      return prevState;
+    });
   };
 
   paintModeChanged = paintMode => {
@@ -53,10 +56,10 @@ class App extends Component {
   };
 
   setLed = led2set => {
-    const {canvasWidth, canvasHeight} = Canvas.getCanvasSize();
-    
-    led2set.x = led2set.x < 0 ? 0 : led2set.x > canvasWidth ? canvasWidth : led2set.x;
-    led2set.y = led2set.y < 0 ? 0 : led2set.y > canvasHeight ? canvasHeight : led2set.y;
+    const { width, height } = this.state.backImg.imgSize;
+
+    led2set.x = led2set.x < 0 ? 0 : led2set.x > width ? width : led2set.x;
+    led2set.y = led2set.y < 0 ? 0 : led2set.y > height ? height : led2set.y;
 
     this.setState(prevState => {
       const updatedLeds = prevState.leds.map(led => {
@@ -109,6 +112,7 @@ class App extends Component {
                   leds={this.state.leds}
                   tooling={this.state.tooling}
                   backImg={this.state.backImg}
+                  onImgLoaded={this.onImgLoaded}
                   displayProps={this.state.displayProps}
                   addLed={this.addLed}
                   clickedLed={this.clickedLed}

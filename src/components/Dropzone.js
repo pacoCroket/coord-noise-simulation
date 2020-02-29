@@ -14,11 +14,10 @@ export default class Dropzone extends Component {
   onFilesAdded = evt => {
     if (this.props.disabled) return;
     const img = evt.target.files.item(0);
-
     var reader = new FileReader();
 
     reader.onload = e => {
-      this.props.onImgAdded(img, e.target.result);
+      this.props.onImgAdded(e.target.result);
     };
     reader.readAsDataURL(img);
   };

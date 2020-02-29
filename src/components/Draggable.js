@@ -93,10 +93,10 @@ export default class Draggable extends Component {
   getStyle = () => {
     const { x, y } = this.props.led;
     const { ledSize } = this.props;
-    const {xScaled, yScaled} = Canvas.fraction2CanvasScale(x, y);
+    // const {xScaled, yScaled} = Canvas.fraction2CanvasScale(x, y);
 
     return {
-      transform: `translate(${xScaled - ledSize / 2}px, ${yScaled - ledSize / 2}px)`,
+      transform: `translate(${x - ledSize / 2}px, ${y - ledSize / 2}px)`,
       cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
       opacity: `${this.state.isDragging ? "0.8" : "1"}`,
       width: ledSize,

@@ -34,10 +34,6 @@ export default class Canvas extends Component {
     return {fractionX: x/canvasWidth, fractionY: y/canvasHeight}
   }
 
-  handleResize = (e) => {
-    console.log(e.target)
-  }
-
   getRelativePos = ({ clientX, clientY }) => {
     const { cx, cy } = Canvas.getCanvasPos();
     const x = clientX - cx;
@@ -99,16 +95,12 @@ export default class Canvas extends Component {
 
     // add the single first tempLed if paintMode === 'paint'
     if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
-      // scale position to fraction within the canvas
-      const {fractionX, fractionY} = Canvas.canvasScale2Fraction(this.state.tempLeds[0].x, this.state.tempLeds[0].y);
-
-      this.props.addLed({ x: fractionX, y: fractionY});
+      
+      this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
     } else if (this.props.tooling.paintMode === App.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach(led => {
-        const {fractionX, fractionY} = Canvas.canvasScale2Fraction(led.x, led.y);
-
-        this.props.addLed({ x: fractionX, y: fractionY });
+        this.props.addLed({ x: led.x, y: led.y });
       });
     }
 
@@ -125,16 +117,20 @@ export default class Canvas extends Component {
   // unelegant way of letting 'isDragging' stick for a bit longer
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
+  handleImgageLoad = (e) => {
+    this.props.onImgLoaded(e.target);
+  }
+
   render() {
     const { ledSize } = this.props.displayProps;
     const { imgUrl, imgSize } = this.props.backImg;
     const { paintMode } = this.props.tooling;
 
     return (
-      <div className="d-flex canvas" onMouseDown={this.handleMouseDown} onResize={this.handleResize}>
+      <div className="d-flex canvas" onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
 
-        <img src={imgUrl} className="img-fluid backImg" id="canvas" alt="reference for leds"></img>
+        <img src={imgUrl} className="img-fluid backImg" onLoad={this.handleImgageLoad} id="canvas" alt="reference for leds"></img>
 
         {/* Show current LEDs */}
         {this.props.leds.map(led => (
@@ -175,5 +171,6 @@ export default class Canvas extends Component {
 Canvas.propTypes = {
   backImg: PropTypes.object,
   tooling: PropTypes.object.isRequired,
-  leds: PropTypes.array.isRequired
+  leds: PropTypes.array.isRequired,
+  onImgLoaded: PropTypes.func.isRequired
 };
