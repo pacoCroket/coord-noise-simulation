@@ -89,6 +89,7 @@ export default class Draggable extends Component {
     //   limit the x and y between 0 and size of the image
     let x = this.props.led.x < 0 ? 0 : this.props.led.x > xLim ? xLim : this.props.led.x;
     let y = this.props.led.y < 0 ? 0 : this.props.led.y > yLim ? yLim : this.props.led.y;
+    
     return {
       transform: `translate(${x - ledSize / 2}px, ${y - ledSize / 2}px)`,
       cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,

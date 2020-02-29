@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar";
 import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
 import "bootstrap/dist/css/bootstrap.min.css";
+import leds from "./data/ledsData"
 
 class App extends Component {
   static paintModes = {
@@ -23,38 +24,7 @@ class App extends Component {
     displayProps: {
       ledSize: 50
     },
-    leds: [
-      {
-        id: 0,
-        x: 800,
-        y: 150
-      },
-      {
-        id: 1,
-        x: 43,
-        y: 45
-      },
-      {
-        id: 2,
-        x: 43,
-        y: 45
-      },
-      {
-        id: 3,
-        x: 105,
-        y: 15
-      },
-      {
-        id: 4,
-        x: 250,
-        y: 0
-      },
-      {
-        id: 5,
-        x: 500,
-        y: 300
-      }
-    ]
+    leds: leds
   };
 
   onImgAdded = (img, imgUrl) => {
@@ -88,7 +58,7 @@ class App extends Component {
   setLed = led2set => {
     led2set.x = led2set.x < 0 ? 0 : led2set.x > this.state.backImg.imgSize.x ? this.state.backImg.imgSize.x : led2set.x;
     led2set.y = led2set.y < 0 ? 0 : led2set.y > this.state.backImg.imgSize.y ? this.state.backImg.imgSize.y : led2set.y;
-    console.log(led2set)
+    
     this.setState({
       leds: [
         ...this.state.leds.map(led => {
