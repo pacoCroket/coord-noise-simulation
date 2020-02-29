@@ -72,19 +72,22 @@ class App extends Component {
     this.setState({ tooling: { paintMode } });
   };
 
-  addLed = ({ x, y }) => {
+  addLed = e => {
+    console.log(e);
     // do nothing if paintMode == 'erase'
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
     const newLed = {
       id: `${this.state.leds.length + 1}`,
-      x,
-      y
+      x: 0,
+      y: 0
     };
 
     this.setState({ leds: [...this.state.leds, newLed] });
   };
 
   setLed = led2set => {
+    led2set.x = led2set.x < 0 ? 0 : led2set.x > this.state.backImg.imgSize.x ? this.state.backImg.imgSize.x : led2set.x;
+    led2set.y = led2set.y < 0 ? 0 : led2set.y > this.state.backImg.imgSize.y ? this.state.backImg.imgSize.y : led2set.y;
     console.log(led2set)
     this.setState({
       leds: [

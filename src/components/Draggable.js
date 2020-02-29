@@ -44,13 +44,21 @@ export default class Draggable extends Component {
       return;
     }
 
-    let led2set = this.props.led;
-    // if (this.prevState) {
-      led2set.x = clientX - this.prevState.originalX + this.prevState.lastTranslateX;
-      led2set.y = clientY - this.prevState.originalY + this.prevState.lastTranslateY;
-    // }
-
-    this.props.setLed(led2set);
+    this.setState( function(prevState) {
+        let led2set = this.props.led;
+        led2set.x = clientX - prevState.originalX + prevState.lastTranslateX;
+        led2set.y = clientY - prevState.originalY + prevState.lastTranslateY;
+        this.props.setLed(led2set);
+    },
+      () => {
+        if (onDrag) {
+          onDrag({
+            translateX: this.state.this.props.led.x,
+            translateY: this.state.this.props.led.y
+          });
+        }
+      }
+    );
   };
 
   handleMouseUp = () => {
@@ -94,7 +102,11 @@ export default class Draggable extends Component {
     const { x, y } = this.props.imgSize;
 
     return (
-      <div className="led" onMouseDown={this.handleMouseDown} style={this.getStyle(x, y, this.props.ledSize)}>
+      <div
+        className="led"
+        onMouseDown={this.handleMouseDown}
+        style={this.getStyle(x, y, this.props.ledSize)}
+      >
         <p className="m-0">{this.props.led.id}</p>
       </div>
     );

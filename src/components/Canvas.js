@@ -25,7 +25,7 @@ export default class Canvas extends Component {
           className="img-fluid"
           id="canvas"
           alt="reference leds"
-          onClick={this.props.addLed}
+          onDoubleClick={this.props.addLed.bind(this)}
         ></img>
         {this.props.leds.map(led => (
           <Draggable
