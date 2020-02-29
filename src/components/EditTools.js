@@ -4,19 +4,9 @@ import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown, Butto
 import App from "../App";
 
 export default class EditTools extends Component {
-  getStyle = isActive => {
-    console.log(isActive);
-    return {
-      background: isActive ? "rgb(239, 255, 220)" : "none"
-    };
-  };
 
   render() {
-    const {
-      tooling: { paintMode },
-      paintModeChanged
-    } = this.props;
-    console.log(paintMode);
+    const { paintModeChanged } = this.props;
 
     return (
       <div className="d-flex flex-column editTools">
@@ -24,16 +14,33 @@ export default class EditTools extends Component {
         <div className="Card">
           <Dropzone onImgAdded={this.props.onImgAdded} />
         </div>
+        <div className="mx-auto">{this.props.tooling.paintMode}</div>
 
         <ButtonToolbar className="btn-toolbar mx-auto">
-          <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="options" defaultValue={1}>
-            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.paint)}>
+          <ToggleButtonGroup className="mx-auto px-2 w-100" vertical type="radio" name="toolbar">
+            <Button
+              className="btn btn-primary toolbox-btn"
+              name="paint"
+              id="paintBtn"
+              onClick={paintModeChanged.bind(this, App.paintModes.paint)}
+            >
               <i className="fas fa-paint-brush"></i>
             </Button>
-            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.line)}>
+            <Button
+              className="btn btn-primary toolbox-btn"
+              name="line"
+              id="lineBtn"
+              onClick={paintModeChanged.bind(this, App.paintModes.line)}
+            >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
-            <Button className="btn btn-primary toolbox-btn" onClick={paintModeChanged.bind(this, App.paintModes.erase)}>
+            <Button
+              className="btn btn-primary toolbox-btn"
+              name="erase"
+              id="eraseBtn"
+              onClick={paintModeChanged.bind(this, App.paintModes.erase)}
+              active
+            >
               <i className="fas fa-eraser"></i>
             </Button>
           </ToggleButtonGroup>
