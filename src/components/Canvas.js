@@ -6,7 +6,7 @@ import App from "../App";
 export default class Canvas extends Component {
   constructor() {
     super();
-    this.state = { isDragging: false, isDraggingLed: false, tempLeds: [{}] };
+    this.state = { isDragging: false, isDraggingLed: false, tempLeds: [] };
   }
 
   static getCanvasPos = () => {
@@ -39,7 +39,8 @@ export default class Canvas extends Component {
     const x = clientX - cx;
     const y = clientY - cy;
 
-    this.setState({ tempLeds: [{ id: 0, x, y }] });
+    if (this.props.tooling.paintMode !== App.paintModes.erase)
+      this.setState({ tempLeds: [{ id: 0, x, y }] });
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
@@ -47,8 +48,6 @@ export default class Canvas extends Component {
 
     // append new Leds to tempLeds and update their pos
     if (this.props.tooling.paintMode === App.paintModes.line && this.state.tempLeds[0]) {
-      console.log(this.state.tempLeds);
-
       const { cx, cy } = Canvas.getCanvasPos();
       const dX = clientX - cx - this.state.tempLeds[0].x;
       const dY = clientY - cy - this.state.tempLeds[0].y;
@@ -61,11 +60,9 @@ export default class Canvas extends Component {
         let fract = (j * this.props.displayProps.ledSize) / dist;
         let x = this.state.tempLeds[0].x + dX * fract;
         let y = this.state.tempLeds[0].y + dY * fract;
-        tempLeds.push({ id: j, x, y });
+        tempLeds.push({ id: this.props.leds.length+j, x, y });
         // this.props.addLed({x, y});
       }
-      console.log(tempLeds);
-
       this.setState({ tempLeds });
     }
   };
@@ -104,7 +101,24 @@ export default class Canvas extends Component {
 
         <img src={imgUrl} className="img-fluid backImg" id="canvas" alt="reference for leds"></img>
 
+        {/* Show current LEDs */}
         {this.props.leds.map(led => (
+          <Draggable
+            className="mx-auto"
+            key={led.id}
+            paintMode={paintMode}
+            led={led}
+            imgSize={imgSize}
+            ledSize={ledSize}
+            clickedLed={this.props.clickedLed}
+            setLed={this.props.setLed}
+            onDragStart={this.onDragStart}
+            onDragEnd={this.onDragEnd}
+          ></Draggable>
+        ))}
+
+        {/* Show tempLeds */}
+        {this.state.tempLeds.map(led => (
           <Draggable
             className="mx-auto"
             key={led.id}

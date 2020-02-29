@@ -13,6 +13,7 @@ export default class EditTools extends Component {
 
   handleChange = event => {
     const { value } = event.target;
+    if (value == undefined) return;
     this.props.paintModeChanged(value);
   };
 
