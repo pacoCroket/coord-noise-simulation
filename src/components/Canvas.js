@@ -27,11 +27,11 @@ export default class Canvas extends Component {
     }
   };
 
-  setLed = (led) => {    
+  setLed = led => {
     // TODO this led could be already relative to the canvas, not window
     const { x, y } = this.getRelativeFractionPos({ clientX: led.x, clientY: led.y });
     this.props.setLed(x, y);
-  }
+  };
 
   handleMouseDown = ({ clientX, clientY }) => {
     window.addEventListener("mousemove", this.handleMouseMove);
@@ -39,7 +39,7 @@ export default class Canvas extends Component {
 
     if (this.props.tooling.paintMode !== App.paintModes.erase && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
-      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true});
+      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true });
     }
   };
 
@@ -61,11 +61,14 @@ export default class Canvas extends Component {
 
         // fit LEDs between original mouseDown and current mouse position
         for (var j = 0; j < fittingCount; j++) {
-          let fract = (j * this.props.displayProps.ledSize) / dist;
-          let newX = this.state.tempLeds[0].x * width + dX * fract;
-          let newY = this.state.tempLeds[0].y * height + dY * fract;
           // scale back down to fractional coordinates
-          tempLeds.push({ id: this.props.leds.length + j, x: newX/width, y: newY/height });
+          let fract = (j * this.props.displayProps.ledSize) / dist;
+          let newX = (this.state.tempLeds[0].x * width + dX * fract) / width;
+          let newY = (this.state.tempLeds[0].y * height + dY * fract) / height;
+          // skip if out of canvas
+          if (newX < 0 || newX > 1 || newY < 0 || newY > 1) continue;
+
+          tempLeds.push({ id: this.props.leds.length + j, x: newX, y: newY });
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
