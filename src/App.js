@@ -50,6 +50,10 @@ class App extends Component {
     this.setState({ tooling: { paintMode } });
   };
 
+  ledSizeChanged = ledSize => {
+    this.setState({ displayProps: {ledSize} });
+  };
+
   addLed = ({ x, y }) => {
     // do nothing if paintMode == 'erase'
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
@@ -108,6 +112,7 @@ class App extends Component {
                   tooling={this.state.tooling}
                   onImgAdded={this.onImgAdded}
                   paintModeChanged={this.paintModeChanged}
+                  ledSizeChanged={this.ledSizeChanged}
                 ></EditTools>
               </div>
               {/* TODO vertical divider */}

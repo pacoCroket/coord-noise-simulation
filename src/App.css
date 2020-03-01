@@ -113,12 +113,16 @@ body {
   position: absolute;
   z-index: 999 !important;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.253);
   background: firebrick;
   text-align: center;
+  font-size: 1.5rem;
 }
 
 /* End canvas */

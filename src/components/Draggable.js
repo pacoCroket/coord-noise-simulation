@@ -98,7 +98,7 @@ export default class Draggable extends Component {
     return {
       transform: `translate(${x * width - ledSize / 2}px, ${y * height - ledSize / 2}px)`,
       cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
-      opacity: `${this.state.isDragging ? "0.8" : "1"}`,
+      opacity: `${this.state.isDragging ? "0.5" : "0.8"}`,
       width: ledSize,
       height: ledSize
     };
