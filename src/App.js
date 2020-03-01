@@ -98,12 +98,12 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <NavBar id="NavBar"></NavBar>
-        <header className="App-header h-100">
-          <div className="container-fluid workspace noSel px-5 py-4">
+      <div className="App" id="app">
+      <NavBar id="NavBar"></NavBar>
+        {/* <header className="App-header"> */}
+          <div className="container-fluid workspace noSel">
             {/* TODO snap workspace to bottom */}
-            <div className="row mx-auto">
+            <div className="row container-fluid">
               <div className="col-md-auto p-0">
                 <EditTools
                   leds={this.state.leds}
@@ -115,7 +115,7 @@ class App extends Component {
               </div>
               {/* TODO vertical divider */}
               <div className="col-1 p-0"></div>
-              <div className="col p-0">
+              <div className="col p-0 my-auto">
                 <Canvas
                   leds={this.state.leds}
                   tooling={this.state.tooling}
@@ -129,7 +129,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-        </header>
+        {/* </header> */}
       </div>
     );
   }

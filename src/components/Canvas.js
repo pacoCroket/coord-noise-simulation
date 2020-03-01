@@ -9,6 +9,17 @@ export default class Canvas extends Component {
     this.state = { isDragging: false, isDraggingLed: false, tempLeds: [] };
   }
 
+  // Update image dimensions when resizing window
+  updateDimensions = () => {
+    this.props.onImgLoaded(document.getElementById("canvas"));
+  };
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
   getRelativeFractionPos = ({ clientX, clientY }) => {
     const { imgX, imgY } = this.props.backImg.imgPos;
     // scale x and y to be fractions of the image
@@ -18,12 +29,11 @@ export default class Canvas extends Component {
     return { x, y };
   };
 
-  setStyle = () => {
-    console.log(document.getElementById("canvas").height());
-    if (document.getElementById("canvas").height() > document.getElementById("canvas").width()) {
-      return { height: 100 + "%", width: "auto" };
+  setImgStyle = () => {
+    if (this.props.backImg.imgSize.height > this.props.backImg.imgSize.width) {
+      return { height: '100%', width: 'auto' };
     } else {
-      return { width: 100 + "%", height: "auto" };
+      return { width: '100%', height: 'auto' };
     }
   };
 
@@ -47,7 +57,7 @@ export default class Canvas extends Component {
     this.setState({ isDragging: true });
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
-      const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
+      let { x, y } = this.getRelativeFractionPos({ clientX, clientY });
       const { width, height } = this.props.backImg.imgSize;
 
       // append new Leds to tempLeds and update their pos
@@ -73,6 +83,9 @@ export default class Canvas extends Component {
         // add the calculated leds to state
         this.setState({ tempLeds });
       } else if (this.props.tooling.paintMode === App.paintModes.paint) {
+        // constrain to canvas
+        x = x < 0 ? 0 : x > 1 ? 1 : x;
+        y = y < 0 ? 0 : y > 1 ? 1 : y;
         this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
       }
     }
@@ -114,44 +127,52 @@ export default class Canvas extends Component {
     const { paintMode } = this.props.tooling;
 
     return (
-      <div className="d-flex canvas" onMouseDown={this.handleMouseDown}>
+      <div className="canvas" onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
+        <div className="d-flex">
+          <img
+            src={imgUrl}
+            className="img-fluid backImg"
+            style={this.setImgStyle()}
+            onLoad={this.handleImgageLoad}
+            id="canvas"
+            alt="reference for leds"
+          ></img>
 
-        <img src={imgUrl} className="img-fluid backImg" onLoad={this.handleImgageLoad} id="canvas" alt="reference for leds"></img>
+          {/* Show current LEDs */}
+          {this.props.leds.map(led => (
+            <Draggable
+              className=""
+              key={led.id}
+              paintMode={paintMode}
+              isDragging={this.state.isDragging}
+              led={led}
+              imgSize={imgSize}
+              ledSize={ledSize}
+              clickedLed={this.props.clickedLed}
+              setLed={this.setLed}
+              onDragStart={this.onDragStart}
+              onDragEnd={this.onDragEnd}
+            ></Draggable>
+          ))}
 
-        {/* Show current LEDs */}
-        {this.props.leds.map(led => (
-          <Draggable
-            className="mx-auto"
-            key={led.id}
-            paintMode={paintMode}
-            isDragging={this.state.isDragging}
-            led={led}
-            imgSize={imgSize}
-            ledSize={ledSize}
-            clickedLed={this.props.clickedLed}
-            setLed={this.setLed}
-            onDragStart={this.onDragStart}
-            onDragEnd={this.onDragEnd}
-          ></Draggable>
-        ))}
-
-        {/* Show tempLeds */}
-        {this.state.tempLeds.map(led => (
-          <Draggable
-            className="mx-auto"
-            key={led.id}
-            paintMode={paintMode}
-            isDragging={this.state.isDragging}
-            led={led}
-            imgSize={imgSize}
-            ledSize={ledSize}
-            clickedLed={this.props.clickedLed}
-            setLed={this.props.setLed}
-            onDragStart={this.onDragStart}
-            onDragEnd={this.onDragEnd}
-          ></Draggable>
-        ))}
+          {/* Show tempLeds */}
+          {this.state.tempLeds.map(led => (
+            <Draggable
+              className=""
+              key={led.id}
+              paintMode={paintMode}
+              isDragging={this.state.isDragging}
+              led={led}
+              imgSize={imgSize}
+              ledSize={ledSize}
+              clickedLed={this.props.clickedLed}
+              setLed={this.props.setLed}
+              onDragStart={this.onDragStart}
+              onDragEnd={this.onDragEnd}
+            ></Draggable>
+          ))}
+        </div>
       </div>
     );
   }
