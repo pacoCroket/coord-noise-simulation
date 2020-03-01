@@ -46,7 +46,7 @@ export default class Canvas extends Component {
 
     if (this.props.tooling.paintMode !== App.paintModes.erase && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
-      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
+      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true});
     }
   };
 
@@ -126,6 +126,7 @@ export default class Canvas extends Component {
             className="mx-auto"
             key={led.id}
             paintMode={paintMode}
+            isDragging={this.state.isDragging}
             led={led}
             imgSize={imgSize}
             ledSize={ledSize}
@@ -142,6 +143,7 @@ export default class Canvas extends Component {
             className="mx-auto"
             key={led.id}
             paintMode={paintMode}
+            isDragging={this.state.isDragging}
             led={led}
             imgSize={imgSize}
             ledSize={ledSize}

@@ -1,8 +1,12 @@
 import React, { Component } from "react";
-import Canvas from "./Canvas";
 import App from "../App";
 
 export default class Draggable extends Component {
+  // all coordinates in this component state are
+  // stored as fractions within the canvas (0-1)
+  // Every time { clientX, clientY } is used, it is scaled
+  // with this.props.imgSize
+
   constructor(props) {
     super();
     this.state = {
@@ -22,6 +26,8 @@ export default class Draggable extends Component {
   }
 
   handleMouseDown = ({ clientX, clientY }) => {
+    const { width, height } = this.props.imgSize;
+
     // Skip if paintMode is 'erase'
     if (this.props.paintMode === App.paintModes.erase) {
       this.props.clickedLed(this.props.led.id);
@@ -37,37 +43,30 @@ export default class Draggable extends Component {
     }
 
     this.setState({
-      originalX: clientX,
-      originalY: clientY,
+      originalX: clientX / width,
+      originalY: clientY / height,
       isDragging: true
     });
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
     const { isDragging } = this.state;
-    const { onDrag } = this.props;
+    // const { onDrag } = this.props;
+    const { width, height } = this.props.imgSize;
 
     if (!isDragging) {
       return;
     }
 
-    this.setState(
-      prevState => {
-        let led2set = this.props.led;
+    this.setState(prevState => {
+      let led2set = this.props.led;
 
-        led2set.x = clientX - prevState.originalX + prevState.lastTranslateX;
-        led2set.y = clientY - prevState.originalY + prevState.lastTranslateY;
-        this.props.setLed(led2set);
-      },
-      () => {
-        if (onDrag) {
-          onDrag({
-            translateX: this.state.this.props.led.x,
-            translateY: this.state.this.props.led.y
-          });
-        }
-      }
-    );
+      led2set.x = clientX / width - prevState.originalX + prevState.lastTranslateX;
+      led2set.y = clientY / height - prevState.originalY + prevState.lastTranslateY;
+      // constrain values
+      led2set.x = led2set.x < 0 ? 0 : led2set.x > 1 ? 1 : led2set.x;
+      led2set.y = led2set.y < 0 ? 0 : led2set.y > 1 ? 1 : led2set.y;
+    });
   };
 
   handleMouseUp = () => {

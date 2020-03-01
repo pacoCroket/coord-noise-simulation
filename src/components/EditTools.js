@@ -1,19 +1,15 @@
 import React, { Component } from "react";
 import Dropzone from "./Dropzone";
-import { ToggleButtonGroup, ButtonGroup, Button, DropdownButton, Dropdown, ButtonToolbar } from "react-bootstrap";
+import { ToggleButtonGroup, Button, ButtonToolbar } from "react-bootstrap";
 import App from "../App";
 import PropTypes from "prop-types";
 
 export default class EditTools extends Component {
-  constructor() {
-    super();
-  }
-
   getActive = btnName => btnName === this.props.tooling.paintMode;
 
   handleChange = event => {
     const { value } = event.target;
-    if (value == undefined) return;
+    if (value === undefined) return;
     this.props.paintModeChanged(value);
   };
 
