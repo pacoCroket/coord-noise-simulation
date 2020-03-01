@@ -16,7 +16,8 @@ class App extends Component {
   state = {
     backImg: {
       imgUrl: "https://via.placeholder.com/800x200",
-      imgSize: { width: 800, height: 200 }
+      imgSize: { width: 800, height: 200 },
+      imgPos: { imgX: 0, imgY: 0 }
     },
     tooling: {
       paintMode: App.paintModes.paint
@@ -37,6 +38,10 @@ class App extends Component {
   onImgLoaded = img => {
     this.setState(prevState => {
       prevState.backImg.imgSize = { width: img.width, height: img.height };
+      prevState.backImg.imgPos = {
+        imgX: document.getElementById("canvas").getBoundingClientRect().left,
+        imgY: document.getElementById("canvas").getBoundingClientRect().top
+      };
       return prevState;
     });
   };
@@ -48,7 +53,7 @@ class App extends Component {
   addLed = ({ x, y }) => {
     // do nothing if paintMode == 'erase'
     if (this.state.tooling.paintMode === App.paintModes.erase) return;
-    
+
     this.setState(prevState => {
       const newLed = { id: this.state.leds.length, x, y };
       return { leds: [...prevState.leds, newLed] };

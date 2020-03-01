@@ -9,19 +9,12 @@ export default class Canvas extends Component {
     this.state = { isDragging: false, isDraggingLed: false, tempLeds: [] };
   }
 
-  static getCanvasPos = () => {
-    return {
-      cx: document.getElementById("canvas").getBoundingClientRect().left,
-      cy: document.getElementById("canvas").getBoundingClientRect().top
-    };
-  };
-
   getRelativeFractionPos = ({ clientX, clientY }) => {
-    const { cx, cy } = Canvas.getCanvasPos();
+    const { imgX, imgY } = this.props.backImg.imgPos;
     // scale x and y to be fractions of the image
     const { width, height } = this.props.backImg.imgSize;
-    const x = (clientX - cx) / width;
-    const y = (clientY - cy) / height;
+    const x = (clientX - imgX) / width;
+    const y = (clientY - imgY) / height;
     return { x, y };
   };
 
@@ -55,11 +48,13 @@ export default class Canvas extends Component {
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
+      const { width, height } = this.props.backImg.imgSize;
 
       // append new Leds to tempLeds and update their pos
       if (this.props.tooling.paintMode === App.paintModes.line) {
-        const dX = x - this.state.tempLeds[0].x;
-        const dY = y - this.state.tempLeds[0].y;
+        // scale fractional coordinates back to 'regular' coordinates
+        const dX = (x - this.state.tempLeds[0].x) * width;
+        const dY = (y - this.state.tempLeds[0].y) * height;
         const dist = Math.sqrt(dX * dX + dY * dY);
         const fittingCount = dist / this.props.displayProps.ledSize;
         let tempLeds = [];
@@ -67,9 +62,10 @@ export default class Canvas extends Component {
         // fit LEDs between original mouseDown and current mouse position
         for (var j = 0; j < fittingCount; j++) {
           let fract = (j * this.props.displayProps.ledSize) / dist;
-          let newX = this.state.tempLeds[0].x + dX * fract;
-          let newY = this.state.tempLeds[0].y + dY * fract;
-          tempLeds.push({ id: this.props.leds.length + j, x: newX, y: newY });
+          let newX = this.state.tempLeds[0].x * width + dX * fract;
+          let newY = this.state.tempLeds[0].y * height + dY * fract;
+          // scale back down to fractional coordinates
+          tempLeds.push({ id: this.props.leds.length + j, x: newX/width, y: newY/height });
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
