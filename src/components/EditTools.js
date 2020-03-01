@@ -10,6 +10,7 @@ export default class EditTools extends Component {
   getActive = btnName => btnName === this.props.tooling.paintMode;
 
   handlePaintChange = event => {
+    // TODO BUG sometimes value == undefined
     const { value } = event.target;
     if (value === undefined) return;
     this.props.paintModeChanged(value);
@@ -19,15 +20,25 @@ export default class EditTools extends Component {
     this.props.ledSizeChanged(value);
   };
 
+  getOutput = () => {
+    let value = "";
+    this.props.leds.forEach(led => {
+      value += `${led.id}: ${led.x.toFixed(2)}, ${led.y.toFixed(2)}\n`;
+    });
+    return value;
+  };
+
   render() {
+    const { leds, onImgAdded, tooling } = this.props;
+
     return (
       <div className="d-flex flex-column editTools">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
-        <div className="Card">
-          <Dropzone onImgAdded={this.props.onImgAdded} />
+        <div className="Card mx-auto">
+          <Dropzone onImgAdded={onImgAdded} />
         </div>
 
-        <h4 className="mx-auto">{this.props.tooling.paintMode}</h4>
+        <h4 className="mx-auto">{tooling.paintMode}</h4>
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
             <Button
@@ -62,6 +73,7 @@ export default class EditTools extends Component {
 
         <div className="mx-4">
           <h4 className="mx-auto">LED size</h4>
+          {/* TODO feature to estimate real LED size */}
           <Slider
             onChange={this.handleSliderChange}
             ValueLabelComponent={ValueLabelComponent}
@@ -70,6 +82,22 @@ export default class EditTools extends Component {
             min={0}
             max={100}
           />
+          <hr className="my-2"></hr>
+
+          <h4 className="mx-auto">Output</h4>
+          <textarea
+            value={this.getOutput()}
+            className="outputField"
+            id="ouputField"
+            placeholder="output"
+            cols={12}
+            rows={8}
+            readOnly
+          ></textarea>
+
+          {/* <Button className="btn btn-primary toolbox-btn w-100 mx-auto" value="output" id="output" onClick={this.handleOutput}>
+            <i className="fas fa-microchip"></i>
+          </Button> */}
         </div>
       </div>
     );

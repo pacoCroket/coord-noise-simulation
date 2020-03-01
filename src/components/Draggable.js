@@ -58,15 +58,15 @@ export default class Draggable extends Component {
       return;
     }
 
-    this.setState(prevState => {
-      let led2set = this.props.led;
+    let led2set = this.props.led;
 
-      led2set.x = clientX / width - prevState.originalX + prevState.lastTranslateX;
-      led2set.y = clientY / height - prevState.originalY + prevState.lastTranslateY;
-      // constrain values
-      led2set.x = led2set.x < 0 ? 0 : led2set.x > 1 ? 1 : led2set.x;
-      led2set.y = led2set.y < 0 ? 0 : led2set.y > 1 ? 1 : led2set.y;
-    });
+    led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
+    led2set.y = clientY / height - this.state.originalY + this.state.lastTranslateY;
+    // constrain values
+    led2set.x = led2set.x < 0 ? 0 : led2set.x > 1 ? 1 : led2set.x;
+    led2set.y = led2set.y < 0 ? 0 : led2set.y > 1 ? 1 : led2set.y;
+
+    this.props.setLed(led2set);
   };
 
   handleMouseUp = () => {

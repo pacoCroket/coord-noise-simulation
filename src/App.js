@@ -67,9 +67,6 @@ class App extends Component {
   setLed = led2set => {
     const { x, y } = led2set;
 
-    led2set.x = x < 0 ? 0 : x > 1 ? 1 : x;
-    led2set.y = y < 0 ? 0 : y > 1 ? 1 : y;
-
     this.setState(prevState => {
       const updatedLeds = prevState.leds.map(led => {
         if (led.id === led2set.id) {
@@ -109,6 +106,7 @@ class App extends Component {
             <div className="row mx-auto">
               <div className="col-md-auto p-0">
                 <EditTools
+                  leds={this.state.leds}
                   tooling={this.state.tooling}
                   onImgAdded={this.onImgAdded}
                   paintModeChanged={this.paintModeChanged}
@@ -117,7 +115,7 @@ class App extends Component {
               </div>
               {/* TODO vertical divider */}
               <div className="col-1 p-0"></div>
-              <div className="col p-0 my-auto">
+              <div className="col p-0">
                 <Canvas
                   leds={this.state.leds}
                   tooling={this.state.tooling}
