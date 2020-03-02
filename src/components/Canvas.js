@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Draggable from "./Draggable";
 import App from "../App";
 import Image from 'react-bootstrap/Image'
+import Utilities from "../Utilities";
 
 export default class Canvas extends Component {
   constructor() {
@@ -86,8 +87,8 @@ export default class Canvas extends Component {
         this.setState({ tempLeds });
       } else if (this.props.tooling.paintMode === App.paintModes.paint) {
         // constrain to canvas
-        x = x < 0 ? 0 : x > 1 ? 1 : x;
-        y = y < 0 ? 0 : y > 1 ? 1 : y;
+        x = Utilities.constrain(x, 0, 1);
+        y = Utilities.constrain(y, 0, 1);
         this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
       }
     }

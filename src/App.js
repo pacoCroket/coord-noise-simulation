@@ -130,6 +130,7 @@ class App extends Component {
               <EditTools
                 leds={this.state.leds}
                 tooling={this.state.tooling}
+                imgSize={this.state.backImg.imgSize}
                 onImgAdded={this.onImgAdded}
                 paintModeChanged={this.paintModeChanged}
                 ledSizeChanged={this.ledSizeChanged}

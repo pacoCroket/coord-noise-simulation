@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import App from "../App";
+import Utilities from "../Utilities";
 
 export default class Draggable extends Component {
   // all coordinates in this component state are
@@ -63,8 +64,8 @@ export default class Draggable extends Component {
     led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
     led2set.y = clientY / height - this.state.originalY + this.state.lastTranslateY;
     // constrain values
-    led2set.x = led2set.x < 0 ? 0 : led2set.x > 1 ? 1 : led2set.x;
-    led2set.y = led2set.y < 0 ? 0 : led2set.y > 1 ? 1 : led2set.y;
+    led2set.x = Utilities.constrain(led2set.x, 0, 1);
+    led2set.y = Utilities.constrain(led2set.y, 0, 1);
 
     this.props.setLed(led2set);
   };

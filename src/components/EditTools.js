@@ -5,6 +5,7 @@ import App from "../App";
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
+import Utilities from "../Utilities";
 
 export default class EditTools extends Component {
   constructor(props) {
@@ -25,17 +26,40 @@ export default class EditTools extends Component {
     this.props.ledSizeChanged(value);
   };
 
-  handleOutputScaling = (value) => {
+  handleOutputScaling = value => {
     this.setState({ outputScaling: value });
     this.props.outputScalingChanged(parseInt(value));
   };
 
   getOutput = () => {
     const { outputScaling } = this.props.tooling;
-    let array = [];
-    // TODO maintain w/h relationship
+    const { width, height } = this.props.imgSize;
+
+    let xMin = outputScaling;
+    let yMin = outputScaling;
+    let xMax = 0;
+    let yMax = 0;
+
     this.props.leds.forEach(led => {
-      array.push(`{${(led.x * outputScaling).toFixed(0)}, ${(led.y * outputScaling).toFixed(0)}}`);
+      if (led.x > xMax) xMax = led.x;
+      if (led.y > yMax) yMax = led.y;
+      if (led.x < xMin) xMin = led.x;
+      if (led.y < yMin) yMin = led.y;
+    });
+
+    // maintain w/h relationship. Values are still fractions
+    let widthActual = (xMax - xMin) * width; // scale up to real values
+    let heightActual = (yMax - yMin) * height;
+    let widthRefactor = widthActual > heightActual ? 1 : (widthActual / heightActual); // scale back down to fractions
+    let heightRefactor = heightActual > widthActual ? 1 : (heightActual / widthActual);
+
+    // const scaleFactor = Math.max(xMax - xMin, yMax - yMin) / outputScaling;
+
+    let array = [];
+    // TODO
+    this.props.leds.forEach(led => {
+      array.push(
+        `{${Utilities.map(led.x, xMin, xMax, 0, outputScaling*widthRefactor).toFixed(0)}, ${Utilities.map(led.y, yMin, yMax, 0, outputScaling*heightRefactor).toFixed(0)}}`);
     });
     return `{${array.join(", ")}}`;
   };
@@ -98,7 +122,7 @@ export default class EditTools extends Component {
 
           <textarea
             value={this.state.outputScaling}
-            onChange={ e=> this.handleOutputScaling(e.target.value.replace(/\D/g,''))}
+            onChange={e => this.handleOutputScaling(e.target.value.replace(/\D/g, ""))}
             cols={12}
             rows={1}
             className="outputField"
