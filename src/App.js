@@ -5,6 +5,7 @@ import EditTools from "./components/EditTools.js";
 import Canvas from "./components/Canvas.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import leds from "./data/ledsData";
+import * as firebase from "firebase";
 
 class App extends Component {
   constructor() {
@@ -27,10 +28,18 @@ class App extends Component {
       leds: leds
     };
   }
+
   static paintModes = {
     paint: "paint",
     line: "line",
     erase: "erase"
+  };
+
+  componentDidMount = () => {
+    const rootRef = firebase
+      .database()
+      .ref()
+      .child("react");
   };
 
   onImgAdded = imgUrl => {
