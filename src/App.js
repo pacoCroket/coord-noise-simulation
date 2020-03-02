@@ -12,8 +12,8 @@ class App extends Component {
 
     this.state = {
       backImg: {
-        imgUrl: "https://via.placeholder.com/800x200",
-        imgSize: { width: 800, height: 200 },
+        imgUrl: "https://via.placeholder.com/900x500",
+        imgSize: { width: 900, height: 500 },
         imgPos: { imgX: 0, imgY: 0 }
       },
       tooling: {
@@ -64,11 +64,11 @@ class App extends Component {
   };
 
   paintModeChanged = paintMode => {
-    this.setState({ tooling: { paintMode } });
+    this.setState(prevState => (prevState.tooling.paintMode = paintMode));
   };
 
   ledSizeChanged = ledSize => {
-    this.setState({ displayProps: { ledSize } });
+    this.setState(prevState => prevState.displayProps.ledSize = ledSize);
   };
 
   addLed = ({ x, y }) => {
