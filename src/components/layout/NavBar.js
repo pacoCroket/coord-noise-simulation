@@ -1,20 +1,33 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import SignedInLinks from "./SignedInLinks";
+import SignedOutLinks from "./SignedOutLinks";
 
 class NavBar extends Component {
   render() {
     return (
       <div className="navbar navbar-expand-md navbar-light bg-faded">
         {/* Brand */}
-        <a className="navbar-brand mr-5" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank" rel="noopener noreferrer">
+        <a
+          className="navbar-brand mr-5"
+          href="https://github.com/pacoCroket/coord-noise-simulation"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           By Paco Croket
         </a>
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="navbarSupportedContent">
           {/* start items */}
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link to="/" className="nav-link">
                 Project
-              </a>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/" className="nav-link">
+                About
+              </Link>
             </li>
             {/* Edit dropdown */}
             <li className="nav-item dropdown">
@@ -48,7 +61,12 @@ class NavBar extends Component {
         {/* Center */}
         {/* TODO make really in center of window */}
         <div className="mx-auto order-0">
-          <a className="navbar-brand mx-auto" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank" rel="noopener noreferrer">
+          <a
+            className="navbar-brand mx-auto"
+            href="https://github.com/pacoCroket/coord-noise-simulation"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Noise2LED
           </a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
@@ -59,14 +77,15 @@ class NavBar extends Component {
         {/* Right */}
         <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent">
           {/* start items */}
-          <ul className="navbar-nav ml-auto">
-            {/* User profile */}
+          <SignedInLinks/>
+          <SignedOutLinks/>
+          {/* <ul className="navbar-nav ml-auto">
             <li className="nav-item user-profile">
               <a className="nav-link" href="#">
                 User Profile
               </a>
             </li>
-          </ul>
+          </ul> */}
         </div>
       </div>
     );

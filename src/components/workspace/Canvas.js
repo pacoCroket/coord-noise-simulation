@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Draggable from "./Draggable";
-import App from "../App";
+import App from "../../App";
 import Image from 'react-bootstrap/Image'
-import Utilities from "../Utilities";
+import Utilities from "../../Utilities";
 
 export default class Canvas extends Component {
   constructor() {

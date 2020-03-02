@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Dropzone from "./Dropzone";
 import { ToggleButtonGroup, Button, ButtonToolbar } from "react-bootstrap";
-import App from "../App";
+import App from "../../App";
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
-import Utilities from "../Utilities";
+import Utilities from "../../Utilities";
 
 export default class EditTools extends Component {
   constructor(props) {

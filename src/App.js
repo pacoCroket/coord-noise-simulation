@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
-import NavBar from "./components/NavBar";
-import EditTools from "./components/EditTools.js";
-import Canvas from "./components/Canvas.js";
+import NavBar from "./components/layout/NavBar";
+import About from "./components/layout/About";
+import Workspace from "./components/workspace/Workspace";
 import "bootstrap/dist/css/bootstrap.min.css";
 import leds from "./data/ledsData";
 import * as firebase from "firebase";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import SingIn from "./components/auth/SingIn";
 
 class App extends Component {
   constructor() {
@@ -36,10 +38,10 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    const rootRef = firebase
-      .database()
-      .ref()
-      .child("react");
+    // const rootRef = firebase
+    //   .database()
+    //   .ref()
+    //   .child("react");
   };
 
   onImgAdded = imgUrl => {
@@ -126,45 +128,34 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" id="app">
-        <header>
-          <NavBar id="NavBar"></NavBar>
-        </header>
-        {/* <header className="App-header mh-100"> */}
-        {/* <div className="workspace noSel"> */}
-        {/* TODO snap workspace to bottom */}
-        <div className="workspace">
-          <div className="row noSel mw-100 h-100 mx-0 ">
-            <div className="col-md-auto px-4">
-              <EditTools
-                leds={this.state.leds}
-                tooling={this.state.tooling}
-                imgSize={this.state.backImg.imgSize}
-                onImgAdded={this.onImgAdded}
-                paintModeChanged={this.paintModeChanged}
-                ledSizeChanged={this.ledSizeChanged}
-                outputScalingChanged={this.outputScalingChanged}
-              ></EditTools>
-            </div>
-            {/* TODO vertical divider */}
-            <div className="col-1 p-0"></div>
-            <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
-              <Canvas
-                leds={this.state.leds}
-                tooling={this.state.tooling}
-                backImg={this.state.backImg}
-                onImgLoaded={this.onImgLoaded}
-                displayProps={this.state.displayProps}
-                addLed={this.addLed}
-                clickedLed={this.clickedLed}
-                setLed={this.setLed}
-              ></Canvas>
-            </div>
-          </div>
+      <BrowserRouter>
+        <div className="App" id="app">
+          <header>
+            <NavBar id="NavBar" />
+          </header>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              component={Workspace}
+              leds={this.state.leds}
+              tooling={this.state.tooling}
+              onImgAdded={this.onImgAdded}
+              paintModeChanged={this.paintModeChanged}
+              ledSizeChanged={this.ledSizeChanged}
+              outputScalingChanged={this.outputScalingChanged}
+              backImg={this.state.backImg}
+              onImgLoaded={this.onImgLoaded}
+              displayProps={this.state.displayProps}
+              addLed={this.addLed}
+              clickedLed={this.clickedLed}
+              setLed={this.setLed}
+            />
+            <Route path="/about" component={About} />
+            <Route path="/signin" component={SingIn} />
+          </Switch>
         </div>
-        {/* </div> */}
-        {/* </header> */}
-      </div>
+      </BrowserRouter>
     );
   }
 }
