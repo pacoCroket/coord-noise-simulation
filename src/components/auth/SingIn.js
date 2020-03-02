@@ -10,12 +10,13 @@ export default class SingIn extends Component {
   };
 
   handleSubmit = e => {
-    console.log(e);
+    e.preventDefault();
+    console.log(e)
   };
 
   render() {
     return (
-      <div className="container">
+      <div className="container my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
           <h5>Sing In</h5>
           <Form.Group controlId="formBasicEmail">

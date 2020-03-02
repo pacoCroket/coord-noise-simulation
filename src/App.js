@@ -8,6 +8,7 @@ import leds from "./data/ledsData";
 import * as firebase from "firebase";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import SingIn from "./components/auth/SingIn";
+import SingUp from "./components/auth/SingUp";
 
 class App extends Component {
   constructor() {
@@ -153,6 +154,7 @@ class App extends Component {
             />
             <Route path="/about" component={About} />
             <Route path="/signin" component={SingIn} />
+            <Route path="/signup" component={SingUp} />
           </Switch>
         </div>
       </BrowserRouter>

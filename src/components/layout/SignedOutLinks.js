@@ -18,11 +18,11 @@ export default class SignedOutLinks extends Component {
             Profile
           </a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <NavLink to="/" className="dropdown-item">
+            <NavLink to="/signup" className="dropdown-item">
               Sing Up
             </NavLink>
 
-            <NavLink to="/" className="dropdown-item">
+            <NavLink to="/signin" className="dropdown-item">
               Log In
             </NavLink>
           </div>
