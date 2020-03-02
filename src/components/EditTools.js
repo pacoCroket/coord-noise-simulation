@@ -7,6 +7,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 
 export default class EditTools extends Component {
+  constructor(props) {
+    super();
+    this.state = { outputScaling: props.tooling.outputScaling };
+  }
+
   getActive = btnName => btnName === this.props.tooling.paintMode;
 
   handlePaintChange = event => {
@@ -20,13 +25,19 @@ export default class EditTools extends Component {
     this.props.ledSizeChanged(value);
   };
 
+  handleOutputScaling = (value) => {
+    this.setState({ outputScaling: value });
+    this.props.outputScalingChanged(parseInt(value));
+  };
+
   getOutput = () => {
     const { outputScaling } = this.props.tooling;
     let array = [];
+    // TODO maintain w/h relationship
     this.props.leds.forEach(led => {
       array.push(`{${(led.x * outputScaling).toFixed(0)}, ${(led.y * outputScaling).toFixed(0)}}`);
     });
-    return `{${array.join(', ')}}`;
+    return `{${array.join(", ")}}`;
   };
 
   render() {
@@ -84,6 +95,14 @@ export default class EditTools extends Component {
             max={100}
           />
           <hr className="my-2"></hr>
+
+          <textarea
+            value={this.state.outputScaling}
+            onChange={ e=> this.handleOutputScaling(e.target.value.replace(/\D/g,''))}
+            cols={12}
+            rows={1}
+            className="outputField"
+          ></textarea>
 
           <h4 className="mx-auto">Output</h4>
           <textarea

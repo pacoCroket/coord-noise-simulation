@@ -68,7 +68,11 @@ class App extends Component {
   };
 
   ledSizeChanged = ledSize => {
-    this.setState(prevState => prevState.displayProps.ledSize = ledSize);
+    this.setState(prevState => (prevState.displayProps.ledSize = ledSize));
+  };
+
+  outputScalingChanged = outputScaling => {
+    this.setState(prevState => (prevState.tooling.outputScaling = outputScaling));
   };
 
   addLed = ({ x, y }) => {
@@ -129,6 +133,7 @@ class App extends Component {
                 onImgAdded={this.onImgAdded}
                 paintModeChanged={this.paintModeChanged}
                 ledSizeChanged={this.ledSizeChanged}
+                outputScalingChanged={this.outputScalingChanged}
               ></EditTools>
             </div>
             {/* TODO vertical divider */}
