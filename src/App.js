@@ -127,7 +127,7 @@ class App extends Component {
         {/* <div className="workspace noSel"> */}
         {/* TODO snap workspace to bottom */}
         <div className="workspace">
-          <div className="row noSel mw-100 mx-0 ">
+          <div className="row noSel mw-100 h-100 mx-0 ">
             <div className="col-md-auto px-4">
               <EditTools
                 leds={this.state.leds}

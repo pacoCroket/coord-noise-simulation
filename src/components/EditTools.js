@@ -74,8 +74,8 @@ export default class EditTools extends Component {
           <Dropzone onImgAdded={onImgAdded} />
         </div>
 
-        <h4 className="mx-auto">{tooling.paintMode}</h4>
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
+        <h4 className="mx-auto">{tooling.paintMode}</h4>
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
             <Button
               className="btn btn-primary toolbox-btn"
@@ -120,7 +120,7 @@ export default class EditTools extends Component {
           />
           <hr className="my-2"></hr>
 
-          <h4 className="mx-auto">Scale</h4>
+          <h4 className="mx-auto">Scale out</h4>
           <textarea
             value={this.state.outputScaling}
             onChange={e => this.handleOutputScaling(e.target.value.replace(/\D/g, ""))}
@@ -136,7 +136,7 @@ export default class EditTools extends Component {
             id="ouputField"
             placeholder="output"
             cols={12}
-            rows={8}
+            rows={5}
             readOnly
           ></textarea>
 
