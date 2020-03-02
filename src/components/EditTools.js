@@ -120,6 +120,7 @@ export default class EditTools extends Component {
           />
           <hr className="my-2"></hr>
 
+          <h4 className="mx-auto">Scale</h4>
           <textarea
             value={this.state.outputScaling}
             onChange={e => this.handleOutputScaling(e.target.value.replace(/\D/g, ""))}
@@ -135,7 +136,7 @@ export default class EditTools extends Component {
             id="ouputField"
             placeholder="output"
             cols={12}
-            rows={10}
+            rows={8}
             readOnly
           ></textarea>
 

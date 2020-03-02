@@ -130,7 +130,7 @@ export default class Canvas extends Component {
     const { paintMode } = this.props.tooling;
 
     return (
-      <div className="canvas" onMouseDown={this.handleMouseDown}>
+      <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <Image
