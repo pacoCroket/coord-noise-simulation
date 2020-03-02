@@ -5,7 +5,7 @@ class NavBar extends Component {
     return (
       <div className="navbar navbar-expand-md navbar-light bg-faded">
         {/* Brand */}
-        <a className="navbar-brand mr-5" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank">
+        <a className="navbar-brand mr-5" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank" rel="noopener noreferrer">
           By Paco Croket
         </a>
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="navbarSupportedContent">
@@ -48,7 +48,7 @@ class NavBar extends Component {
         {/* Center */}
         {/* TODO make really in center of window */}
         <div className="mx-auto order-0">
-          <a className="navbar-brand mx-auto" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank">
+          <a className="navbar-brand mx-auto" href="https://github.com/pacoCroket/coord-noise-simulation" target="_blank" rel="noopener noreferrer">
             Noise2LED
           </a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">

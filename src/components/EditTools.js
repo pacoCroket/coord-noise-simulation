@@ -65,7 +65,7 @@ export default class EditTools extends Component {
   };
 
   render() {
-    const { leds, onImgAdded, tooling } = this.props;
+    const { onImgAdded, tooling } = this.props;
 
     return (
       <div className="d-flex flex-column editTools">

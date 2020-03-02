@@ -86,8 +86,6 @@ class App extends Component {
   };
 
   setLed = led2set => {
-    const { x, y } = led2set;
-
     this.setState(prevState => {
       const updatedLeds = prevState.leds.map(led => {
         if (led.id === led2set.id) {
