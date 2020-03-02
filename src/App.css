@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 #root {
@@ -16,14 +16,15 @@ body {
 /* NAVBAR */
 .navbar {
   background-color: whitesmoke;
+  z-index: 999 !important;
 }
 
 /* APP */
 
 .App {
   height: 100%;
-  background-color: #282c34;  background-color: #282c34;
   color: white;
+  background-color: #1b1e24;
 }
 
 /* NavBar */
@@ -34,12 +35,21 @@ body {
 /* End NavBar */
 /* Workspace */
 .workspace {
-  margin: 4rem;
-  /* padding: 3rem; */
-  display: flex;
+  background-color: #282c34;
+  /* position: absolute; */
+  /* bottom:0; */
+  margin: 2rem 2rem;
+  /* max-height: 100%; */
+  /* align-items: stretch; */
+  /* padding: 3rem 0; */
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   font-size: calc(10px + 2vmin);
+}
+
+.paintArea {  
+  max-height: 100%;
 }
 
 /* End Workspace */
@@ -94,7 +104,8 @@ body {
 }
 
 .outputField {
-  /* height: 200px; */
+  /* height: 300px; */
+  resize: none;
   /* width: 110px; */
   font-size: 1rem;
 }

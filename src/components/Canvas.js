@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Draggable from "./Draggable";
 import App from "../App";
+import Image from 'react-bootstrap/Image'
 
 export default class Canvas extends Component {
   constructor() {
@@ -29,11 +30,12 @@ export default class Canvas extends Component {
     return { x, y };
   };
 
+  // useless
   setImgStyle = () => {
-    if (this.props.backImg.imgSize.height > this.props.backImg.imgSize.width) {
-      return { height: '100%', width: 'auto' };
-    } else {
-      return { width: '100%', height: 'auto' };
+    if (this.props.backImg.imgSize.height > 800) {
+      return { height: '800px', width: 'auto' };
+    } else if (this.props.backImg.imgSize.width > 1200) {
+      return { width: '1200px', height: 'auto' };
     }
   };
 
@@ -130,14 +132,15 @@ export default class Canvas extends Component {
       <div className="canvas" onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
-          <img
+          <Image
             src={imgUrl}
             className="img-fluid backImg"
-            style={this.setImgStyle()}
+            // style={this.setImgStyle()}
             onLoad={this.handleImgageLoad}
             id="canvas"
             alt="reference for leds"
-          ></img>
+            fluid={true}
+          ></Image>
 
           {/* Show current LEDs */}
           {this.props.leds.map(led => (

@@ -7,25 +7,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import leds from "./data/ledsData";
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      backImg: {
+        imgUrl: "https://via.placeholder.com/800x200",
+        imgSize: { width: 800, height: 200 },
+        imgPos: { imgX: 0, imgY: 0 }
+      },
+      tooling: {
+        paintMode: App.paintModes.paint,
+        outputScaling: 255
+      },
+      displayProps: {
+        ledSize: 50,
+        workspaceSize: { width: 800, height: 600 }
+      },
+      leds: leds
+    };
+  }
   static paintModes = {
     paint: "paint",
     line: "line",
     erase: "erase"
-  };
-
-  state = {
-    backImg: {
-      imgUrl: "https://via.placeholder.com/800x200",
-      imgSize: { width: 800, height: 200 },
-      imgPos: { imgX: 0, imgY: 0 }
-    },
-    tooling: {
-      paintMode: App.paintModes.paint
-    },
-    displayProps: {
-      ledSize: 50
-    },
-    leds: leds
   };
 
   onImgAdded = imgUrl => {
@@ -37,10 +42,22 @@ class App extends Component {
 
   onImgLoaded = img => {
     this.setState(prevState => {
-      prevState.backImg.imgSize = { width: img.width, height: img.height };
+      let { width, height } = img;
+      const paintAreaWidth = document.getElementById("paintArea").getBoundingClientRect().width;
+      const paintAreaHeight = document.getElementById("paintArea").getBoundingClientRect().height;
+
+      width = width > paintAreaWidth ? paintAreaWidth : width;
+      height = height > paintAreaHeight ? paintAreaHeight : height;
+
+      // constrain
+      prevState.backImg.imgSize = { width, height };
       prevState.backImg.imgPos = {
         imgX: document.getElementById("canvas").getBoundingClientRect().left,
         imgY: document.getElementById("canvas").getBoundingClientRect().top
+      };
+      prevState.displayProps.workspaceSize = {
+        width: paintAreaWidth,
+        height: paintAreaHeight
       };
       return prevState;
     });
@@ -51,7 +68,7 @@ class App extends Component {
   };
 
   ledSizeChanged = ledSize => {
-    this.setState({ displayProps: {ledSize} });
+    this.setState({ displayProps: { ledSize } });
   };
 
   addLed = ({ x, y }) => {
@@ -99,36 +116,38 @@ class App extends Component {
   render() {
     return (
       <div className="App" id="app">
-      <NavBar id="NavBar"></NavBar>
-        {/* <header className="App-header"> */}
-          <div className="container-fluid workspace noSel">
-            {/* TODO snap workspace to bottom */}
-            <div className="row container-fluid">
-              <div className="col-md-auto p-0">
-                <EditTools
-                  leds={this.state.leds}
-                  tooling={this.state.tooling}
-                  onImgAdded={this.onImgAdded}
-                  paintModeChanged={this.paintModeChanged}
-                  ledSizeChanged={this.ledSizeChanged}
-                ></EditTools>
-              </div>
-              {/* TODO vertical divider */}
-              <div className="col-1 p-0"></div>
-              <div className="col p-0 my-auto">
-                <Canvas
-                  leds={this.state.leds}
-                  tooling={this.state.tooling}
-                  backImg={this.state.backImg}
-                  onImgLoaded={this.onImgLoaded}
-                  displayProps={this.state.displayProps}
-                  addLed={this.addLed}
-                  clickedLed={this.clickedLed}
-                  setLed={this.setLed}
-                ></Canvas>
-              </div>
+        <NavBar id="NavBar"></NavBar>
+        {/* <header className="App-header mh-100"> */}
+        {/* <div className="workspace noSel"> */}
+        {/* TODO snap workspace to bottom */}
+        <div className="workspace">
+          <div className="row noSel mw-100">
+            <div className="col-md-auto px-4">
+              <EditTools
+                leds={this.state.leds}
+                tooling={this.state.tooling}
+                onImgAdded={this.onImgAdded}
+                paintModeChanged={this.paintModeChanged}
+                ledSizeChanged={this.ledSizeChanged}
+              ></EditTools>
+            </div>
+            {/* TODO vertical divider */}
+            <div className="col-1 p-0"></div>
+            <div className="col p-0 my-auto paintArea" id="paintArea">
+              <Canvas
+                leds={this.state.leds}
+                tooling={this.state.tooling}
+                backImg={this.state.backImg}
+                onImgLoaded={this.onImgLoaded}
+                displayProps={this.state.displayProps}
+                addLed={this.addLed}
+                clickedLed={this.clickedLed}
+                setLed={this.setLed}
+              ></Canvas>
             </div>
           </div>
+        </div>
+        {/* </div> */}
         {/* </header> */}
       </div>
     );

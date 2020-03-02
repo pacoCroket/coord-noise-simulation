@@ -21,11 +21,12 @@ export default class EditTools extends Component {
   };
 
   getOutput = () => {
-    let value = "";
+    const { outputScaling } = this.props.tooling;
+    let array = [];
     this.props.leds.forEach(led => {
-      value += `${led.id}: ${led.x.toFixed(2)}, ${led.y.toFixed(2)}\n`;
+      array.push(`{${(led.x * outputScaling).toFixed(0)}, ${(led.y * outputScaling).toFixed(0)}}`);
     });
-    return value;
+    return `{${array.join(', ')}}`;
   };
 
   render() {
@@ -91,7 +92,7 @@ export default class EditTools extends Component {
             id="ouputField"
             placeholder="output"
             cols={12}
-            rows={8}
+            rows={10}
             readOnly
           ></textarea>
 
