@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import App from "../../App";
-import Utilities from "../../Utilities";
+import Utilities from "../../Utils";
 
 export default class Draggable extends Component {
   // all coordinates in this component state are

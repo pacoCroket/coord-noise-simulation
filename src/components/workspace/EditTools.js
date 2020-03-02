@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import Dropzone from "./Dropzone";
 import { ToggleButtonGroup, Button, ButtonToolbar } from "react-bootstrap";
-import App from "../../App";
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
-import Utilities from "../../Utilities";
+import Utils from "../../Utils";
 
 export default class EditTools extends Component {
   constructor(props) {
@@ -59,7 +58,7 @@ export default class EditTools extends Component {
     // TODO
     this.props.leds.forEach(led => {
       array.push(
-        `{${Utilities.map(led.x, xMin, xMax, 0, outputScaling*widthRefactor).toFixed(0)}, ${Utilities.map(led.y, yMin, yMax, 0, outputScaling*heightRefactor).toFixed(0)}}`);
+        `{${Utils.map(led.x, xMin, xMax, 0, outputScaling*widthRefactor).toFixed(0)}, ${Utils.map(led.y, yMin, yMax, 0, outputScaling*heightRefactor).toFixed(0)}}`);
     });
     return `{${array.join(", ")}}`;
   };
@@ -79,28 +78,28 @@ export default class EditTools extends Component {
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
             <Button
               className="btn btn-primary toolbox-btn"
-              value={App.paintModes.paint}
+              value={Utils.paintModes.paint}
               id="paintBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.paint)}
+              active={this.getActive(Utils.paintModes.paint)}
             >
               <i className="fas fa-paint-brush"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              value={App.paintModes.line}
+              value={Utils.paintModes.line}
               id="lineBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.line)}
+              active={this.getActive(Utils.paintModes.line)}
             >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              value={App.paintModes.erase}
+              value={Utils.paintModes.erase}
               id="eraseBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.erase)}
+              active={this.getActive(Utils.paintModes.erase)}
             >
               <i className="fas fa-eraser"></i>
             </Button>

@@ -1,6 +1,12 @@
 // TODO just import all p5.js library or add create Vector library
 
-class Utilities {
+class Utils {
+  static paintModes = {
+    paint: "paint",
+    line: "line",
+    erase: "erase"
+  };
+  
   /**
    * Re-maps a number from one range to another.
    * <br><br>
@@ -43,4 +49,4 @@ class Utilities {
   };
 }
 
-export default Utilities;
+export default Utils;

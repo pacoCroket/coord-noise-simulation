@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Draggable from "./Draggable";
-import App from "../../App";
 import Image from 'react-bootstrap/Image'
-import Utilities from "../../Utilities";
+import Utils from "../../Utils";
 
 export default class Canvas extends Component {
   constructor() {
@@ -50,7 +49,7 @@ export default class Canvas extends Component {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
-    if (this.props.tooling.paintMode !== App.paintModes.erase && !this.state.isDraggingLed) {
+    if (this.props.tooling.paintMode !== Utils.paintModes.erase && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
       this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true });
     }
@@ -64,18 +63,18 @@ export default class Canvas extends Component {
       const { width, height } = this.props.backImg.imgSize;
 
       // append new Leds to tempLeds and update their pos
-      if (this.props.tooling.paintMode === App.paintModes.line) {
+      if (this.props.tooling.paintMode === Utils.paintModes.line) {
         // scale fractional coordinates back to 'regular' coordinates
         const dX = (x - this.state.tempLeds[0].x) * width;
         const dY = (y - this.state.tempLeds[0].y) * height;
         const dist = Math.sqrt(dX * dX + dY * dY);
-        const fittingCount = dist / this.props.displayProps.ledSize;
+        const fittingCount = dist / this.props.tooling.ledSize;
         let tempLeds = [];
 
         // fit LEDs between original mouseDown and current mouse position
         for (var j = 0; j < fittingCount; j++) {
           // scale back down to fractional coordinates
-          let fract = (j * this.props.displayProps.ledSize) / dist;
+          let fract = (j * this.props.tooling.ledSize) / dist;
           let newX = (this.state.tempLeds[0].x * width + dX * fract) / width;
           let newY = (this.state.tempLeds[0].y * height + dY * fract) / height;
           // skip if out of canvas
@@ -85,10 +84,10 @@ export default class Canvas extends Component {
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
-      } else if (this.props.tooling.paintMode === App.paintModes.paint) {
+      } else if (this.props.tooling.paintMode === Utils.paintModes.paint) {
         // constrain to canvas
-        x = Utilities.constrain(x, 0, 1);
-        y = Utilities.constrain(y, 0, 1);
+        x = Utils.constrain(x, 0, 1);
+        y = Utils.constrain(y, 0, 1);
         this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
       }
     }
@@ -99,9 +98,9 @@ export default class Canvas extends Component {
     window.removeEventListener("mouseup", this.handleMouseUp);
 
     // add the single first tempLed if paintMode === 'paint'
-    if (this.props.tooling.paintMode === App.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
+    if (this.props.tooling.paintMode === Utils.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
       this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
-    } else if (this.props.tooling.paintMode === App.paintModes.line) {
+    } else if (this.props.tooling.paintMode === Utils.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach(led => {
         this.props.addLed({ x: led.x, y: led.y });
@@ -125,9 +124,9 @@ export default class Canvas extends Component {
   };
 
   render() {
-    const { ledSize } = this.props.displayProps;
     const { imgUrl, imgSize } = this.props.backImg;
-    const { paintMode } = this.props.tooling;
+    const { paintMode, ledSize } = this.props.tooling;
+    const { leds } = this.props.leds;
 
     return (
       <div onMouseDown={this.handleMouseDown}>
@@ -144,7 +143,7 @@ export default class Canvas extends Component {
           ></Image>
 
           {/* Show current LEDs */}
-          {this.props.leds.map(led => (
+          {leds&&this.props.leds.map(led => (
             <Draggable
               className=""
               key={led.id}

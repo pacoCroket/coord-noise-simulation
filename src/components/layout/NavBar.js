@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 
@@ -20,14 +20,14 @@ class NavBar extends Component {
           {/* start items */}
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to="/" className="nav-link">
+              <NavLink to="/" className="nav-link">
                 Project
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link to="/" className="nav-link">
+              <NavLink to="/" className="nav-link">
                 About
-              </Link>
+              </NavLink>
             </li>
             {/* Edit dropdown */}
             <li className="nav-item dropdown">

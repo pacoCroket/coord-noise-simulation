@@ -27,7 +27,7 @@ export default class SignedInLinks extends Component {
             </NavLink>
 
             <div className="dropdown-divider"></div>
-            <NavLink to="/" className="dropdown-item btn btn-default">
+            <NavLink to="/" className="dropdown-item">
               {/* <Image src="holder.js/171x180" roundedCircle /> */}
               FC
             </NavLink>
