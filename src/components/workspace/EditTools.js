@@ -5,17 +5,21 @@ import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 import Utils from "../../Utils";
+import { connect } from "react-redux";
 
-export default class EditTools extends Component {
+class EditTools extends Component {
   constructor(props) {
     super();
-    this.state = { outputScaling: props.tooling.outputScaling };
+    this.state = { outputScaling: 255 };
   }
 
-  getActive = btnName => btnName === this.props.tooling.paintMode;
-
   handlePaintChange = event => {
-    // TODO BUG sometimes value == undefined
+    // remove active state from other buttons
+    var active = document.getElementsByClassName("toolbox-btn active");
+    active && (active[0].className = active[0].className.replace(" active", ""));
+    // set this button to active
+    event.target.className += " active";
+
     const { value } = event.target;
     if (value === undefined) return;
     this.props.paintModeChanged(value);
@@ -31,8 +35,8 @@ export default class EditTools extends Component {
   };
 
   getOutput = () => {
-    const { outputScaling } = this.props.tooling;
     const { width, height } = this.props.imgSize;
+    const { outputScaling } = this.state;
 
     let xMin = outputScaling;
     let yMin = outputScaling;
@@ -49,8 +53,8 @@ export default class EditTools extends Component {
     // maintain w/h relationship. Values are still fractions
     let widthActual = (xMax - xMin) * width; // scale up to real values
     let heightActual = (yMax - yMin) * height;
-    let widthRefactor = widthActual > heightActual ? 1 : (widthActual / heightActual); // scale back down to fractions
-    let heightRefactor = heightActual > widthActual ? 1 : (heightActual / widthActual);
+    let widthRefactor = widthActual > heightActual ? 1 : widthActual / heightActual; // scale back down to fractions
+    let heightRefactor = heightActual > widthActual ? 1 : heightActual / widthActual;
 
     // const scaleFactor = Math.max(xMax - xMin, yMax - yMin) / outputScaling;
 
@@ -58,13 +62,20 @@ export default class EditTools extends Component {
     // TODO
     this.props.leds.forEach(led => {
       array.push(
-        `{${Utils.map(led.x, xMin, xMax, 0, outputScaling*widthRefactor).toFixed(0)}, ${Utils.map(led.y, yMin, yMax, 0, outputScaling*heightRefactor).toFixed(0)}}`);
+        `{${Utils.map(led.x, xMin, xMax, 0, outputScaling * widthRefactor).toFixed(0)}, ${Utils.map(
+          led.y,
+          yMin,
+          yMax,
+          0,
+          outputScaling * heightRefactor
+        ).toFixed(0)}}`
+      );
     });
     return `{${array.join(", ")}}`;
   };
 
   render() {
-    const { onImgAdded, tooling } = this.props;
+    const { onImgAdded, paintMode } = this.props;
 
     return (
       <div className="d-flex flex-column editTools">
@@ -74,14 +85,13 @@ export default class EditTools extends Component {
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
-        <h4 className="mx-auto">{tooling.paintMode}</h4>
+          <h4 className="mx-auto">{paintMode}</h4>
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
             <Button
-              className="btn btn-primary toolbox-btn"
+              className="btn btn-primary toolbox-btn active"
               value={Utils.paintModes.paint}
               id="paintBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(Utils.paintModes.paint)}
             >
               <i className="fas fa-paint-brush"></i>
             </Button>
@@ -90,7 +100,6 @@ export default class EditTools extends Component {
               value={Utils.paintModes.line}
               id="lineBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(Utils.paintModes.line)}
             >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
@@ -99,7 +108,6 @@ export default class EditTools extends Component {
               value={Utils.paintModes.erase}
               id="eraseBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(Utils.paintModes.erase)}
             >
               <i className="fas fa-eraser"></i>
             </Button>
@@ -169,3 +177,19 @@ ValueLabelComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   value: PropTypes.number.isRequired
 };
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    leds: state.project.leds,
+    backImg: state.project.backImg
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addLed: led => dispatch({ type: "ADD_LED", led }),
+    deleteLed: led => dispatch({ type: "DEL_LED", led })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditTools);

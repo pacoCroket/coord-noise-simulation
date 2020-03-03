@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import App from "../../App";
-import Utilities from "../../Utils";
+import Utils from "../../Utils";
+import { connect } from "react-redux";
 
-export default class Draggable extends Component {
+class Draggable extends Component {
   // all coordinates in this component state are
   // stored as fractions within the canvas (0-1)
   // Every time { clientX, clientY } is used, it is scaled
@@ -30,8 +30,8 @@ export default class Draggable extends Component {
     const { width, height } = this.props.imgSize;
 
     // Skip if paintMode is 'erase'
-    if (this.props.paintMode === App.paintModes.erase) {
-      this.props.clickedLed(this.props.led.id);
+    if (this.props.paintMode === Utils.paintModes.erase) {
+      this.props.clickedLed(this.props.led);
       return;
     }
 
@@ -64,8 +64,8 @@ export default class Draggable extends Component {
     led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
     led2set.y = clientY / height - this.state.originalY + this.state.lastTranslateY;
     // constrain values
-    led2set.x = Utilities.constrain(led2set.x, 0, 1);
-    led2set.y = Utilities.constrain(led2set.y, 0, 1);
+    led2set.x = Utils.constrain(led2set.x, 0, 1);
+    led2set.y = Utils.constrain(led2set.y, 0, 1);
 
     this.props.setLed(led2set);
   };
@@ -113,3 +113,18 @@ export default class Draggable extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    backImg: state.project.backImg
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteLed: led => dispatch({ type: "DEL_LED", led }),
+    setLed: led => dispatch({type: "SET_LED", led})
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Draggable);

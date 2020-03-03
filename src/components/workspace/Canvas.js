@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import Draggable from "./Draggable";
 import Image from 'react-bootstrap/Image'
 import Utils from "../../Utils";
+import { connect } from "react-redux";
 
-export default class Canvas extends Component {
+class Canvas extends Component {
   constructor() {
     super();
     this.state = { isDragging: false, isDraggingLed: false, tempLeds: [] };
@@ -49,7 +50,7 @@ export default class Canvas extends Component {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
-    if (this.props.tooling.paintMode !== Utils.paintModes.erase && !this.state.isDraggingLed) {
+    if (this.props.paintMode !== Utils.paintModes.erase && !this.state.isDraggingLed) {
       const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
       this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true });
     }
@@ -63,18 +64,18 @@ export default class Canvas extends Component {
       const { width, height } = this.props.backImg.imgSize;
 
       // append new Leds to tempLeds and update their pos
-      if (this.props.tooling.paintMode === Utils.paintModes.line) {
+      if (this.props.paintMode === Utils.paintModes.line) {
         // scale fractional coordinates back to 'regular' coordinates
         const dX = (x - this.state.tempLeds[0].x) * width;
         const dY = (y - this.state.tempLeds[0].y) * height;
         const dist = Math.sqrt(dX * dX + dY * dY);
-        const fittingCount = dist / this.props.tooling.ledSize;
+        const fittingCount = dist / this.props.ledSize;
         let tempLeds = [];
 
         // fit LEDs between original mouseDown and current mouse position
         for (var j = 0; j < fittingCount; j++) {
           // scale back down to fractional coordinates
-          let fract = (j * this.props.tooling.ledSize) / dist;
+          let fract = (j * this.props.ledSize) / dist;
           let newX = (this.state.tempLeds[0].x * width + dX * fract) / width;
           let newY = (this.state.tempLeds[0].y * height + dY * fract) / height;
           // skip if out of canvas
@@ -84,7 +85,8 @@ export default class Canvas extends Component {
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
-      } else if (this.props.tooling.paintMode === Utils.paintModes.paint) {
+
+      } else if (this.props.paintMode === Utils.paintModes.paint) {
         // constrain to canvas
         x = Utils.constrain(x, 0, 1);
         y = Utils.constrain(y, 0, 1);
@@ -98,12 +100,13 @@ export default class Canvas extends Component {
     window.removeEventListener("mouseup", this.handleMouseUp);
 
     // add the single first tempLed if paintMode === 'paint'
-    if (this.props.tooling.paintMode === Utils.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
-      this.props.addLed({ x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y });
-    } else if (this.props.tooling.paintMode === Utils.paintModes.line) {
+    if (this.props.paintMode === Utils.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
+      const led = { id: this.props.leds.length, x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y };
+      this.props.addLed(led);
+    } else if (this.props.paintMode === Utils.paintModes.line) {
       // add all of tempLeds
-      this.state.tempLeds.forEach(led => {
-        this.props.addLed({ x: led.x, y: led.y });
+      this.state.tempLeds.forEach((led, index) => {
+        this.props.addLed({id: this.props.leds.length+index, x: led.x, y: led.y });
       });
     }
 
@@ -125,7 +128,7 @@ export default class Canvas extends Component {
 
   render() {
     const { imgUrl, imgSize } = this.props.backImg;
-    const { paintMode, ledSize } = this.props.tooling;
+    const { paintMode, ledSize } = this.props;
     const { leds } = this.props.leds;
 
     return (
@@ -143,7 +146,7 @@ export default class Canvas extends Component {
           ></Image>
 
           {/* Show current LEDs */}
-          {leds&&this.props.leds.map(led => (
+          {this.props.leds.map(led => (
             <Draggable
               className=""
               key={led.id}
@@ -183,7 +186,22 @@ export default class Canvas extends Component {
 
 Canvas.propTypes = {
   backImg: PropTypes.object,
-  tooling: PropTypes.object.isRequired,
   leds: PropTypes.array.isRequired,
   onImgLoaded: PropTypes.func.isRequired
 };
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    leds: state.project.leds,
+    backImg: state.project.backImg
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addLed: led => dispatch({ type: "ADD_LED", led }),
+    deleteLed: led => dispatch({ type: "DEL_LED", led })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);

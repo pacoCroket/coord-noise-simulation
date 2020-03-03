@@ -44,8 +44,18 @@ const projectReducer = (state = initState, action) => {
   switch (action.type) {
     case "ADD_IMG":
       return { ...state, backImg: action.backImg };
-      case "ADD_LED":
-          return {...state, leds: [...state.leds, action.led]}
+    case "ADD_LED":
+      return { ...state, leds: [...state.leds, action.led] };
+    case "DEL_LED":
+      var leds = state.leds.filter(led => led.id !== action.led.id);
+      // update ID of all LEDs to maintain continuity
+      leds.forEach((led, index) => {
+        led.id = index;
+      });
+      return { ...state, leds };
+    case "SET_LED":
+      var leds = state.leds.map(led => led.id === action.led.id?action.led:led);
+      return { ...state, leds };
   }
   return state;
 };
