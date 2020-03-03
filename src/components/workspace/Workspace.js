@@ -6,6 +6,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import Utils from "../../Utils";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 class Workspace extends Component {
   state = {
@@ -67,49 +68,53 @@ class Workspace extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (this.props.project) {
-      const { leds } = this.props.project;
-      const { paintMode, ledSize, imgSize, imgPos } = this.state;
-
-      // return <h2> In Progress</h2>;
+    // loading
+    if (!this.props.project)
       return (
-        <div className="workspace">
-          <div className="row noSel mw-100 h-100 mx-0 ">
-            <div className="col-md-auto px-4">
-              <EditTools
-                leds={leds}
-                paintMode={paintMode}
-                ledSize={ledSize}
-                imgSize={imgSize}
-                imgPos={imgPos}
-                onImgAdded={this.onImgAdded}
-                paintModeChanged={this.paintModeChanged}
-                ledSizeChanged={this.ledSizeChanged}
-                outputScalingChanged={this.outputScalingChanged}
-              ></EditTools>
-            </div>
-            {/* TODO vertical divider */}
-            <div className="col-1 p-0">
-              <h4>{this.props.title}</h4>
-            </div>
-            <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
-              <Canvas
-                leds={leds}
-                paintMode={paintMode}
-                ledSize={ledSize}
-                imgSize={imgSize}
-                imgPos={imgPos}
-                updateImageDimensions={this.updateImageDimensions}
-                onImgLoaded={this.onImgLoaded}
-                clickedLed={this.clickedLed}
-              ></Canvas>
-            </div>
-          </div>
+        <div className="d-flex justify-content-center align-items-center h-75">
+          <Spinner animation="border" />
         </div>
       );
-    } else {
-      return <h4>Retrieving project</h4>;
-    }
+
+    const { leds } = this.props.project;
+    const { paintMode, ledSize, imgSize, imgPos } = this.state;
+
+    // return <h2> In Progress</h2>;
+    return (
+      <div className="workspace">
+        <div className="row noSel mw-100 h-100 mx-0 ">
+          <div className="col-lg-2 col-sm-3 col-xs-4 px-4">
+            <EditTools
+              leds={leds}
+              paintMode={paintMode}
+              ledSize={ledSize}
+              imgSize={imgSize}
+              imgPos={imgPos}
+              onImgAdded={this.onImgAdded}
+              paintModeChanged={this.paintModeChanged}
+              ledSizeChanged={this.ledSizeChanged}
+              outputScalingChanged={this.outputScalingChanged}
+            ></EditTools>
+          </div>
+          {/* TODO vertical divider */}
+          <div className="col-1 p-0">
+            <h4>{this.props.project.title}</h4>
+          </div>
+          <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
+            <Canvas
+              leds={leds}
+              paintMode={paintMode}
+              ledSize={ledSize}
+              imgSize={imgSize}
+              imgPos={imgPos}
+              updateImageDimensions={this.updateImageDimensions}
+              onImgLoaded={this.onImgLoaded}
+              clickedLed={this.clickedLed}
+            ></Canvas>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 

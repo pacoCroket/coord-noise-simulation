@@ -14,13 +14,15 @@ class EditTools extends Component {
   }
 
   handlePaintChange = event => {
+    const { value } = event.target;
+
     // remove active state from other buttons
     var active = document.getElementsByClassName("toolbox-btn active");
-    active && (active[0].className = active[0].className.replace(" active", ""));
+    if (active[0]) {
+      active[0].className = active[0].className.replace(" active", "");
+    };
     // set this button to active
     event.target.className += " active";
-
-    const { value } = event.target;
     if (value === undefined) return;
     this.props.paintModeChanged(value);
   };

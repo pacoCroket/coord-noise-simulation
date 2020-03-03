@@ -27,7 +27,7 @@ class SignIn extends Component {
     return (
       <div className="container my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
-          <h5>Sing In</h5>
+          <h5>Log In</h5>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" placeholder="Enter email" name="email" onChange={this.handleChange} />
@@ -53,7 +53,7 @@ class SignIn extends Component {
             Log In
           </Button>
         </Form>
-        <Link to="/signup">
+        <Link to="/signup" >
           <Button variant="primary" type="button" className="btn my-2">
             Go to Sign Up Page
           </Button>

@@ -15,6 +15,10 @@ body {
   z-index: 999 !important;
 }
 
+.nav-link {
+  margin: 0 0.5rem;
+}
+
 /* APP */
 
 .App {
@@ -31,7 +35,7 @@ body {
 /* End NavBar */
 /* Workspace */
 .workspace {
-  background-color: #282c34;
+  background-color: #1e2127;
   /* position: absolute; */
   /* bottom:0; */
   margin: 2rem 2rem;

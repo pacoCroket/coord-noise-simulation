@@ -94,13 +94,17 @@ class Canvas extends Component {
     window.removeEventListener("mouseup", this.handleMouseUp);
 
     // add the single first tempLed if paintMode === 'paint'
-    if (this.props.paintMode === Utils.paintModes.paint && !this.state.isDraggingLed && this.state.tempLeds[0]) {
+    if (
+      this.props.paintMode === Utils.paintModes.paint &&
+      !this.state.isDraggingLed &&
+      this.state.tempLeds[0]
+    ) {
       const led = { id: this.props.leds.length, x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y };
       this.props.addLed(led);
     } else if (this.props.paintMode === Utils.paintModes.line) {
       // add all of tempLeds
-      this.state.tempLeds.forEach((led, index) => {
-        this.props.addLed({ id: this.props.leds.length + index, x: led.x, y: led.y });
+      this.state.tempLeds.forEach(led => {
+        this.props.addLed(led);
       });
     }
 
@@ -115,7 +119,7 @@ class Canvas extends Component {
   };
 
   // unused
-  onDrag = (led) => {
+  onDrag = led => {
     this.setState({ tempLeds: [led] });
   };
 
