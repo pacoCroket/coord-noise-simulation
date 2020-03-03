@@ -17,8 +17,7 @@ export default class Dropzone extends Component {
     try {
       var reader = new FileReader();
       reader.onload = e => {
-        console.log(e)
-        this.props.onImgAdded(e.target.result);
+        this.props.onImgAdded({ imgUrl: e.target.result });
       };
 
       reader.readAsDataURL(img);

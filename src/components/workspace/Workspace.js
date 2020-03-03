@@ -2,65 +2,38 @@ import React, { Component } from "react";
 import EditTools from "./EditTools";
 import Canvas from "./Canvas";
 import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
 import Utils from "../../Utils";
+import { compose } from "redux";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
-    ledSize: 50
+    ledSize: 50,
+    imgSize: { width: 0, height: 0 },
+    imgPos: { imgX: 0, imgY: 0 }
   };
 
-  onImgAdded = imgUrl => {
-    const { imgSize, imgPos } = this.props.backImg;
-    const backImg = {
-      imgUrl,
-      imgSize,
-      imgPos
-    };
-    this.props.addImg(backImg);
+  onImgAdded = ({ imgUrl }) => {
+    this.props.addImg({ imgUrl });
   };
 
-  onImgLoaded = img => {
-    const { imgUrl } = this.props.backImg;
-    let { width, height } = img;
+  updateImageDimensions = () => {
+    let { width, height } = document.getElementById("canvas");
     const paintAreaWidth = document.getElementById("paintArea").getBoundingClientRect().width;
     const paintAreaHeight = document.getElementById("paintArea").getBoundingClientRect().height;
 
     width = width > paintAreaWidth ? paintAreaWidth : width;
     height = height > paintAreaHeight ? paintAreaHeight : height;
-
-    let backImg = {
-      imgUrl,
-      imgSize: { width, height },
-      imgPos: {
-        imgX: document.getElementById("canvas").getBoundingClientRect().left,
-        imgY: document.getElementById("canvas").getBoundingClientRect().top
-      }
+    const imgPos = {
+      imgX: document.getElementById("canvas").getBoundingClientRect().left,
+      imgY: document.getElementById("canvas").getBoundingClientRect().top
     };
-
-    this.props.addImg(backImg);
-
-    // OLD
-    // this.setState(prevState => {
-    //   let { width, height } = img;
-    //   const paintAreaWidth = document.getElementById("paintArea").getBoundingClientRect().width;
-    //   const paintAreaHeight = document.getElementById("paintArea").getBoundingClientRect().height;
-
-    //   width = width > paintAreaWidth ? paintAreaWidth : width;
-    //   height = height > paintAreaHeight ? paintAreaHeight : height;
-
-    //   // constrain
-    //   prevState.backImg.imgSize = { width, height };
-    //   prevState.backImg.imgPos = {
-    //     imgX: document.getElementById("canvas").getBoundingClientRect().left,
-    //     imgY: document.getElementById("canvas").getBoundingClientRect().top
-    //   };
-    //   prevState.displayProps.workspaceSize = {
-    //     width: paintAreaWidth,
-    //     height: paintAreaHeight
-    //   };
-    //   return prevState;
-    // });
+    
+    this.setState({
+      imgSize: { width, height },
+      imgPos
+    });
   };
 
   paintModeChanged = paintMode => {
@@ -90,50 +63,57 @@ class Workspace extends Component {
   };
 
   render() {
-    const { leds, backImg } = this.props;
-    const { paintMode, ledSize } = this.state;
+    if (this.props.project) {
+      const { leds } = this.props.project;
+      const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
-    // return <h2> In Progress</h2>;
-    return (
-      <div className="workspace">
-        <div className="row noSel mw-100 h-100 mx-0 ">
-          <div className="col-md-auto px-4">
-            <EditTools
-              leds={leds}
-              paintMode={paintMode}
-              ledSize={ledSize}
-              imgSize={backImg.imgSize}
-              onImgAdded={this.onImgAdded}
-              paintModeChanged={this.paintModeChanged}
-              ledSizeChanged={this.ledSizeChanged}
-              outputScalingChanged={this.outputScalingChanged}
-            ></EditTools>
-          </div>
-          {/* TODO vertical divider */}
-          <div className="col-1 p-0">
-            <h4>{this.props.title}</h4>
-          </div>
-          <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
-            <Canvas
-              leds={leds}
-              paintMode={paintMode}
-              ledSize={ledSize}
-              backImg={backImg}
-              onImgLoaded={this.onImgLoaded}
-              clickedLed={this.clickedLed}
-            ></Canvas>
+      // return <h2> In Progress</h2>;
+      return (
+        <div className="workspace">
+          <div className="row noSel mw-100 h-100 mx-0 ">
+            <div className="col-md-auto px-4">
+              <EditTools
+                leds={leds}
+                paintMode={paintMode}
+                ledSize={ledSize}
+                imgSize={imgSize}
+                imgPos={imgPos}
+                onImgAdded={this.onImgAdded}
+                paintModeChanged={this.paintModeChanged}
+                ledSizeChanged={this.ledSizeChanged}
+                outputScalingChanged={this.outputScalingChanged}
+              ></EditTools>
+            </div>
+            {/* TODO vertical divider */}
+            <div className="col-1 p-0">
+              <h4>{this.props.title}</h4>
+            </div>
+            <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
+              <Canvas
+                leds={leds}
+                paintMode={paintMode}
+                ledSize={ledSize}
+                imgSize={imgSize}
+                imgPos={imgPos}
+                updateImageDimensions={this.updateImageDimensions}
+                onImgLoaded={this.onImgLoaded}
+                clickedLed={this.clickedLed}
+              ></Canvas>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return <h4>Retrieving project</h4>;
+    }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const projects = state.firestore.ordered.projects;
+  const project = projects ? projects[0] : null;
   return {
-    leds: state.project.leds,
-    backImg: state.project.backImg,
-    title: state.project.title
+    project
   };
 };
 
@@ -145,4 +125,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Workspace);
+export default compose(connect(mapStateToProps, mapDispatchToProps), firestoreConnect([{ collection: "projects" }]))(Workspace);

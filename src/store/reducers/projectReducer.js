@@ -1,8 +1,6 @@
 const initState = {
   backImg: {
-    imgUrl: "https://via.placeholder.com/900x500",
-    imgSize: { width: 900, height: 500 },
-    imgPos: { imgX: 0, imgY: 0 }
+    imgUrl: "https://via.placeholder.com/900x500"
   },
   title: "mem dscsde",
   description: "dsadas",

@@ -1,42 +1,38 @@
 import React, { Component } from "react";
 import Draggable from "./Draggable";
-import Image from 'react-bootstrap/Image'
+import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
 import { connect } from "react-redux";
 
 class Canvas extends Component {
   constructor() {
     super();
-    this.state = { isDragging: false, isDraggingLed: false, tempLeds: [] };
+    this.state = {
+      isDragging: false,
+      isDraggingLed: false,
+      tempLeds: []
+    };
   }
 
   // Update image dimensions when resizing window
-  updateDimensions = () => {
-    this.props.onImgLoaded(document.getElementById("canvas"));
+  updateImageDimensions = () => {
+    this.props.updateImageDimensions();
   };
+
   componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("resize", this.updateImageDimensions);
   }
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("resize", this.updateImageDimensions);
   }
 
   getRelativeFractionPos = ({ clientX, clientY }) => {
-    const { imgX, imgY } = this.props.backImg.imgPos;
+    const { imgX, imgY } = this.props.imgPos;
     // scale x and y to be fractions of the image
-    const { width, height } = this.props.backImg.imgSize;
+    const { width, height } = this.props.imgSize;
     const x = (clientX - imgX) / width;
     const y = (clientY - imgY) / height;
     return { x, y };
-  };
-
-  // useless
-  setImgStyle = () => {
-    if (this.props.backImg.imgSize.height > 800) {
-      return { height: '800px', width: 'auto' };
-    } else if (this.props.backImg.imgSize.width > 1200) {
-      return { width: '1200px', height: 'auto' };
-    }
   };
 
   setLed = led => {
@@ -60,7 +56,7 @@ class Canvas extends Component {
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
       let { x, y } = this.getRelativeFractionPos({ clientX, clientY });
-      const { width, height } = this.props.backImg.imgSize;
+      const { width, height } = this.props.imgSize;
 
       // append new Leds to tempLeds and update their pos
       if (this.props.paintMode === Utils.paintModes.line) {
@@ -84,7 +80,6 @@ class Canvas extends Component {
         }
         // add the calculated leds to state
         this.setState({ tempLeds });
-
       } else if (this.props.paintMode === Utils.paintModes.paint) {
         // constrain to canvas
         x = Utils.constrain(x, 0, 1);
@@ -105,7 +100,7 @@ class Canvas extends Component {
     } else if (this.props.paintMode === Utils.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach((led, index) => {
-        this.props.addLed({id: this.props.leds.length+index, x: led.x, y: led.y });
+        this.props.addLed({ id: this.props.leds.length + index, x: led.x, y: led.y });
       });
     }
 
@@ -121,24 +116,18 @@ class Canvas extends Component {
   // unelegant way of letting 'isDragging' stick for a bit longer
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
-  handleImgageLoad = e => {
-    this.props.onImgLoaded(e.target);
-  };
-
   render() {
-    const { imgUrl, imgSize } = this.props.backImg;
-    const { paintMode, ledSize } = this.props;
-    const { leds } = this.props.leds;
+    const { paintMode, ledSize, imgSize, imgPos, backImg } = this.props;
 
     return (
       <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <Image
-            src={imgUrl}
+            src={backImg.imgUrl}
             className="img-fluid backImg"
             // style={this.setImgStyle()}
-            onLoad={this.handleImgageLoad}
+            onLoad={this.updateImageDimensions}
             id="canvas"
             alt="reference for leds"
             fluid={true}
@@ -153,6 +142,7 @@ class Canvas extends Component {
               isDragging={this.state.isDragging}
               led={led}
               imgSize={imgSize}
+              imgPos={imgPos}
               ledSize={ledSize}
               clickedLed={this.props.clickedLed}
               setLed={this.setLed}
@@ -170,6 +160,7 @@ class Canvas extends Component {
               isDragging={this.state.isDragging}
               led={led}
               imgSize={imgSize}
+              imgPos={imgPos}
               ledSize={ledSize}
               clickedLed={this.props.clickedLed}
               setLed={this.props.setLed}

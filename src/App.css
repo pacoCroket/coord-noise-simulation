@@ -59,6 +59,7 @@ body {
   color: #282c34;
   background-color: aliceblue;
   max-height: 100%;
+  max-width: 160px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
