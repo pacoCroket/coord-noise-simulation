@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 class NavBar extends Component {
   render() {
-    const { auth } = this.props;
+    const { auth, profile } = this.props;
     const links = auth.uid ? <SignedInLinks /> : <SignedOutLinks />;
 
     return (
@@ -37,7 +37,7 @@ class NavBar extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Project
+                Projects
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <NavLink to="/project" className="dropdown-item">
@@ -47,11 +47,7 @@ class NavBar extends Component {
                   New Project
                 </NavLink>
                 <a className="dropdown-item" href="#">
-                  Load
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">
-                  Export
+                  All Projects
                 </a>
               </div>
             </li>
@@ -67,7 +63,7 @@ class NavBar extends Component {
         {/* Center */}
         {/* TODO make really in center of window */}
         <div className="mx-auto order-0">
-          <Link to="/project" className="dropdown-item">
+          <Link to="/project" className="navbar-brand">
             Noise2LED
           </Link>
           <button
@@ -90,9 +86,9 @@ class NavBar extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.firebase)
   return {
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    profile: state.firebase.profile
   };
 };
 

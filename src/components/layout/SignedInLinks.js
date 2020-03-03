@@ -5,6 +5,8 @@ import { signOut } from "../../store/actions/authActions";
 
 class SignedInLinks extends Component {
   render() {
+    const {auth, profile} = this.props;
+
     return (
       <ul className="navbar-nav ml-auto mr-5">
         <li className="nav-item">
@@ -14,7 +16,7 @@ class SignedInLinks extends Component {
         </li>
         <li className="nav-item">
           <Link to="/" className="nav-link">
-            {this.props.auth.displayName ? this.state.auth.displayName : "My profile"}
+            {profile.initials ? profile.initials.toUpperCase() + " Profile" : "My profile"}
           </Link>
         </li>
         <li className="nav-item">
@@ -30,7 +32,8 @@ class SignedInLinks extends Component {
 const mapStateToProps = state => {
   return {
     authError: state.auth.authError,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    profile: state.firebase.profile
   };
 };
 
