@@ -11,13 +11,17 @@ class Workspace extends Component {
   };
 
   onImgAdded = imgUrl => {
-    // this.setState(prevState => {
-    //   prevState.backImg.imgUrl = imgUrl;
-    //   return prevState;
-    // });
+    const { imgSize, imgPos } = this.props.backImg;
+    const backImg = {
+      imgUrl,
+      imgSize,
+      imgPos
+    };
+    this.props.addImg(backImg);
   };
 
   onImgLoaded = img => {
+    const { imgUrl } = this.props.backImg;
     let { width, height } = img;
     const paintAreaWidth = document.getElementById("paintArea").getBoundingClientRect().width;
     const paintAreaHeight = document.getElementById("paintArea").getBoundingClientRect().height;
@@ -26,7 +30,7 @@ class Workspace extends Component {
     height = height > paintAreaHeight ? paintAreaHeight : height;
 
     let backImg = {
-      imgUrl: "https://via.placeholder.com/600x600",
+      imgUrl,
       imgSize: { width, height },
       imgPos: {
         imgX: document.getElementById("canvas").getBoundingClientRect().left,
@@ -60,15 +64,15 @@ class Workspace extends Component {
   };
 
   paintModeChanged = paintMode => {
-    this.setState({paintMode});
+    this.setState({ paintMode });
   };
 
   ledSizeChanged = ledSize => {
-    this.setState({ledSize});
+    this.setState({ ledSize });
   };
 
   outputScalingChanged = outputScaling => {
-    this.setState({outputScaling});
+    this.setState({ outputScaling });
   };
 
   addLed = ({ x, y }) => {

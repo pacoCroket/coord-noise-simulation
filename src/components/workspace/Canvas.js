@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Draggable from "./Draggable";
 import Image from 'react-bootstrap/Image'
 import Utils from "../../Utils";
@@ -183,12 +182,6 @@ class Canvas extends Component {
     );
   }
 }
-
-Canvas.propTypes = {
-  backImg: PropTypes.object,
-  leds: PropTypes.array.isRequired,
-  onImgLoaded: PropTypes.func.isRequired
-};
 
 const mapStateToProps = (state, ownProps) => {
   return {

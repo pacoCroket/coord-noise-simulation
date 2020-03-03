@@ -156,12 +156,6 @@ class EditTools extends Component {
   }
 }
 
-EditTools.propTypes = {
-  tooling: PropTypes.object.isRequired,
-  onImgAdded: PropTypes.func.isRequired,
-  paintModeChanged: PropTypes.func.isRequired
-};
-
 function ValueLabelComponent(props) {
   const { children, open, value } = props;
 
