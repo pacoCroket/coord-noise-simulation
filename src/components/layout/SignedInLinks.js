@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
+import Button from "react-bootstrap/Button";
 
 class SignedInLinks extends Component {
   render() {
-    const {auth, profile} = this.props;
+    const { auth, profile } = this.props;
 
     return (
       <ul className="navbar-nav ml-auto mr-5">
@@ -20,9 +23,25 @@ class SignedInLinks extends Component {
           </Link>
         </li>
         <li className="nav-item">
-          <Link onClick={this.props.signOut} to="/" className="nav-link">
-            Log Out
-          </Link>
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={
+              <Popover id="popover-positioned-bottom">
+                <Popover.Title as="h3">See you soon!</Popover.Title>
+                <Popover.Content className="d-flex justify-content-center">
+                  {/* <strong>Holy guacamole!</strong> Check this info. */}
+                  <Button onClick={this.props.signOut} className="btn btn-primary">
+                    Log Out
+                  </Button>
+                </Popover.Content>
+              </Popover>
+            }
+          >
+            <a className="nav-link">Log Out</a>
+
+            {/* <Button variant="secondary">Popover on {placement}</Button> */}
+          </OverlayTrigger>
         </li>
       </ul>
     );

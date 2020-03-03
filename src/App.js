@@ -8,6 +8,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import SingIn from "./components/auth/SignIn";
 import SingUp from "./components/auth/SignUp";
 import NewProject from "./components/layout/NewProject";
+import HomePage from "./components/layout/HomePage";
 
 class App extends Component {
   render() {
@@ -18,7 +19,7 @@ class App extends Component {
             <NavBar id="NavBar" />
           </header>
           <Switch>
-            <Route exact path="/" component={Workspace}/>
+            <Route exact path="/" component={HomePage}/>
             <Route path="/project" component={Workspace}/>
             <Route path="/newproject" component={NewProject} />
             <Route path="/about" component={About} />

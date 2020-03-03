@@ -26,6 +26,11 @@ class NavBar extends Component {
         >
           {/* start items */}
           <ul className="navbar-nav mr-auto">
+          <li className="nav-item">
+              <NavLink to="/" className="nav-link">
+                Home
+              </NavLink>
+            </li>
             {/* Project dropdown */}
             <li className="nav-item dropdown">
               <a
