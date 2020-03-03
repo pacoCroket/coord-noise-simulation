@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import { signOut } from "../../store/actions/authActions";
 
-export default class SignedInLinks extends Component {
+class SignedInLinks extends Component {
   render() {
     return (
       <ul className="navbar-nav ml-auto mr-5">
@@ -22,9 +24,9 @@ export default class SignedInLinks extends Component {
               New Project
             </NavLink>
 
-            <NavLink to="/" className="dropdown-item">
+            <a onClick={this.props.signOut}  to="/" className="dropdown-item">
               Log Out
-            </NavLink>
+            </a>
 
           </div>
         </li>
@@ -32,3 +34,17 @@ export default class SignedInLinks extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    authError: state.auth.authError
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signOut: () => dispatch(signOut())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks);

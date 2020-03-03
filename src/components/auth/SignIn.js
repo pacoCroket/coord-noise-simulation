@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 import { signIn } from "../../store/actions/authActions";
+import { Alert } from "react-bootstrap";
 
 class SignIn extends Component {
   state = { email: "", password: "" };
@@ -18,6 +19,8 @@ class SignIn extends Component {
   };
 
   render() {
+    const { authError } = this.props;
+
     return (
       <div className="container my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
@@ -39,6 +42,7 @@ class SignIn extends Component {
           <Button variant="primary" type="submit">
             Log In
           </Button>
+          {authError ? <Alert variant={"warning"}>{authError}</Alert> : null}
         </Form>
       </div>
     );
