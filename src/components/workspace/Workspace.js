@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Utils from "../../Utils";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 class Workspace extends Component {
   state = {
@@ -29,7 +30,7 @@ class Workspace extends Component {
       imgX: document.getElementById("canvas").getBoundingClientRect().left,
       imgY: document.getElementById("canvas").getBoundingClientRect().top
     };
-    
+
     this.setState({
       imgSize: { width, height },
       imgPos
@@ -63,6 +64,9 @@ class Workspace extends Component {
   };
 
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
+
     if (this.props.project) {
       const { leds } = this.props.project;
       const { paintMode, ledSize, imgSize, imgPos } = this.state;
@@ -113,7 +117,8 @@ const mapStateToProps = (state, ownProps) => {
   const projects = state.firestore.ordered.projects;
   const project = projects ? projects[0] : null;
   return {
-    project
+    project,
+    auth: state.firebase.auth
   };
 };
 
@@ -125,4 +130,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), firestoreConnect([{ collection: "projects" }]))(Workspace);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "projects" }])
+)(Workspace);

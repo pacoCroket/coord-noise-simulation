@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signIn } from "../../store/actions/authActions";
 import { Alert } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 class SignIn extends Component {
   state = { email: "", password: "" };
@@ -19,7 +21,8 @@ class SignIn extends Component {
   };
 
   render() {
-    const { authError } = this.props;
+    const { authError, auth } = this.props;    
+    if (auth.uid) return <Redirect to="/" />;
 
     return (
       <div className="container my-5 w-50">
@@ -32,18 +35,29 @@ class SignIn extends Component {
 
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" name="password" onChange={this.handleChange} />
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={this.handleChange}
+            />
           </Form.Group>
 
           {/* <Form.Group controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Check me out" />
           </Form.Group> */}
 
-          <Button variant="primary" type="submit">
+          {authError ? <Alert variant={"warning"}>{authError}</Alert> : null}
+
+          <Button variant="primary" type="submit" className="btn btn-lg my-2">
             Log In
           </Button>
-          {authError ? <Alert variant={"warning"}>{authError}</Alert> : null}
         </Form>
+        <Link to="/signup">
+          <Button variant="primary" type="button" className="btn my-2">
+            Go to Sign Up Page
+          </Button>
+        </Link>
       </div>
     );
   }
@@ -51,7 +65,8 @@ class SignIn extends Component {
 
 const mapStateToProps = state => {
   return {
-    authError: state.auth.authError
+    authError: state.auth.authError,
+    auth: state.firebase.auth
   };
 };
 

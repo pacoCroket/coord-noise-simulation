@@ -13,13 +13,19 @@ import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
 // get rootStore from auth and project reducers
 const store = createStore(
   rootReducer,
-  compose(applyMiddleware(thunk.withExtraArgument({ getFirestore, getFirebase })), reduxFirestore(firebase, fbConfig))
+  compose(
+    applyMiddleware(thunk.withExtraArgument({ getFirestore, getFirebase })),
+    reduxFirestore(firebase, fbConfig)
+  )
 );
+
+const rrfConfig = { ...fbConfig, userProfile: "users", useFirestoreForProfile: true};
 
 const rrfProps = {
   firebase,
-  config: fbConfig,
+  config: rrfConfig,
   dispatch: store.dispatch,
+  initializeAuth: true,
   createFirestoreInstance
 };
 

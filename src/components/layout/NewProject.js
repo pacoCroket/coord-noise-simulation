@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 import { createProject } from "../../store/actions/projectActions";
+import { Redirect } from "react-router-dom";
 
 class NewProject extends Component {
   state = { title: "", description: "" };
@@ -14,22 +15,35 @@ class NewProject extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.createProject(this.state);
-    this.props.history.push('/project');
+    this.props.history.push("/project");
   };
 
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
+
     return (
       <div className="container my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
           <h5>New Project</h5>
           <Form.Group>
             <Form.Label>Title</Form.Label>
-            <Form.Control type="text" placeholder="Enter project title" name="title" onChange={this.handleChange} />
+            <Form.Control
+              type="text"
+              placeholder="Enter project title"
+              name="title"
+              onChange={this.handleChange}
+            />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Description" name="description" onChange={this.handleChange} />
+            <Form.Control
+              type="text"
+              placeholder="Description"
+              name="description"
+              onChange={this.handleChange}
+            />
           </Form.Group>
 
           {/* <Form.Group controlId="formBasicCheckbox">
@@ -45,10 +59,16 @@ class NewProject extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     createProject: project => dispatch(createProject(project))
   };
 };
 
-export default connect(null, mapDispatchToProps)(NewProject);
+export default connect(mapStateToProps, mapDispatchToProps)(NewProject);

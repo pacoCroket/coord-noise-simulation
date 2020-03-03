@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
 
@@ -7,28 +7,20 @@ class SignedInLinks extends Component {
   render() {
     return (
       <ul className="navbar-nav ml-auto mr-5">
-        <li className="nav-item dropdown">
-          <a
-            className="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Profile
-          </a>
-          <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <NavLink to="/newproject" className="dropdown-item">
-              New Project
-            </NavLink>
-
-            <a onClick={this.props.signOut}  to="/" className="dropdown-item">
-              Log Out
-            </a>
-
-          </div>
+        <li className="nav-item">
+          <NavLink to="/newproject" className="nav-link">
+            New Project
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <Link to="/" className="nav-link">
+            {this.props.auth.displayName ? this.state.auth.displayName : "My profile"}
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link onClick={this.props.signOut} to="/" className="nav-link">
+            Log Out
+          </Link>
         </li>
       </ul>
     );
@@ -37,7 +29,8 @@ class SignedInLinks extends Component {
 
 const mapStateToProps = state => {
   return {
-    authError: state.auth.authError
+    authError: state.auth.authError,
+    auth: state.firebase.auth
   };
 };
 
