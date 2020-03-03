@@ -110,7 +110,9 @@ class Workspace extends Component {
             ></EditTools>
           </div>
           {/* TODO vertical divider */}
-          <div className="col-1 p-0"></div>
+          <div className="col-1 p-0">
+            <h4>{this.props.title}</h4>
+          </div>
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}
@@ -130,7 +132,8 @@ class Workspace extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     leds: state.project.leds,
-    backImg: state.project.backImg
+    backImg: state.project.backImg,
+    title: state.project.title
   };
 };
 

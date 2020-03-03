@@ -18,7 +18,7 @@ export default class SignedInLinks extends Component {
             Profile
           </a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <NavLink to="/" className="dropdown-item">
+            <NavLink to="/newproject" className="dropdown-item">
               New Project
             </NavLink>
 
@@ -26,11 +26,6 @@ export default class SignedInLinks extends Component {
               Log Out
             </NavLink>
 
-            <div className="dropdown-divider"></div>
-            <NavLink to="/" className="dropdown-item">
-              {/* <Image src="holder.js/171x180" roundedCircle /> */}
-              FC
-            </NavLink>
           </div>
         </li>
       </ul>

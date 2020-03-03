@@ -1,11 +1,11 @@
-import Utils from "../../Utils";
-
 const initState = {
   backImg: {
     imgUrl: "https://via.placeholder.com/900x500",
     imgSize: { width: 900, height: 500 },
     imgPos: { imgX: 0, imgY: 0 }
   },
+  title: "mem dscsde",
+  description: "dsadas",
   leds: [
     {
       id: 0,
@@ -42,6 +42,12 @@ const initState = {
 
 const projectReducer = (state = initState, action) => {
   switch (action.type) {
+    case "CREATE_PROJECT":
+      console.log("Create project success ", action.project);
+      return state;
+    case "CREATE_PROJECT_ERROR":
+      console.log("Create project error ", action.err);
+      return state;
     case "ADD_IMG":
       return { ...state, backImg: action.backImg };
     case "ADD_LED":
@@ -54,10 +60,11 @@ const projectReducer = (state = initState, action) => {
       });
       return { ...state, leds };
     case "SET_LED":
-      var leds = state.leds.map(led => led.id === action.led.id?action.led:led);
+      var leds = state.leds.map(led => (led.id === action.led.id ? action.led : led));
       return { ...state, leds };
+    default:
+      return state;
   }
-  return state;
 };
 
 export default projectReducer;

@@ -19,17 +19,7 @@ class NavBar extends Component {
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="navbarSupportedContent">
           {/* start items */}
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                Project
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                About
-              </NavLink>
-            </li>
-            {/* Edit dropdown */}
+            {/* Project dropdown */}
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
@@ -40,12 +30,15 @@ class NavBar extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Edit
+                Project
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">
-                  Save
-                </a>
+                <NavLink to="/project" className="dropdown-item">
+                  Current Project
+                </NavLink>
+                <NavLink to="/newproject" className="dropdown-item">
+                  New Project
+                </NavLink>
                 <a className="dropdown-item" href="#">
                   Load
                 </a>
@@ -54,6 +47,12 @@ class NavBar extends Component {
                   Export
                 </a>
               </div>
+            </li>
+
+            <li className="nav-item">
+              <NavLink to="/about" className="nav-link">
+                About
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -77,8 +76,8 @@ class NavBar extends Component {
         {/* Right */}
         <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent">
           {/* start items */}
-          <SignedInLinks/>
-          <SignedOutLinks/>
+          <SignedInLinks />
+          <SignedOutLinks />
           {/* <ul className="navbar-nav ml-auto">
             <li className="nav-item user-profile">
               <a className="nav-link" href="#">
