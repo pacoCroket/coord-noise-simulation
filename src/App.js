@@ -5,8 +5,8 @@ import About from "./components/layout/About";
 import Workspace from "./components/workspace/Workspace";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import SingIn from "./components/auth/SingIn";
-import SingUp from "./components/auth/SingUp";
+import SingIn from "./components/auth/SignIn";
+import SingUp from "./components/auth/SignUp";
 import NewProject from "./components/layout/NewProject";
 
 class App extends Component {

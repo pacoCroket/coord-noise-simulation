@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { connect } from "react-redux";
+import { signIn } from "../../store/actions/authActions";
 
-export default class SingIn extends Component {
+class SignIn extends Component {
   state = { email: "", password: "" };
 
   handleChange = e => {
@@ -11,7 +13,8 @@ export default class SingIn extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(e);
+    this.props.signIn(this.state);
+    // console.log(e);
   };
 
   render() {
@@ -41,3 +44,17 @@ export default class SingIn extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    authError: state.auth.authError
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signIn: creds => dispatch(signIn(creds))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

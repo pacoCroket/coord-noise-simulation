@@ -113,7 +113,13 @@ class Canvas extends Component {
     // also update it within this render loop
     this.state.isDraggingLed = true;
   };
-  // unelegant way of letting 'isDragging' stick for a bit longer
+
+  // unused
+  onDrag = (led) => {
+    this.setState({ tempLeds: [led] });
+  };
+
+  // unelegant way of letting 'isDragging' stick for a bit longer with timeout
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
@@ -147,6 +153,7 @@ class Canvas extends Component {
               clickedLed={this.props.clickedLed}
               setLed={this.setLed}
               onDragStart={this.onDragStart}
+              onDrag={this.onDrag}
               onDragEnd={this.onDragEnd}
             ></Draggable>
           ))}
@@ -165,6 +172,7 @@ class Canvas extends Component {
               clickedLed={this.props.clickedLed}
               setLed={this.props.setLed}
               onDragStart={this.onDragStart}
+              onDrag={this.onDrag}
               onDragEnd={this.onDragEnd}
             ></Draggable>
           ))}

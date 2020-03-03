@@ -59,6 +59,10 @@ class Draggable extends Component {
       return;
     }
 
+    if (this.props.onDrag) {
+      // this.props.onDrag();
+    }
+
     let led2set = this.props.led;
 
     led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
