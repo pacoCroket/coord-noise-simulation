@@ -5,7 +5,8 @@ const initState = {
   title: "",
   description: "",
   author: "",
-  createdAt: ""
+  createdAt: "",
+  id: ""
 };
 
 const projectReducer = (state = initState, action) => {

@@ -7,15 +7,14 @@ import Utils from "../../Utils";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import {addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
+import { addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 },
-    projectId: this.props.match.params.id
+    imgPos: { imgX: 0, imgY: 0 }
   };
 
   onImgAdded = ({ imgUrl }) => {
@@ -121,8 +120,9 @@ class Workspace extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const projects = state.firestore.ordered.projects;
-  const project = projects ? projects[0] : null;
+  const { id } = ownProps.match.params;
+  const project =
+    id === "last" && state.project.projects.length>0 ? state.project.projects[0] : state.project.projects.find(project => project.id === id);
   return {
     project,
     auth: state.firebase.auth

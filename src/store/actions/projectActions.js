@@ -46,6 +46,14 @@ export const getUserProjects = () => {
   };
 };
 
+export const delProject = (projectId) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // make async call to DB
+    const firestore = getFirestore();
+    console.log("delete Project")
+  }
+}
+
 export const addImg = backImg => {
   return (dispatch, getState) => {
     // make async call to DB

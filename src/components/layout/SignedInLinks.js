@@ -1,13 +1,17 @@
 import React, { Component } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
-import { getUserProjects } from "../../store/actions/projectActions";
+import { getUserProjects, delProject } from "../../store/actions/projectActions";
 
 class SignedInLinks extends Component {
   componentDidMount = () => {
     this.props.getUserProjects();
   };
+
+  delProject = () => {
+    this.props.delProject(this.props.projectId);
+  }
 
   render() {
     const { profile, projects } = this.props;
@@ -34,8 +38,8 @@ class SignedInLinks extends Component {
                 Projects
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <NavLink to="/project" className="dropdown-item">
-                  Current Project
+                <NavLink exact to="/project/last" className="dropdown-item">
+                  Latest Project
                 </NavLink>
                 <div className="dropdown-divider"></div>
                 {projects
@@ -45,6 +49,10 @@ class SignedInLinks extends Component {
                       </NavLink>
                     ))
                   : null}
+                <div className="dropdown-divider"></div>
+                <a onClick={this.delProject} className="dropdown-item">
+                  Delete this Project
+                </a>
               </div>
             </li>
 
@@ -123,14 +131,16 @@ const mapStateToProps = state => {
     authError: state.auth.authError,
     auth: state.firebase.auth,
     profile: state.firebase.profile,
-    projects: state.project.projects
+    projects: state.project.projects,
+    projectId: state.project.id
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     signOut: () => dispatch(signOut()),
-    getUserProjects: () => dispatch(getUserProjects())
+    getUserProjects: () => dispatch(getUserProjects()),
+    delProject: (projectId) => dispatch(delProject(projectId))
   };
 };
 
