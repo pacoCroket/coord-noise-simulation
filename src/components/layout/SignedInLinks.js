@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
-import { getUserProjects, delProject } from "../../store/actions/projectActions";
+import { getUserProjects, delProject, setCurrentProject } from "../../store/actions/projectActions";
 import { Button } from "react-bootstrap";
 
 class SignedInLinks extends Component {
   componentDidMount = () => {
     this.props.getUserProjects();
+  };
+
+  handleSetProject = project => {
+    this.props.setCurrentProject(project);
   };
 
   delProject = () => {
@@ -45,7 +49,12 @@ class SignedInLinks extends Component {
                 <div className="dropdown-divider"></div>
                 {projects
                   ? projects.map((project, index) => (
-                      <NavLink key={index} to={"/project/" + project.id} className="dropdown-item">
+                      <NavLink
+                        key={index}
+                        onClick={() => this.handleSetProject(project)}
+                        to={"/project/" + project.id}
+                        className="dropdown-item"
+                      >
                         {index + 1 + " - " + project.title}
                       </NavLink>
                     ))
@@ -65,7 +74,7 @@ class SignedInLinks extends Component {
           </ul>
           {/* </div> */}
 
-          <div className="navbar-brand mx-auto order-0">this.props.project.title</div>
+          <div className="navbar-brand mx-auto order-0">{this.props.currentProject&&this.props.currentProject.title}</div>
 
           {/* Right */}
           {/* <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent"> */}
@@ -115,7 +124,7 @@ const mapStateToProps = state => {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
     projects: state.project.projects,
-    project: state.project
+    currentProject: state.project.currentProject
   };
 };
 
@@ -123,6 +132,7 @@ const mapDispatchToProps = dispatch => {
   return {
     signOut: () => dispatch(signOut()),
     getUserProjects: () => dispatch(getUserProjects()),
+    setCurrentProject: project => dispatch({ type: "SET_CURRENT_PROJECT", project }),
     delProject: projectId => dispatch(delProject(projectId))
   };
 };

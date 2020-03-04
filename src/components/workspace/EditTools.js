@@ -6,6 +6,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 import Utils from "../../Utils";
 import { connect } from "react-redux";
+import Uploader from "./Uploader";
 
 class EditTools extends Component {
   constructor(props) {
@@ -86,7 +87,8 @@ class EditTools extends Component {
       <div className="d-flex flex-column editTools">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
-          <Dropzone onImgAdded={onImgAdded} />
+          <Dropzone />
+          {/* <Uploader/> */}
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">

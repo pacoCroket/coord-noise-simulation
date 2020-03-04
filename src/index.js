@@ -7,24 +7,26 @@ import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "./store/reducers/rootReducer";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
-import { getFirestore, createFirestoreInstance } from "redux-firestore";
+import { reduxFirestore, createFirestoreInstance, getFirestore } from "redux-firestore";
 import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
 
-// get rootStore from auth and project reducers
+// get rootStore from auth and project reducers, with initial state
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   rootReducer,
-  compose(
-    applyMiddleware(thunk.withExtraArgument({ getFirestore, getFirebase }))
+  composeEnhancers(
+    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
+    reduxFirestore(firebase, fbConfig)
   )
 );
 
-const rrfConfig = { ...fbConfig, userProfile: "users", useFirestoreForProfile: true};
+const rrfConfig = { ...fbConfig, userProfile: "users", useFirestoreForProfile: true };
 
 const rrfProps = {
   firebase,
   config: rrfConfig,
   dispatch: store.dispatch,
-  initializeAuth: true,
+  // initializeAuth: true,
   createFirestoreInstance
 };
 

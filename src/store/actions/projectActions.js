@@ -55,9 +55,31 @@ export const delProject = projectId => {
   };
 };
 
-export const setCurrentProject = currrentProjectId => {
-  return dispatch => {
-    dispatch({ type: "SET_CURRENT_PROJECT", currrentProjectId });
+export const setCurrentProject = currentProject => {
+  console.log("dispatch currentProject, ", currentProject);
+  return dispatch => dispatch({ type: "SET_CURRENT_PROJECT", currentProject });
+};
+
+export const uploadImg = img => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    // Path within Database for metadata (also used for file Storage path)
+    const storagePath = "projectImages";
+    const dbPath = "projectFilesInfo";
+    const authorId = getState().firebase.auth.uid;
+    const fileMetadata = { contentType: "image/jpeg", authorId };
+
+    firebase
+      .uploadFile(storagePath, img, storagePath, { metadata: fileMetadata })
+      // firebase.uploadFile(storagePath, img, storagePath)
+      .then(uploadTaskSnapshot => {
+        console.log("Img upload Sucess: " + uploadTaskSnapshot);
+        dispatch({ type: "UPLOAD_IMG", img });
+      })
+      .catch(error => {
+        console.log("Error uploading image: ", error.message);
+      });
+    // const { currrentProjectId } = getState().project;
   };
 };
 

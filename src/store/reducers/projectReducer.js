@@ -1,6 +1,6 @@
 const initState = {
   projects: [],
-  currrentProjectId: ""
+  currentProject: {}
 };
 
 const projectReducer = (state = initState, action) => {
@@ -15,8 +15,11 @@ const projectReducer = (state = initState, action) => {
       console.log("Load projects success ", action.projects);
       return { ...state, projects: [...action.projects] };
     case "SET_CURRENT_PROJECT":
-      console.log("Current project ID ", action.currrentProjectId);
-      return {...state, currrentProjectId: action.currrentProjectId};
+      console.log("Current project ID: ", action.project.id);
+      return { ...state, currentProject: { ...action.project } };
+    case "UPLOAD_IMG":
+      console.log("Image uploaded: " + action.img);
+      return state;
     case "ADD_IMG":
       console.log("Img added ", action.imgUrl);
       var projects = state.projects.map(project =>
@@ -25,7 +28,7 @@ const projectReducer = (state = initState, action) => {
       return { ...state, projects };
     case "ADD_LED":
       var projects = state.projects.map(project =>
-        project.id === state.currrentProjectId  ? { ...project, leds: [...project.leds, action.led] } : project
+        project.id === state.currrentProjectId ? { ...project, leds: [...project.leds, action.led] } : project
       );
       return { ...state, projects };
     case "DEL_LED":

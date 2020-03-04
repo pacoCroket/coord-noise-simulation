@@ -7,7 +7,13 @@ import Utils from "../../Utils";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import {getUserProjects, setCurrentProject, addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
+import {
+  getUserProjects,
+  setCurrentProject,
+  addLed,
+  setLed,
+  delLed
+} from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
@@ -15,10 +21,6 @@ class Workspace extends Component {
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
     imgPos: { imgX: 0, imgY: 0 }
-  };
-
-  onImgAdded = ({ imgUrl }) => {
-    this.props.addImg(imgUrl);
   };
 
   updateImageDimensions = () => {
@@ -68,30 +70,26 @@ class Workspace extends Component {
   render() {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
-
     // redirect to new project
-    if (this.props.projects.length === 0) return <Redirect to="/newproject" />;
+    if (this.props.projects.length === 0) {
+      return <Redirect to="/newproject" />;
 
-    // redirect to last project
-    if (this.props.match.params.id === "last") {
-      const { id } = this.props.projects[0];
-      return <Redirect to={"/project/" + id} />;
+      // redirect to last project
+    } else if (this.props.match.params.id === "last") {
+      const project = this.props.projects[0];
+      this.props.setCurrentProject(project);
+      return <Redirect to={"/project/" + project.id} />;
     }
 
-    // loading
-    if (!this.props.project)
+    // loading if not current project
+    if (Object.getOwnPropertyNames(this.props.currentProject).length === 0)
       return (
         <div className="d-flex justify-content-center align-items-center h-75">
           <Spinner animation="border" />
         </div>
       );
 
-    // set current project ID if not already
-    if (this.props.currrentProjectId !== this.props.project.id) {
-      setCurrentProject(this.props.project.id);
-    }
-
-    const { leds, backImg } = this.props.project;
+    const { leds, backImg } = this.props.currentProject;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
     // return <h2> In Progress</h2>;
@@ -105,16 +103,13 @@ class Workspace extends Component {
               ledSize={ledSize}
               imgSize={imgSize}
               imgPos={imgPos}
-              onImgAdded={this.onImgAdded}
               paintModeChanged={this.paintModeChanged}
               ledSizeChanged={this.ledSizeChanged}
               outputScalingChanged={this.outputScalingChanged}
             ></EditTools>
           </div>
           {/* TODO vertical divider */}
-          <div className="col-1 p-0">
-            <h4>{this.props.project.title}</h4>
-          </div>
+          <div className="col-1 p-0"></div>
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}
@@ -136,10 +131,9 @@ class Workspace extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const project = state.project.projects.find(project => project.id === id);
+  // const project = state.project.projects.find(project => project.id === id);
   return {
-    project,
-    currrentProjectId: state.project.currrentProjectId,
+    currentProject: state.project.currentProject,
     projects: state.project.projects,
     auth: state.firebase.auth
   };
@@ -148,8 +142,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     getUserProjects: () => dispatch(getUserProjects()),
-    setCurrentProject: projectId => dispatch(setCurrentProject(projectId)),
-    addImg: imgUrl => dispatch(addImg(imgUrl)),
+    setCurrentProject: project => dispatch({ type: "SET_CURRENT_PROJECT", project }),
     addLed: led => dispatch(addLed(led)),
     setLed: led => dispatch(setLed(led)),
     delLed: led => dispatch(delLed(led))
