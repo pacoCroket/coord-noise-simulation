@@ -1,41 +1,11 @@
 const initState = {
-  backImg: {
-    imgUrl: "https://via.placeholder.com/900x500"
-  },
-  title: "mem dscsde",
-  description: "dsadas",
-  leds: [
-    {
-      id: 0,
-      x: 0.1,
-      y: 0.5
-    },
-    {
-      id: 1,
-      x: 0.12,
-      y: 0.845
-    },
-    {
-      id: 2,
-      x: 0.68453,
-      y: 0.1687
-    },
-    {
-      id: 3,
-      x: 0.684,
-      y: 0.96483
-    },
-    {
-      id: 4,
-      x: 0.13,
-      y: 1
-    },
-    {
-      id: 5,
-      x: 0,
-      y: 0.35
-    }
-  ]
+  projects: [],
+  backImg: {imgUrl: ""},
+  leds: [],
+  title: "",
+  description: "",
+  author: "",
+  createdAt: ""
 };
 
 const projectReducer = (state = initState, action) => {
@@ -46,6 +16,9 @@ const projectReducer = (state = initState, action) => {
     case "CREATE_PROJECT_ERROR":
       console.log("Create project error ", action.err);
       return state;
+    case "LOAD_PROJECT":
+      console.log("Load project success ", action.project);
+      return {...state, projects: [...state.projects, action.project]};
     case "ADD_IMG":
       return { ...state, backImg: action.backImg };
     case "ADD_LED":

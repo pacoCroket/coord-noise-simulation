@@ -20,55 +20,10 @@ class NavBar extends Component {
         >
           By Paco Croket
         </a>
-        <div
-          className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2"
-          id="navbarSupportedContent"
-        >
-          {/* start items */}
-          <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                Home
-              </NavLink>
-            </li>
-            {/* Project dropdown */}
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Projects
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <NavLink to="/project" className="dropdown-item">
-                  Current Project
-                </NavLink>
-                <NavLink to="/newproject" className="dropdown-item">
-                  New Project
-                </NavLink>
-                <a className="dropdown-item" href="#">
-                  All Projects
-                </a>
-              </div>
-            </li>
 
-            <li className="nav-item">
-              <NavLink to="/about" className="nav-link">
-                About
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-
-        {/* Center */}
-        {/* TODO make really in center of window */}
-        <div className="mx-auto order-0">
-          <Link to="/project" className="navbar-brand">
+        {/* Center TODO*/}
+        {/* <div className="mx-auto order-0">
+          <Link to={auth.uid ?"/project":"/"} className="navbar-brand">
             Noise2LED
           </Link>
           <button
@@ -79,12 +34,9 @@ class NavBar extends Component {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-        </div>
+        </div> */}
 
-        {/* Right */}
-        <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent">
-          {auth.isLoaded && links}
-        </div>
+        {auth.isLoaded && links}
       </div>
     );
   }

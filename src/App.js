@@ -20,7 +20,7 @@ class App extends Component {
           </header>
           <Switch>
             <Route exact path="/" component={HomePage}/>
-            <Route path="/project" component={Workspace}/>
+            <Route path="/project/:id" component={Workspace}/>
             <Route path="/newproject" component={NewProject} />
             <Route path="/about" component={About} />
             <Route path="/signin" component={SingIn} />

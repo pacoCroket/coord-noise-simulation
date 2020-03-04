@@ -133,15 +133,17 @@ class Canvas extends Component {
       <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
-          <Image
-            src={backImg.imgUrl}
-            className="img-fluid backImg"
-            // style={this.setImgStyle()}
-            onLoad={this.updateImageDimensions}
-            id="canvas"
-            alt="reference for leds"
-            fluid={true}
-          ></Image>
+          {backImg.imgUrl ? (
+            <Image
+              src={backImg.imgUrl}
+              className="img-fluid backImg"
+              // style={this.setImgStyle()}
+              onLoad={this.updateImageDimensions}
+              id="canvas"
+              alt="reference for leds"
+              fluid={true}
+            ></Image>
+          ) : null}
 
           {/* Show current LEDs */}
           {this.props.leds.map(led => (

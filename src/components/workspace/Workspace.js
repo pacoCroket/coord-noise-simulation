@@ -7,13 +7,15 @@ import Utils from "../../Utils";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import {addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 }
+    imgPos: { imgX: 0, imgY: 0 },
+    projectId: this.props.match.params.id
   };
 
   onImgAdded = ({ imgUrl }) => {
@@ -60,7 +62,7 @@ class Workspace extends Component {
   clickedLed = led => {
     // remove if on 'erase' paintMode
     if (this.state.paintMode === Utils.paintModes.erase) {
-      this.props.deleteLed(led);
+      this.props.delLed(led);
     }
   };
 
@@ -129,9 +131,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addImg: backImg => dispatch({ type: "ADD_IMG", backImg }),
-    addLed: led => dispatch({ type: "ADD_LED", led }),
-    deleteLed: led => dispatch({ type: "DEL_LED", led })
+    addImg: backImg => dispatch(addImg(backImg)),
+    addLed: led => dispatch(addLed(led)),
+    setLed: led => dispatch(setLed(led)),
+    delLed: led => dispatch(delLed(led))
   };
 };
 

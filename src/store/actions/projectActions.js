@@ -24,6 +24,28 @@ export const createProject = project => {
   };
 };
 
+export const getUserProjects = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // make async call to DB
+    const firestore = getFirestore();
+    const uid = getState().firebase.auth.uid;
+
+    firestore
+      .collection("projects")
+      .where("authorId", "==", uid)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          dispatch({ type: "LOAD_PROJECT", project: {...doc.data(), id: doc.id}});
+        });
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
+  };
+};
+
 export const addImg = backImg => {
   return (dispatch, getState) => {
     // make async call to DB
