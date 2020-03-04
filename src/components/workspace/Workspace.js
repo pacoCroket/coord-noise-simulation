@@ -17,10 +17,6 @@ class Workspace extends Component {
     imgPos: { imgX: 0, imgY: 0 }
   };
 
-  componentDidMount = () => {
-    this.props.getUserProjects();
-  };
-
   onImgAdded = ({ imgUrl }) => {
     this.props.addImg(imgUrl);
   };
@@ -90,6 +86,11 @@ class Workspace extends Component {
         </div>
       );
 
+    // set current project ID if not already
+    if (this.props.currrentProjectId !== this.props.project.id) {
+      setCurrentProject(this.props.project.id);
+    }
+
     const { leds, backImg } = this.props.project;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
@@ -138,7 +139,7 @@ const mapStateToProps = (state, ownProps) => {
   const project = state.project.projects.find(project => project.id === id);
   return {
     project,
-    projectId: id,
+    currrentProjectId: state.project.currrentProjectId,
     projects: state.project.projects,
     auth: state.firebase.auth
   };

@@ -29,7 +29,7 @@ export const getUserProjects = () => {
     // make async call to DB
     const firestore = getFirestore();
     const uid = getState().firebase.auth.uid;
-    let projects = []
+    let projects = [];
     firestore
       .collection("projects")
       .where("authorId", "==", uid)
@@ -38,8 +38,8 @@ export const getUserProjects = () => {
         querySnapshot.forEach(doc => {
           // doc.data() is never undefined for query doc snapshots
           projects.push({ ...doc.data(), id: doc.id });
-        });        
-        dispatch({ type: "LOAD_PROJECTS", projects});
+        });
+        dispatch({ type: "LOAD_PROJECTS", projects });
       })
       .catch(error => {
         console.log("Error getting documents: ", error);
@@ -63,6 +63,7 @@ export const setCurrentProject = currrentProjectId => {
 
 export const addImg = backImg => {
   return (dispatch, getState) => {
+    const { currrentProjectId } = getState().project;
     // make async call to DB
     dispatch({ type: "ADD_IMG", backImg });
   };

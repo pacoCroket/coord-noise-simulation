@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
 import { getUserProjects, delProject } from "../../store/actions/projectActions";
+import { Button } from "react-bootstrap";
 
 class SignedInLinks extends Component {
   componentDidMount = () => {
@@ -96,9 +97,9 @@ class SignedInLinks extends Component {
                   Settings
                 </NavLink>
                 <div className="dropdown-divider"></div>
-                <a onClick={this.props.signOut} className="dropdown-item">
+                <Button onClick={this.props.signOut} className="dropdown-item">
                   Log Out
-                </a>
+                </Button>
               </div>
             </li>
           </ul>

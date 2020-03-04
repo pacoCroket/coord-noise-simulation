@@ -128,7 +128,6 @@ class Canvas extends Component {
 
   render() {
     const { paintMode, ledSize, imgSize, imgPos, backImg } = this.props;
-    console.log(backImg)
     return (
       <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}

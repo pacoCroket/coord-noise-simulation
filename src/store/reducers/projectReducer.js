@@ -18,9 +18,9 @@ const projectReducer = (state = initState, action) => {
       console.log("Current project ID ", action.currrentProjectId);
       return {...state, currrentProjectId: action.currrentProjectId};
     case "ADD_IMG":
-      console.log("Img added", action.imgUrl);
+      console.log("Img added ", action.imgUrl);
       var projects = state.projects.map(project =>
-        project.id === state.currrentProjectId ? { ...project, backImg: { imgUrl: action.imgUrl } } : project
+        project.id === action.project.id ? action.project : project
       );
       return { ...state, projects };
     case "ADD_LED":
