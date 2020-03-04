@@ -128,22 +128,23 @@ class Canvas extends Component {
 
   render() {
     const { paintMode, ledSize, imgSize, imgPos, backImg } = this.props;
-
+    console.log(backImg)
     return (
       <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
-          {backImg.imgUrl ? (
-            <Image
-              src={backImg.imgUrl}
-              className="img-fluid backImg"
-              // style={this.setImgStyle()}
-              onLoad={this.updateImageDimensions}
-              id="canvas"
-              alt="reference for leds"
-              fluid={true}
-            ></Image>
-          ) : null}
+          <div id="canvas">
+            {backImg.imgUrl.length>1? (
+              <Image
+                src={backImg.imgUrl}
+                className="img-fluid backImg"
+                // style={this.setImgStyle()}
+                onLoad={this.updateImageDimensions}
+                alt="reference for leds"
+                fluid={true}
+              ></Image>
+            ) : null}
+          </div>
 
           {/* Show current LEDs */}
           {this.props.leds.map(led => (
@@ -190,8 +191,6 @@ class Canvas extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    leds: state.project.leds,
-    backImg: state.project.backImg
   };
 };
 

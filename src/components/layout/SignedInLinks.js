@@ -10,8 +10,8 @@ class SignedInLinks extends Component {
   };
 
   delProject = () => {
-    this.props.delProject(this.props.projectId);
-  }
+    this.props.delProject(this.props.project.id);
+  };
 
   render() {
     const { profile, projects } = this.props;
@@ -45,7 +45,7 @@ class SignedInLinks extends Component {
                 {projects
                   ? projects.map((project, index) => (
                       <NavLink key={index} to={"/project/" + project.id} className="dropdown-item">
-                        {index+1 + " - " + project.title}
+                        {index + 1 + " - " + project.title}
                       </NavLink>
                     ))
                   : null}
@@ -63,6 +63,8 @@ class SignedInLinks extends Component {
             </li>
           </ul>
           {/* </div> */}
+
+          <div className="navbar-brand mx-auto order-0">this.props.project.title</div>
 
           {/* Right */}
           {/* <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent"> */}
@@ -99,26 +101,6 @@ class SignedInLinks extends Component {
                 </a>
               </div>
             </li>
-
-            {/* <li className="nav-item">
-              <OverlayTrigger
-                trigger="click"
-                placement="bottom"
-                overlay={
-                  <Popover id="popover-positioned-bottom">
-                    <Popover.Title as="h3">See you soon!</Popover.Title>
-                    <Popover.Content className="d-flex justify-content-center">
-                      <Button onClick={this.props.signOut} className="btn btn-primary">
-                        Log Out
-                      </Button>
-                    </Popover.Content>
-                  </Popover>
-                }
-              >
-                <a className="nav-link">Log Out</a>
-
-              </OverlayTrigger>
-            </li> */}
           </ul>
         </div>
       </div>
@@ -132,7 +114,7 @@ const mapStateToProps = state => {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
     projects: state.project.projects,
-    projectId: state.project.id
+    project: state.project
   };
 };
 
@@ -140,7 +122,7 @@ const mapDispatchToProps = dispatch => {
   return {
     signOut: () => dispatch(signOut()),
     getUserProjects: () => dispatch(getUserProjects()),
-    delProject: (projectId) => dispatch(delProject(projectId))
+    delProject: projectId => dispatch(delProject(projectId))
   };
 };
 

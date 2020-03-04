@@ -7,7 +7,7 @@ import Utils from "../../Utils";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import { addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
+import {getUserProjects, setCurrentProject, addLed, setLed, delLed, addImg } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
@@ -17,8 +17,12 @@ class Workspace extends Component {
     imgPos: { imgX: 0, imgY: 0 }
   };
 
+  componentDidMount = () => {
+    this.props.getUserProjects();
+  };
+
   onImgAdded = ({ imgUrl }) => {
-    this.props.addImg({ imgUrl });
+    this.props.addImg(imgUrl);
   };
 
   updateImageDimensions = () => {
@@ -69,6 +73,15 @@ class Workspace extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
 
+    // redirect to new project
+    if (this.props.projects.length === 0) return <Redirect to="/newproject" />;
+
+    // redirect to last project
+    if (this.props.match.params.id === "last") {
+      const { id } = this.props.projects[0];
+      return <Redirect to={"/project/" + id} />;
+    }
+
     // loading
     if (!this.props.project)
       return (
@@ -77,7 +90,7 @@ class Workspace extends Component {
         </div>
       );
 
-    const { leds } = this.props.project;
+    const { leds, backImg } = this.props.project;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
     // return <h2> In Progress</h2>;
@@ -104,6 +117,7 @@ class Workspace extends Component {
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}
+              backImg={backImg}
               paintMode={paintMode}
               ledSize={ledSize}
               imgSize={imgSize}
@@ -121,17 +135,20 @@ class Workspace extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const project =
-    id === "last" && state.project.projects.length>0 ? state.project.projects[0] : state.project.projects.find(project => project.id === id);
+  const project = state.project.projects.find(project => project.id === id);
   return {
     project,
+    projectId: id,
+    projects: state.project.projects,
     auth: state.firebase.auth
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addImg: backImg => dispatch(addImg(backImg)),
+    getUserProjects: () => dispatch(getUserProjects()),
+    setCurrentProject: projectId => dispatch(setCurrentProject(projectId)),
+    addImg: imgUrl => dispatch(addImg(imgUrl)),
     addLed: led => dispatch(addLed(led)),
     setLed: led => dispatch(setLed(led)),
     delLed: led => dispatch(delLed(led))

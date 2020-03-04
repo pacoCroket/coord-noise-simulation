@@ -37,6 +37,9 @@ class EditTools extends Component {
   };
 
   getOutput = () => {
+    const { leds } = this.props;
+    if (leds.length === 0) return;
+
     const { width, height } = this.props.imgSize;
     const { outputScaling } = this.state;
 
@@ -45,7 +48,7 @@ class EditTools extends Component {
     let xMax = 0;
     let yMax = 0;
 
-    this.props.leds.forEach(led => {
+    leds.forEach(led => {
       if (led.x > xMax) xMax = led.x;
       if (led.y > yMax) yMax = led.y;
       if (led.x < xMin) xMin = led.x;
@@ -176,8 +179,7 @@ ValueLabelComponent.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    leds: state.project.leds,
-    backImg: state.project.backImg
+
   };
 };
 
