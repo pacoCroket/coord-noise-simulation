@@ -1,12 +1,6 @@
 const initState = {
   projects: [],
-  backImg: {imgUrl: ""},
-  leds: [],
-  title: "",
-  description: "",
-  author: "",
-  createdAt: "",
-  id: ""
+  currrentProjectId: ""
 };
 
 const projectReducer = (state = initState, action) => {
@@ -17,13 +11,23 @@ const projectReducer = (state = initState, action) => {
     case "CREATE_PROJECT_ERROR":
       console.log("Create project error ", action.err);
       return state;
-    case "LOAD_PROJECT":
-      console.log("Load project success ", action.project);
-      return {...state, projects: [...state.projects, action.project]};
+    case "LOAD_PROJECTS":
+      console.log("Load projects success ", action.projects);
+      return { ...state, projects: [...action.projects] };
+    case "SET_CURRENT_PROJECT":
+      console.log("Current project ID ", action.currrentProjectId);
+      return {...state, currrentProjectId: action.currrentProjectId};
     case "ADD_IMG":
-      return { ...state, backImg: action.backImg };
+      console.log("Img added", action.imgUrl);
+      var projects = state.projects.map(project =>
+        project.id === state.currrentProjectId ? { ...project, backImg: { imgUrl: action.imgUrl } } : project
+      );
+      return { ...state, projects };
     case "ADD_LED":
-      return { ...state, leds: [...state.leds, action.led] };
+      var projects = state.projects.map(project =>
+        project.id === state.currrentProjectId  ? { ...project, leds: [...project.leds, action.led] } : project
+      );
+      return { ...state, projects };
     case "DEL_LED":
       var leds = state.leds.filter(led => led.id !== action.led.id);
       // update ID of all LEDs to maintain continuity

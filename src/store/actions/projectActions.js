@@ -29,7 +29,7 @@ export const getUserProjects = () => {
     // make async call to DB
     const firestore = getFirestore();
     const uid = getState().firebase.auth.uid;
-
+    let projects = []
     firestore
       .collection("projects")
       .where("authorId", "==", uid)
@@ -37,8 +37,9 @@ export const getUserProjects = () => {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           // doc.data() is never undefined for query doc snapshots
-          dispatch({ type: "LOAD_PROJECT", project: {...doc.data(), id: doc.id}});
-        });
+          projects.push({ ...doc.data(), id: doc.id });
+        });        
+        dispatch({ type: "LOAD_PROJECTS", projects});
       })
       .catch(error => {
         console.log("Error getting documents: ", error);
@@ -46,13 +47,19 @@ export const getUserProjects = () => {
   };
 };
 
-export const delProject = (projectId) => {
+export const delProject = projectId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // make async call to DB
     const firestore = getFirestore();
-    console.log("delete Project")
-  }
-}
+    console.log("delete Project");
+  };
+};
+
+export const setCurrentProject = currrentProjectId => {
+  return dispatch => {
+    dispatch({ type: "SET_CURRENT_PROJECT", currrentProjectId });
+  };
+};
 
 export const addImg = backImg => {
   return (dispatch, getState) => {
