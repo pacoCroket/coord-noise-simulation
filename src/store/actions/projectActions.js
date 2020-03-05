@@ -1,5 +1,3 @@
-import db from "../../config/firebaseConfig";
-
 // Create a new blank project
 export const createProject = project => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -81,11 +79,34 @@ export const uploadImg = img => {
       .uploadFile(storagePath, renamedImg)
       // firebase.uploadFile(storagePath, img, storagePath)
       .then(res => {
-        res.uploadTaskSnapshot.ref
-          .getDownloadURL()
-          .then(imgURL => {
-            dispatch({ type: "UPLOAD_IMG", imgURL });
+        res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
+          // add to the project in firestore
+          const firestore = getFirestore();
+          const projDocRef = firestore.collection("projects").doc(currentProject.id);
+
+          firestore
+          .runTransaction(function(transaction) {
+            // This code may get re-run multiple times if there are conflicts.
+            return transaction.get(projDocRef).then(function(projDoc) {
+              if (!projDoc.exists) {
+                throw "Document does not exist!";
+              }
+              projDocRef.update({ imgURL, lastEdit: new Date() });
+            });
           })
+          .then(res => {
+            dispatch({ type: "PROJECT_UPDATED", currentProject });
+    
+            console.log("Project updated, " + res);
+            return;
+          })
+          .catch(err => {
+            console.log("project update error: ", err.message);
+            return;
+          });
+
+          dispatch({ type: "UPLOAD_IMG", imgURL });
+        });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
@@ -102,15 +123,16 @@ export const updateProject = () => {
     const projDocRef = firestore.collection("projects").doc(project.id);
     console.log(projDocRef);
 
-    firestore.runTransaction(function(transaction) {
-      // This code may get re-run multiple times if there are conflicts.
-      return transaction.get(projDocRef).then(function(projDoc) {
-        if (!projDoc.exists) {
-          throw "Document does not exist!";
-        }
-        projDocRef.set({ ...project, lastEdit: new Date() });
-      });
-    })
+    firestore
+      .runTransaction(function(transaction) {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(projDocRef).then(function(projDoc) {
+          if (!projDoc.exists) {
+            throw "Document does not exist!";
+          }
+          projDocRef.set({ ...project, lastEdit: new Date() });
+        });
+      })
       .then(res => {
         dispatch({ type: "PROJECT_UPDATED", project });
 

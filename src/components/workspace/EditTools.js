@@ -153,12 +153,11 @@ class EditTools extends Component {
             readOnly
           ></textarea>
 
-          <Button
-            className="btn btn-primary mx-auto px-3"
-            onClick={this.props.handleUpdateProject}
-          >
-            Update project
-          </Button>
+          <div className="mx-auto px-3">
+            <Button className="btn btn-primary" onClick={this.props.handleUpdateProject}>
+              Save
+            </Button>
+          </div>
         </div>
       </div>
     );
