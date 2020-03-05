@@ -32,7 +32,10 @@ for (uint8_t i = 0; i < NUM_LEDS; i++)
 class HomePage extends Component {
   render() {
     return (
-      <div className="d-flex flex-column justify-content-center align-items-center h-75 my-4">
+      <div
+        className="d-flex flex-column justify-content-center align-items-center my-4"
+        style={{ height: "88%" }}
+      >
         <h1>Noise2LED - Paco Croket</h1>
         <span className="w-50 m-2">
           The idea here is to paint the position of your LEDs in ther order and then get an custom output to
@@ -64,7 +67,7 @@ class HomePage extends Component {
           .
         </span>
 
-        <pre className="w-50 m-2">
+        <pre className="m-2 p-3 border border-info">
           <code className="text-info">{code}</code>
         </pre>
       </div>

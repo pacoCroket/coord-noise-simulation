@@ -18,29 +18,20 @@ const projectReducer = (state = initState, action) => {
       console.log("Current project ID: ", action.project.id);
       return { ...state, currentProject: { ...action.project } };
     case "UPLOAD_IMG":
-      console.log("Image uploaded: " + action.img);
-      return state;
+      console.log("Image uploaded: ", action.imgURL);
+      return {...state, currentProject: {...state.currentProject, imgURL: action.imgURL}};
     case "ADD_IMG":
       console.log("Img added ", action.imgUrl);
-      var projects = state.projects.map(project =>
-        project.id === action.project.id ? action.project : project
-      );
-      return { ...state, projects };
+      return state;
     case "ADD_LED":
-      var projects = state.projects.map(project =>
-        project.id === state.currrentProjectId ? { ...project, leds: [...project.leds, action.led] } : project
-      );
-      return { ...state, projects };
+
+      return state;
     case "DEL_LED":
-      var leds = state.leds.filter(led => led.id !== action.led.id);
-      // update ID of all LEDs to maintain continuity
-      leds.forEach((led, index) => {
-        led.id = index;
-      });
-      return { ...state, leds };
+
+      return state;
     case "SET_LED":
-      var leds = state.leds.map(led => (led.id === action.led.id ? action.led : led));
-      return { ...state, leds };
+
+      return state;
     default:
       return state;
   }

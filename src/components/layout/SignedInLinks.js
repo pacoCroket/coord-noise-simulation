@@ -11,7 +11,12 @@ class SignedInLinks extends Component {
   };
 
   handleSetProject = project => {
-    this.props.setCurrentProject(project);
+    if (project) {
+      this.props.setCurrentProject(project);
+    } else {
+      const project = this.props.projects[0];
+      this.props.setCurrentProject(project);
+    }
   };
 
   delProject = () => {
@@ -43,7 +48,12 @@ class SignedInLinks extends Component {
                 Projects
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <NavLink exact to="/project/last" className="dropdown-item">
+                <NavLink
+                  exact
+                  to="/project/last"
+                  onClick={() => this.handleSetProject()}
+                  className="dropdown-item"
+                >
                   Latest Project
                 </NavLink>
                 <div className="dropdown-divider"></div>
@@ -74,7 +84,9 @@ class SignedInLinks extends Component {
           </ul>
           {/* </div> */}
 
-          <div className="navbar-brand mx-auto order-0">{this.props.currentProject&&this.props.currentProject.title}</div>
+          <div className="navbar-brand mx-auto order-0">
+            {this.props.currentProject && this.props.currentProject.title}
+          </div>
 
           {/* Right */}
           {/* <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent"> */}

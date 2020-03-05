@@ -3,6 +3,7 @@ import Draggable from "./Draggable";
 import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
 import { connect } from "react-redux";
+import { isEmpty } from "underscore";
 
 class Canvas extends Component {
   constructor() {
@@ -127,15 +128,17 @@ class Canvas extends Component {
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
-    const { paintMode, ledSize, imgSize, imgPos, backImg } = this.props;
+    const { paintMode, ledSize, imgSize, imgPos } = this.props;
+    const { imgURL } = this.props.currentProject;
+
     return (
       <div onMouseDown={this.handleMouseDown}>
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <div id="canvas">
-            {backImg.imgUrl.length>1? (
+            {!isEmpty(imgURL) ? (
               <Image
-                src={backImg.imgUrl}
+                src={imgURL}
                 className="img-fluid backImg"
                 // style={this.setImgStyle()}
                 onLoad={this.updateImageDimensions}
@@ -190,6 +193,7 @@ class Canvas extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    currentProject: state.project.currentProject
   };
 };
 

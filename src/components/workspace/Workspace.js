@@ -4,9 +4,11 @@ import Canvas from "./Canvas";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Utils from "../../Utils";
+import { isEmpty } from "underscore";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import moment from "moment";
 import {
   getUserProjects,
   setCurrentProject,
@@ -21,6 +23,10 @@ class Workspace extends Component {
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
     imgPos: { imgX: 0, imgY: 0 }
+  };
+
+  handleSetProject = project => {
+    this.props.setCurrentProject(project);
   };
 
   updateImageDimensions = () => {
@@ -77,19 +83,20 @@ class Workspace extends Component {
       // redirect to last project
     } else if (this.props.match.params.id === "last") {
       const project = this.props.projects[0];
+      // Warning: Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.
       this.props.setCurrentProject(project);
       return <Redirect to={"/project/" + project.id} />;
     }
 
     // loading if not current project
-    if (Object.getOwnPropertyNames(this.props.currentProject).length === 0)
+    if (isEmpty(this.props.currentProject))
       return (
         <div className="d-flex justify-content-center align-items-center h-75">
           <Spinner animation="border" />
         </div>
       );
 
-    const { leds, backImg } = this.props.currentProject;
+    const { leds, backImg, description, createdAt } = this.props.currentProject;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
     // return <h2> In Progress</h2>;
@@ -109,7 +116,10 @@ class Workspace extends Component {
             ></EditTools>
           </div>
           {/* TODO vertical divider */}
-          <div className="col-1 p-0"></div>
+          <div className="col-1 p-0 d-flex flex-column">
+            <h5>{description}</h5>
+            <h5 className="mt-auto">Created: {moment(createdAt.toDate()).calendar()}</h5>
+          </div>
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}

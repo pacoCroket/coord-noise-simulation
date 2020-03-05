@@ -1,3 +1,5 @@
+import Utils from "../../Utils";
+
 // Create a new blank project
 export const createProject = project => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -61,25 +63,31 @@ export const setCurrentProject = currentProject => {
 };
 
 export const uploadImg = img => {
+  // TODO check for file types
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     // Path within Database for metadata (also used for file Storage path)
-    const storagePath = "projectImages";
-    const dbPath = "projectFilesInfo";
     const authorId = getState().firebase.auth.uid;
-    const fileMetadata = { contentType: "image/jpeg", authorId };
+    const projectId = getState().project.currentProject.id;
+    const storagePath = "projectImages/" + authorId;
+    const fileName = projectId + "_" + Date.now();
+    const renamedImg = new File([img], fileName, { type: img.type });
+    // TODO metadata not working
+    // const dbPath = "projectFilesInfo/" + authorId;
+    // const fileMetadata = { authorId, projectId, fileName};
 
     firebase
-      .uploadFile(storagePath, img, storagePath, { metadata: fileMetadata })
+      .uploadFile(storagePath, renamedImg)
       // firebase.uploadFile(storagePath, img, storagePath)
-      .then(uploadTaskSnapshot => {
-        console.log("Img upload Sucess: " + uploadTaskSnapshot);
-        dispatch({ type: "UPLOAD_IMG", img });
+      .then(res => {
+        res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
+          dispatch({ type: "UPLOAD_IMG", imgURL });
+          console.log("Img upload Sucess: " + imgURL);
+        });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
       });
-    // const { currrentProjectId } = getState().project;
   };
 };
 
