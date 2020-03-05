@@ -38,8 +38,8 @@ class HomePage extends Component {
     const { auth, notifications } = this.props;
 
     return (
-      <div className="row homepage mw-100 mx-0">
-        <div className="col d-flex flex-column justify-content-center align-items-center my-4">
+      <div className="row homepage mw-100 mx-0 mt-5 ">
+        <div className="col d-flex flex-column justify-content-center align-items-center">
           <h1>Noise2LED - by Paco Croket</h1>
           <span className="w-50 m-2">
             The idea here is to paint the position of your LEDs in ther order and then get an custom output to
@@ -75,13 +75,13 @@ class HomePage extends Component {
             <code className="text-info">{code}</code>
           </pre>
         </div>
-        <div className="col-2 d-flex flex-column mt-4">
-          <ul className="list-unstyled norifications mr-auto bg-light p-2 pb-3 rounded">
-            <p className="h4 text-dark p-1">Notifications</p>
+        <div className="col-2 d-flex flex-column">
+          <ul className="notification-area">
+            <p className="h4 text-dark px-3">Notifications</p>
             {notifications &&
               notifications.map(item => {
                 return (
-                  <li key={item.id} className="p-2 bg-dark text-light mt-3 rounded">
+                  <li key={item.id} className="notification text-light">
                     <div>
                       <span className="text-capitalize text-info">{item.user} </span>
                       <span className="text-lowercase">{item.content}</span>

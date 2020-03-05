@@ -101,8 +101,8 @@ class Canvas extends Component {
       !this.state.isDraggingLed &&
       this.state.tempLeds[0]
     ) {
-      const led = { id: this.props.leds.length, x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y };
-      this.props.addLed(led);
+      // const led = { id: this.props.leds.length, x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y };
+      this.props.addLed(this.state.tempLeds[0]);
     } else if (this.props.paintMode === Utils.paintModes.line) {
       // add all of tempLeds
       this.state.tempLeds.forEach(led => {
@@ -129,7 +129,7 @@ class Canvas extends Component {
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
-    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds } = this.props;
+    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds, setLed, clickedLed } = this.props;
 
     return (
       <div onMouseDown={this.handleMouseDown}>
@@ -142,6 +142,7 @@ class Canvas extends Component {
                 className="img-fluid backImg"
                 // style={this.setImgStyle()}
                 onLoad={this.updateImageDimensions}
+                onLoadedData={this.updateImageDimensions}
                 alt="reference for leds"
                 fluid={true}
               ></Image>
@@ -159,8 +160,8 @@ class Canvas extends Component {
               imgSize={imgSize}
               imgPos={imgPos}
               ledSize={ledSize}
-              clickedLed={this.props.clickedLed}
-              setLed={this.setLed}
+              clickedLed={clickedLed}
+              setLed={setLed}
               onDragStart={this.onDragStart}
               onDrag={this.onDrag}
               onDragEnd={this.onDragEnd}
@@ -178,8 +179,8 @@ class Canvas extends Component {
               imgSize={imgSize}
               imgPos={imgPos}
               ledSize={ledSize}
-              clickedLed={this.props.clickedLed}
-              setLed={this.props.setLed}
+              clickedLed={clickedLed}
+              setLed={setLed}
               onDragStart={this.onDragStart}
               onDrag={this.onDrag}
               onDragEnd={this.onDragEnd}

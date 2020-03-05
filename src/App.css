@@ -115,7 +115,18 @@ body {
 }
 
 /* End EditTools */
-/* canvas */
+
+/* Start info col */
+
+.project-info {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #31353d;
+    border-radius: 1rem;
+    font-size: 1rem;
+}
+
+/* Startr Canvas */
 .canvas {
   background: none;
   /* border: 2px solid black; */
@@ -157,6 +168,24 @@ body {
 .homepage {
   background-color: #1b1e24;
 }
+
+.notification-area {
+  margin: 0 auto;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  background-color: #fff;
+  list-style: none;
+  list-style-type: none;
+}
+
+.notification {
+  margin: 1rem .5rem;
+  padding: 1rem;
+  background-color: #31353d;
+  border-radius: 1rem;
+}
+
+/* End Home Page */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;

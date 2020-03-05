@@ -1,21 +1,23 @@
 // Create a new blank project
-export const createProject = project => {
+export const createProject = newProject => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // make async call to DB
     const firestore = getFirestore();
     const profile = getState().firebase.profile;
     const uid = getState().firebase.auth.uid;
+    const project = {
+      ...newProject,
+      authorFirstName: profile.firstName,
+      authorLastName: profile.lastName,
+      authorId: uid,
+      leds: [],
+      createdAt: new Date(),
+      lastEdit: new Date()
+    }
 
     firestore
       .collection("projects")
-      .add({
-        ...project,
-        authorFirstName: profile.firstName,
-        authorLastName: profile.lastName,
-        authorId: uid,
-        createdAt: new Date(),
-        lastEdit: new Date()
-      })
+      .add(project)
       .then(() => {
         dispatch({ type: "CREATE_PROJECT", project });
       })
@@ -56,9 +58,9 @@ export const delProject = projectId => {
   };
 };
 
-export const setCurrentProject = currentProject => {
-  console.log("dispatch currentProject, ", currentProject);
-  return dispatch => dispatch({ type: "SET_CURRENT_PROJECT", currentProject });
+export const setLocalProject = localProject => {
+  console.log("dispatch localProject, ", localProject);
+  return dispatch => dispatch({ type: "SET_LOCAL_PROJECT", localProject });
 };
 
 export const uploadImg = img => {
@@ -67,7 +69,7 @@ export const uploadImg = img => {
     const firebase = getFirebase();
     // Path within Database for metadata (also used for file Storage path)
     const authorId = getState().firebase.auth.uid;
-    const currentProject = getState().project.currentProject;
+    const currentProject = getState().project.localProject;
     const storagePath = "projectImages/" + authorId;
     const fileName = currentProject.id + "_" + Date.now();
     const renamedImg = new File([img], fileName, { type: img.type });
@@ -85,25 +87,24 @@ export const uploadImg = img => {
           const projDocRef = firestore.collection("projects").doc(currentProject.id);
 
           firestore
-          .runTransaction(function(transaction) {
-            // This code may get re-run multiple times if there are conflicts.
-            return transaction.get(projDocRef).then(function(projDoc) {
-              if (!projDoc.exists) {
-                throw "Document does not exist!";
-              }
-              projDocRef.update({ imgURL, lastEdit: new Date() });
+            .runTransaction(function(transaction) {
+              // This code may get re-run multiple times if there are conflicts.
+              return transaction.get(projDocRef).then(function(projDoc) {
+                if (!projDoc.exists) {
+                  throw "Document does not exist!";
+                }
+                // set instead of update, in case there is no imgURL field
+                projDocRef.set({ imgURL, lastEdit: new Date() }, { merge: true });
+              });
+            })
+            .then(res => {
+              dispatch({ type: "PROJECT_UPDATED", currentProject });
+
+              console.log("Project updated, " + res);
+            })
+            .catch(err => {
+              console.log("project update error: ", err.message);
             });
-          })
-          .then(res => {
-            dispatch({ type: "PROJECT_UPDATED", currentProject });
-    
-            console.log("Project updated, " + res);
-            return;
-          })
-          .catch(err => {
-            console.log("project update error: ", err.message);
-            return;
-          });
 
           dispatch({ type: "UPLOAD_IMG", imgURL });
         });
@@ -117,31 +118,29 @@ export const uploadImg = img => {
 export const updateProject = () => {
   // TODO fix setting the project!!
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    const project = getState().project.currentProject;
+    const project = getState().project.localProject;
     console.log("updating project, ", project);
     const firestore = getFirestore();
     const projDocRef = firestore.collection("projects").doc(project.id);
     console.log(projDocRef);
 
     firestore
-      .runTransaction(function(transaction) {
+      .runTransaction(transaction => {
         // This code may get re-run multiple times if there are conflicts.
-        return transaction.get(projDocRef).then(function(projDoc) {
+        return transaction.get(projDocRef).then(projDoc => {
           if (!projDoc.exists) {
             throw "Document does not exist!";
           }
-          projDocRef.set({ ...project, lastEdit: new Date() });
+          projDocRef.set({ ...project, lastEdit: new Date() }, { merge: true });
         });
       })
       .then(res => {
         dispatch({ type: "PROJECT_UPDATED", project });
 
         console.log("Project updated, " + res);
-        return;
       })
       .catch(err => {
         console.log("project update error: ", err.message);
-        return;
       });
   };
 };
@@ -155,9 +154,32 @@ export const addImg = backImg => {
 };
 
 export const addLed = led => {
-  return (dispatch, getState) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
     // make async call to DB
-    dispatch({ type: "ADD_LED", led });
+    // add to the project in firestore
+    const firestore = getFirestore();
+    const currentProject = getState().project.currentProject;
+    const projDocRef = firestore.collection("projects").doc(currentProject.id);
+
+    firestore
+      .runTransaction(transaction => {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(projDocRef).then(projDoc => {
+          if (!projDoc.exists) {
+            throw "Document does not exist!";
+          }
+          const newLeds = [...currentProject.leds, led]
+          projDocRef.set({ leds: newLeds, lastEdit: new Date() }, { merge: true });
+        });
+      })
+      .then(res => {
+        dispatch({ type: "ADD_LED", led });
+
+        console.log("LED added, " + res);
+      })
+      .catch(err => {
+        console.log("LED add error: ", err.message);
+      });
   };
 };
 

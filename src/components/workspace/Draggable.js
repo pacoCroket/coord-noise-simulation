@@ -63,7 +63,7 @@ class Draggable extends Component {
       // this.props.onDrag();
     }
 
-    let led2set = this.props.led;
+    let led2set = {id: this.props.led.id}; 
 
     led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
     led2set.y = clientY / height - this.state.originalY + this.state.lastTranslateY;
@@ -118,17 +118,4 @@ class Draggable extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    backImg: state.project.backImg
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    deleteLed: led => dispatch({ type: "DEL_LED", led }),
-    setLed: led => dispatch({type: "SET_LED", led})
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Draggable);
+export default (Draggable);

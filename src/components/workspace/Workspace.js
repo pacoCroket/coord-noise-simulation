@@ -8,19 +8,32 @@ import { isEmpty } from "underscore";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
-import { uploadImg, addLed, setLed, delLed, updateProject } from "../../store/actions/projectActions";
+import {
+  uploadImg,
+  addLed,
+  setLed,
+  delLed,
+  setLocalProject,
+  updateProject
+} from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 },
-    currentProjectId: this.props.match.params.id
+    imgPos: { imgX: 0, imgY: 0 }
   };
 
-  handleUpdateProject = id => {
-    this.setState({ currentProjectId: id });
+  handleSetProject = project => {
+    if (project) {
+      this.props.setLocalProject(project);
+    } else if (!isEmpty(this.props.projects)) {
+      this.props.setLocalProject(this.props.projects[0]);
+    }
+  };
+
+  handleUpdateProject = () => {
     this.props.updateProject();
   };
 
@@ -29,19 +42,23 @@ class Workspace extends Component {
   };
 
   updateImageDimensions = () => {
-    let { width, height } = document.getElementById("canvas");
-    const paintAreaWidth = document.getElementById("paintArea").getBoundingClientRect().width;
-    const paintAreaHeight = document.getElementById("paintArea").getBoundingClientRect().height;
+    const canvas = document.getElementById("canvas");
+    const paintArea = document.getElementById("paintArea");
 
-    width = width > paintAreaWidth ? paintAreaWidth : width;
-    height = height > paintAreaHeight ? paintAreaHeight : height;
+    let canvasWidth = canvas.clientWidth;
+    let canvasHeight = canvas.clientHeight;
+    const paintAreaWidth = paintArea.clientWidth;
+    const paintAreaHeight = paintArea.clientHeight;
+
+    canvasWidth = canvasWidth > paintAreaWidth ? paintAreaWidth : canvasWidth;
+    canvasHeight = canvasHeight > paintAreaHeight ? paintAreaHeight : canvasHeight;
     const imgPos = {
-      imgX: document.getElementById("canvas").getBoundingClientRect().left,
-      imgY: document.getElementById("canvas").getBoundingClientRect().top
+      imgX: canvas.getBoundingClientRect().left,
+      imgY: canvas.getBoundingClientRect().top
     };
 
     this.setState({
-      imgSize: { width, height },
+      imgSize: { width: canvasWidth, height: canvasHeight },
       imgPos
     });
   };
@@ -58,11 +75,16 @@ class Workspace extends Component {
     this.setState({ outputScaling });
   };
 
-  addLed = ({ x, y }) => {
+  addLed = led => {
     // do nothing if paintMode == 'erase'
     if (this.state.paintMode === Utils.paintModes.erase) return;
-    const led = { id: this.props.leds.length, x, y };
     this.props.addLed(led);
+  };
+
+  setLed = led => {
+    if (this.state.paintMode !== Utils.paintModes.erase) {
+      this.props.setLed(led);
+    }
   };
 
   clickedLed = led => {
@@ -75,27 +97,23 @@ class Workspace extends Component {
   render() {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
-    // redirect to new project
-    // if (this.props.projects.length === 0) {
-    //   return <Redirect to="/newproject" />;
-
-    //   // redirect to last project
-    // }
 
     if (!isEmpty(this.props.projects) && this.props.match.params.id === "last") {
       const project = this.props.projects[0];
+      this.handleSetProject(project);
       return <Redirect to={"/project/" + project.id} />;
     }
 
-    // loading if not current project
-    if (isEmpty(this.props.currentProject))
+    // loading if not local project
+    if (isEmpty(this.props.localProject))
       return (
         <div className="d-flex justify-content-center align-items-center h-75">
           <Spinner animation="border" />
         </div>
       );
 
-    const { leds, imgURL, description, createdAt } = this.props.currentProject;
+    const { leds, imgURL, description, createdAt } = this.props.localProject;
+    const { lastEdit } = this.props.onlineProject;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
     // return <h2> In Progress</h2>;
@@ -116,11 +134,6 @@ class Workspace extends Component {
               handleUpdateProject={this.handleUpdateProject}
             ></EditTools>
           </div>
-          {/* TODO vertical divider */}
-          <div className="col-1 p-3 my-2 d-flex flex-column">
-            <h5>{description}</h5>
-            <h5 className="mt-auto">Created: {moment(createdAt.toDate()).calendar()}</h5>
-          </div>
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}
@@ -129,10 +142,30 @@ class Workspace extends Component {
               ledSize={ledSize}
               imgSize={imgSize}
               imgPos={imgPos}
+              addLed={this.addLed}
+              setLed={this.setLed}
+              clickedLed={this.clickedLed}
               updateImageDimensions={this.updateImageDimensions}
               onImgLoaded={this.onImgLoaded}
               clickedLed={this.clickedLed}
             ></Canvas>
+          </div>
+          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1 m-2 d-flex flex-column justify-content-center text-light">
+            <p className="project-info">
+              <span className="font-weight-bold">Description:</span>
+              <br />
+              {description}
+            </p>
+            <p className="project-info">
+              <span className="font-weight-bold">Updated:</span>
+              <br />
+              {lastEdit && moment(lastEdit.toDate()).calendar()}
+            </p>
+            <p className="project-info">
+              <span className="font-weight-bold">Created:</span>
+              <br />
+              {moment(createdAt.toDate()).calendar()}
+            </p>
           </div>
         </div>
       </div>
@@ -143,9 +176,11 @@ class Workspace extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
   const { data, ordered } = state.firestore;
-  const currentProject = data.projects && (id === "last" ? ordered[0] : data.projects[id]);
+  const onlineProject = data.projects && (id === "last" ? ordered[0] : data.projects[id]);
+  const localProject = state.project.localProject;
   return {
-    currentProject,
+    onlineProject,
+    localProject,
     projects: ordered.projects,
     auth: state.firebase.auth
   };
@@ -153,11 +188,12 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project }),
     uploadImg: imgFile => dispatch(uploadImg(imgFile)),
     updateProject: () => dispatch(updateProject()),
-    addLed: led => dispatch(addLed(led)),
-    setLed: led => dispatch(setLed(led)),
-    delLed: led => dispatch(delLed(led))
+    addLed: led => dispatch({ type: "ADD_LED", led }),
+    setLed: led => dispatch({ type: "SET_LED", led }),
+    delLed: led => dispatch({ type: "DEL_LED", led })
   };
 };
 

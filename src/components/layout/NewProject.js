@@ -6,7 +6,7 @@ import { createProject, getUserProjects } from "../../store/actions/projectActio
 import { Redirect } from "react-router-dom";
 
 class NewProject extends Component {
-  state = { title: "", description: ""};
+  state = { title: "", description: "", submitted: false};
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -15,12 +15,13 @@ class NewProject extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.createProject(this.state);
-    this.props.history.push("/project/last");
+    this.setState({submitted: true})
   };
 
   render() {
-    const { auth } = this.props;
+    const { auth, submitted } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
+    if (submitted) return <Redirect to="/project/last" />;
 
     return (
       <div className="container my-5 w-50">

@@ -120,7 +120,7 @@ class EditTools extends Component {
           </ToggleButtonGroup>
         </ButtonToolbar>
 
-        <div className="mx-auto">
+        <div className="mx-auto d-flex flex-column p-2">
           <h4 className="mx-1">LED size</h4>
           {/* TODO feature to estimate real LED size */}
           <Slider
@@ -153,9 +153,9 @@ class EditTools extends Component {
             readOnly
           ></textarea>
 
-          <div className="mx-auto px-3">
+          <div className="mx-auto mt-1">
             <Button className="btn btn-primary" onClick={this.props.handleUpdateProject}>
-              Save
+              Save Project
             </Button>
           </div>
         </div>
