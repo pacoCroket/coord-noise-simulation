@@ -5,13 +5,16 @@ service cloud.firestore {
       allow read, create: if request.auth.uid != null
     	allow write: if resource.data.authorId == request.auth.uid
     }
-    match /users/{userId}{
+    match /users/{userId} {
     allow create
     allow read: if request.auth.uid != null
     allow write: if request.auth.uid == userId
     }
-    match /projectFilesInfo{
+    match /projectFilesInfo {
     allow read, create: if request.auth.uid  != null
+    }
+    match /notifications/{notification} {
+      allow read: if true
     }
   }
 }

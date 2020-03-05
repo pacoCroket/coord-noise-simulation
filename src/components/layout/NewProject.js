@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
-import { createProject } from "../../store/actions/projectActions";
+import { createProject, getUserProjects } from "../../store/actions/projectActions";
 import { Redirect } from "react-router-dom";
 
 class NewProject extends Component {
@@ -15,6 +15,7 @@ class NewProject extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.createProject(this.state);
+    this.props.getUserProjects();
     this.props.history.push("/project/last");
   };
 
@@ -67,7 +68,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProject: project => dispatch(createProject(project))
+    createProject: project => dispatch(createProject(project)),
+    getUserProjects: () => dispatch(getUserProjects()),
   };
 };
 
