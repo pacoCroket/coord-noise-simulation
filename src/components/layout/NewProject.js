@@ -6,7 +6,7 @@ import { createProject, getUserProjects } from "../../store/actions/projectActio
 import { Redirect } from "react-router-dom";
 
 class NewProject extends Component {
-  state = { title: "", description: "", backImg: {imgUrl: ""}, leds: []};
+  state = { title: "", description: ""};
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -15,7 +15,6 @@ class NewProject extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.createProject(this.state);
-    this.props.getUserProjects();
     this.props.history.push("/project/last");
   };
 

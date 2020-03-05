@@ -38,7 +38,7 @@ class HomePage extends Component {
     const { auth, notifications } = this.props;
 
     return (
-      <div className="row mw-100 mx-0 bg-dark">
+      <div className="row homepage mw-100 mx-0">
         <div className="col d-flex flex-column justify-content-center align-items-center my-4">
           <h1>Noise2LED - by Paco Croket</h1>
           <span className="w-50 m-2">
@@ -76,17 +76,17 @@ class HomePage extends Component {
           </pre>
         </div>
         <div className="col-2 d-flex flex-column mt-4">
-          <ul className="list-unstyled norifications mr-auto bg-light p-2 rounded">
-            <p class="h4 text-dark">Notifications</p>
+          <ul className="list-unstyled norifications mr-auto bg-light p-2 pb-3 rounded">
+            <p className="h4 text-dark p-1">Notifications</p>
             {notifications &&
               notifications.map(item => {
                 return (
-                  <li key={item.id} className="p-2 bg-dark text-light mt-4 rounded">
+                  <li key={item.id} className="p-2 bg-dark text-light mt-3 rounded">
                     <div>
-                      <span className="text-capitalize">{item.user} </span>
+                      <span className="text-capitalize text-info">{item.user} </span>
                       <span className="text-lowercase">{item.content}</span>
                     </div>
-                    <div className="font-weight-light">{moment(item.time.toDate()).fromNow()}</div>
+                    <div className="font-weight-light text-muted">{moment(item.time.toDate()).fromNow()}</div>
                   </li>
                 );
               })}
@@ -111,5 +111,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: "notifications", limit: 5 }])
+  firestoreConnect([{ collection: "notifications", limit: 5, orderBy: ['time', 'desc']}])
 )(HomePage);

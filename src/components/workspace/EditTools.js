@@ -20,7 +20,7 @@ class EditTools extends Component {
     var active = document.getElementsByClassName("toolbox-btn active");
     if (active[0]) {
       active[0].className = active[0].className.replace(" active", "");
-    };
+    }
     // set this button to active
     event.target.className += " active";
     if (value === undefined) return;
@@ -83,11 +83,10 @@ class EditTools extends Component {
     const { handleUploadImage, paintMode } = this.props;
 
     return (
-      <div className="d-flex flex-column editTools">
+      <div className="d-flex flex-column editTools h-100 py-3">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
-          <Dropzone 
-          handleUploadImage={handleUploadImage}/>
+          <Dropzone handleUploadImage={handleUploadImage} />
           {/* <Uploader/> */}
         </div>
 
@@ -121,8 +120,8 @@ class EditTools extends Component {
           </ToggleButtonGroup>
         </ButtonToolbar>
 
-        <div className="mx-4">
-          <h4 className="mx-auto">LED size</h4>
+        <div className="mx-auto">
+          <h4 className="mx-1">LED size</h4>
           {/* TODO feature to estimate real LED size */}
           <Slider
             onChange={this.handleSliderChange}
@@ -154,9 +153,12 @@ class EditTools extends Component {
             readOnly
           ></textarea>
 
-          {/* <Button className="btn btn-primary toolbox-btn w-100 mx-auto" value="output" id="output" onClick={this.handleOutput}>
-            <i className="fas fa-microchip"></i>
-          </Button> */}
+          <Button
+            className="btn btn-primary mx-auto px-3"
+            onClick={this.props.handleUpdateProject}
+          >
+            Update project
+          </Button>
         </div>
       </div>
     );

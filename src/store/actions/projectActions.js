@@ -1,3 +1,5 @@
+import db from "../../config/firebaseConfig";
+
 // Create a new blank project
 export const createProject = project => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -84,9 +86,6 @@ export const uploadImg = img => {
           .then(imgURL => {
             dispatch({ type: "UPLOAD_IMG", imgURL });
           })
-          .finally(() => {
-            updateProject(getState().project.currentProject);
-          });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
@@ -94,19 +93,33 @@ export const uploadImg = img => {
   };
 };
 
-export const updateProject = project => {
-  console.log("updating project, ", project);
+export const updateProject = () => {
+  // TODO fix setting the project!!
   return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const project = getState().project.currentProject;
+    console.log("updating project, ", project);
     const firestore = getFirestore();
-    firestore
-      .collection("projects")
-      .doc(project.id)
-      .update({ ...project, lastEdit: new Date() })
+    const projDocRef = firestore.collection("projects").doc(project.id);
+    console.log(projDocRef);
+
+    firestore.runTransaction(function(transaction) {
+      // This code may get re-run multiple times if there are conflicts.
+      return transaction.get(projDocRef).then(function(projDoc) {
+        if (!projDoc.exists) {
+          throw "Document does not exist!";
+        }
+        projDocRef.set({ ...project, lastEdit: new Date() });
+      });
+    })
       .then(res => {
+        dispatch({ type: "PROJECT_UPDATED", project });
+
         console.log("Project updated, " + res);
+        return;
       })
       .catch(err => {
         console.log("project update error: ", err.message);
+        return;
       });
   };
 };

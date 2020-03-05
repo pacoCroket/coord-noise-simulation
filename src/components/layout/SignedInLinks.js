@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { firestoreConnect } from "react-redux-firebase";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { signOut } from "../../store/actions/authActions";
 import { getUserProjects, delProject, setCurrentProject } from "../../store/actions/projectActions";
 import { Button } from "react-bootstrap";
 
 class SignedInLinks extends Component {
-  componentDidMount = () => {
-    this.props.getUserProjects();
-  };
+  // componentDidMount = () => {
+  //   this.props.getUserProjects();
+  // };
 
   handleSetProject = project => {
     if (project) {
@@ -20,7 +22,7 @@ class SignedInLinks extends Component {
   };
 
   delProject = () => {
-    this.props.delProject(this.props.project.id);
+    this.props.delProject(this.props.currentProject.id);
   };
 
   render() {
@@ -131,11 +133,12 @@ class SignedInLinks extends Component {
 }
 
 const mapStateToProps = state => {
+  const { ordered } = state.firestore;
   return {
     authError: state.auth.authError,
     auth: state.firebase.auth,
     profile: state.firebase.profile,
-    projects: state.project.projects,
+    projects: ordered.projects,
     currentProject: state.project.currentProject
   };
 };
@@ -149,4 +152,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "projects", limit: 10, orderBy: ['createdAt', 'desc']}])
+)(SignedInLinks);

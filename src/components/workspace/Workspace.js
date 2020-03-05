@@ -2,21 +2,26 @@ import React, { Component } from "react";
 import EditTools from "./EditTools";
 import Canvas from "./Canvas";
 import { connect } from "react-redux";
-import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 import Utils from "../../Utils";
 import { isEmpty } from "underscore";
-import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
-import { uploadImg, addLed, setLed, delLed } from "../../store/actions/projectActions";
+import { uploadImg, addLed, setLed, delLed, updateProject } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 }
+    imgPos: { imgX: 0, imgY: 0 },
+    currentProjectId: this.props.match.params.id
+  };
+
+  handleUpdateProject = id => {
+    this.setState({ currentProjectId: id });
+    this.props.updateProject();
   };
 
   handleUploadImage = imgFile => {
@@ -71,11 +76,13 @@ class Workspace extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
     // redirect to new project
-    if (this.props.projects.length === 0) {
-      return <Redirect to="/newproject" />;
+    // if (this.props.projects.length === 0) {
+    //   return <Redirect to="/newproject" />;
 
-      // redirect to last project
-    } else if (this.props.match.params.id === "last") {
+    //   // redirect to last project
+    // }
+
+    if (!isEmpty(this.props.projects) && this.props.match.params.id === "last") {
       const project = this.props.projects[0];
       return <Redirect to={"/project/" + project.id} />;
     }
@@ -88,14 +95,14 @@ class Workspace extends Component {
         </div>
       );
 
-    const { leds, backImg, description, createdAt } = this.props.currentProject;
+    const { leds, imgURL, description, createdAt } = this.props.currentProject;
     const { paintMode, ledSize, imgSize, imgPos } = this.state;
 
     // return <h2> In Progress</h2>;
     return (
       <div className="workspace">
         <div className="row noSel mw-100 h-100 mx-0 ">
-          <div className="col-lg-2 col-sm-3 col-xs-4 px-4">
+          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1">
             <EditTools
               leds={leds}
               paintMode={paintMode}
@@ -106,17 +113,18 @@ class Workspace extends Component {
               paintModeChanged={this.paintModeChanged}
               ledSizeChanged={this.ledSizeChanged}
               outputScalingChanged={this.outputScalingChanged}
+              handleUpdateProject={this.handleUpdateProject}
             ></EditTools>
           </div>
           {/* TODO vertical divider */}
-          <div className="col-1 p-0 d-flex flex-column">
+          <div className="col-1 p-3 my-2 d-flex flex-column">
             <h5>{description}</h5>
             <h5 className="mt-auto">Created: {moment(createdAt.toDate()).calendar()}</h5>
           </div>
           <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
             <Canvas
               leds={leds}
-              backImg={backImg}
+              imgURL={imgURL}
               paintMode={paintMode}
               ledSize={ledSize}
               imgSize={imgSize}
@@ -134,10 +142,11 @@ class Workspace extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const { data } = state.firestore;
+  const { data, ordered } = state.firestore;
+  const currentProject = data.projects && (id === "last" ? ordered[0] : data.projects[id]);
   return {
-    currentProject: data.projects && data.projects[id],
-    projects: state.project.projects,
+    currentProject,
+    projects: ordered.projects,
     auth: state.firebase.auth
   };
 };
@@ -145,13 +154,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     uploadImg: imgFile => dispatch(uploadImg(imgFile)),
+    updateProject: () => dispatch(updateProject()),
     addLed: led => dispatch(addLed(led)),
     setLed: led => dispatch(setLed(led)),
     delLed: led => dispatch(delLed(led))
   };
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect(props => [{ collection: "projects", doc: props.match.params.id }])
-)(Workspace);
+export default compose(connect(mapStateToProps, mapDispatchToProps))(Workspace);
