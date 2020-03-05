@@ -16,18 +16,7 @@ class Dropzone extends Component {
   onFilesAdded = evt => {
     if (this.props.disabled) return;
     const imgFile = evt.target.files.item(0);
-    this.props.uploadImg(imgFile);
-
-  //   try {
-  //     var reader = new FileReader();
-  //     reader.onload = e => {
-  //       this.props.onImgAdded({ imgUrl: e.target.result });
-  //     };
-
-  //     reader.readAsDataURL(img);
-  //   } catch (e) {
-  //     console.warn(e);
-  //   }
+    this.props.handleUploadImage(imgFile);
   };
 
   render() {
@@ -45,14 +34,4 @@ class Dropzone extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    uploadImg: img => dispatch(uploadImg(img))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dropzone);
+export default Dropzone;

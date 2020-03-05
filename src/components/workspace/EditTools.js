@@ -80,13 +80,14 @@ class EditTools extends Component {
   };
 
   render() {
-    const { onImgAdded, paintMode } = this.props;
+    const { handleUploadImage, paintMode } = this.props;
 
     return (
       <div className="d-flex flex-column editTools">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
-          <Dropzone />
+          <Dropzone 
+          handleUploadImage={handleUploadImage}/>
           {/* <Uploader/> */}
         </div>
 
@@ -178,17 +179,4 @@ ValueLabelComponent.propTypes = {
   value: PropTypes.number.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addLed: led => dispatch({ type: "ADD_LED", led }),
-    deleteLed: led => dispatch({ type: "DEL_LED", led })
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditTools);
+export default EditTools;

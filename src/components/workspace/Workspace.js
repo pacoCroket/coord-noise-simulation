@@ -9,13 +9,7 @@ import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
-import {
-  getUserProjects,
-  setCurrentProject,
-  addLed,
-  setLed,
-  delLed
-} from "../../store/actions/projectActions";
+import { uploadImg, addLed, setLed, delLed } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
@@ -25,8 +19,8 @@ class Workspace extends Component {
     imgPos: { imgX: 0, imgY: 0 }
   };
 
-  handleSetProject = project => {
-    this.props.setCurrentProject(project);
+  handleUploadImage = imgFile => {
+    this.props.uploadImg(imgFile);
   };
 
   updateImageDimensions = () => {
@@ -108,6 +102,7 @@ class Workspace extends Component {
               ledSize={ledSize}
               imgSize={imgSize}
               imgPos={imgPos}
+              handleUploadImage={this.handleUploadImage}
               paintModeChanged={this.paintModeChanged}
               ledSizeChanged={this.ledSizeChanged}
               outputScalingChanged={this.outputScalingChanged}
@@ -139,10 +134,8 @@ class Workspace extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const {data} = state.firestore;
-  // const project = state.project.projects.find(project => project.id === id);
+  const { data } = state.firestore;
   return {
-    // currentProject: state.project.currentProject,
     currentProject: data.projects && data.projects[id],
     projects: state.project.projects,
     auth: state.firebase.auth
@@ -151,8 +144,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUserProjects: () => dispatch(getUserProjects()),
-    setCurrentProject: project => dispatch({ type: "SET_CURRENT_PROJECT", project }),
+    uploadImg: imgFile => dispatch(uploadImg(imgFile)),
     addLed: led => dispatch(addLed(led)),
     setLed: led => dispatch(setLed(led)),
     delLed: led => dispatch(delLed(led))
@@ -161,5 +153,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect(props =>[{ collection: "projects", doc: props.match.params.id }])
+  firestoreConnect(props => [{ collection: "projects", doc: props.match.params.id }])
 )(Workspace);

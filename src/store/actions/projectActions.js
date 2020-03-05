@@ -79,12 +79,14 @@ export const uploadImg = img => {
       .uploadFile(storagePath, renamedImg)
       // firebase.uploadFile(storagePath, img, storagePath)
       .then(res => {
-        res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
-          // also store new info into project collection
-          updateProject(currentProject);
-
-          dispatch({ type: "UPLOAD_IMG", imgURL });
-        });
+        res.uploadTaskSnapshot.ref
+          .getDownloadURL()
+          .then(imgURL => {
+            dispatch({ type: "UPLOAD_IMG", imgURL });
+          })
+          .finally(() => {
+            updateProject(getState().project.currentProject);
+          });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
@@ -93,6 +95,7 @@ export const uploadImg = img => {
 };
 
 export const updateProject = project => {
+  console.log("updating project, ", project);
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firestore = getFirestore();
     firestore

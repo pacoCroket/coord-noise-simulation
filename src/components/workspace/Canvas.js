@@ -129,8 +129,7 @@ class Canvas extends Component {
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
-    const { paintMode, ledSize, imgSize, imgPos } = this.props;
-    const { imgURL, leds } = this.props.currentProject;
+    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds } = this.props;
 
     return (
       <div onMouseDown={this.handleMouseDown}>
@@ -192,17 +191,4 @@ class Canvas extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    currentProject: state.project.currentProject
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addLed: led => dispatch(addLed(led)),
-    setLed: led => dispatch(setLed(led))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
+export default Canvas;
