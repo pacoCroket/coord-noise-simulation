@@ -6,7 +6,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 import Utils from "../../Utils";
 import { connect } from "react-redux";
-import Uploader from "./Uploader";
 
 class EditTools extends Component {
   constructor(props) {

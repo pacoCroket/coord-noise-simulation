@@ -83,8 +83,6 @@ class Workspace extends Component {
       // redirect to last project
     } else if (this.props.match.params.id === "last") {
       const project = this.props.projects[0];
-      // Warning: Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.
-      this.props.setCurrentProject(project);
       return <Redirect to={"/project/" + project.id} />;
     }
 
@@ -141,9 +139,11 @@ class Workspace extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
+  const {data} = state.firestore;
   // const project = state.project.projects.find(project => project.id === id);
   return {
-    currentProject: state.project.currentProject,
+    // currentProject: state.project.currentProject,
+    currentProject: data.projects && data.projects[id],
     projects: state.project.projects,
     auth: state.firebase.auth
   };
@@ -161,5 +161,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: "projects" }])
+  firestoreConnect(props =>[{ collection: "projects", doc: props.match.params.id }])
 )(Workspace);

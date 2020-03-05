@@ -4,6 +4,7 @@ import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
 import { connect } from "react-redux";
 import { isEmpty } from "underscore";
+import { addLed, setLed } from "../../store/actions/projectActions";
 
 class Canvas extends Component {
   constructor() {
@@ -129,7 +130,7 @@ class Canvas extends Component {
 
   render() {
     const { paintMode, ledSize, imgSize, imgPos } = this.props;
-    const { imgURL } = this.props.currentProject;
+    const { imgURL, leds } = this.props.currentProject;
 
     return (
       <div onMouseDown={this.handleMouseDown}>
@@ -149,7 +150,7 @@ class Canvas extends Component {
           </div>
 
           {/* Show current LEDs */}
-          {this.props.leds.map(led => (
+          {leds.map(led => (
             <Draggable
               className=""
               key={led.id}
@@ -199,8 +200,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addLed: led => dispatch({ type: "ADD_LED", led }),
-    deleteLed: led => dispatch({ type: "DEL_LED", led })
+    addLed: led => dispatch(addLed(led)),
+    setLed: led => dispatch(setLed(led))
   };
 };
 

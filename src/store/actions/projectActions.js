@@ -1,5 +1,3 @@
-import Utils from "../../Utils";
-
 // Create a new blank project
 export const createProject = project => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -15,7 +13,8 @@ export const createProject = project => {
         authorFirstName: profile.firstName,
         authorLastName: profile.lastName,
         authorId: uid,
-        createdAt: new Date()
+        createdAt: new Date(),
+        lastEdit: new Date()
       })
       .then(() => {
         dispatch({ type: "CREATE_PROJECT", project });
@@ -68,9 +67,9 @@ export const uploadImg = img => {
     const firebase = getFirebase();
     // Path within Database for metadata (also used for file Storage path)
     const authorId = getState().firebase.auth.uid;
-    const projectId = getState().project.currentProject.id;
+    const currentProject = getState().project.currentProject;
     const storagePath = "projectImages/" + authorId;
-    const fileName = projectId + "_" + Date.now();
+    const fileName = currentProject.id + "_" + Date.now();
     const renamedImg = new File([img], fileName, { type: img.type });
     // TODO metadata not working
     // const dbPath = "projectFilesInfo/" + authorId;
@@ -81,12 +80,30 @@ export const uploadImg = img => {
       // firebase.uploadFile(storagePath, img, storagePath)
       .then(res => {
         res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
+          // also store new info into project collection
+          updateProject(currentProject);
+
           dispatch({ type: "UPLOAD_IMG", imgURL });
-          console.log("Img upload Sucess: " + imgURL);
         });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
+      });
+  };
+};
+
+export const updateProject = project => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firestore = getFirestore();
+    firestore
+      .collection("projects")
+      .doc(project.id)
+      .update({ ...project, lastEdit: new Date() })
+      .then(res => {
+        console.log("Project updated, " + res);
+      })
+      .catch(err => {
+        console.log("project update error: ", err.message);
       });
   };
 };
