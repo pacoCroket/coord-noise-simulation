@@ -75,18 +75,18 @@ class HomePage extends Component {
             <code className="text-info">{code}</code>
           </pre>
         </div>
-        <div className="col-2 d-flex flex-column mt-4 p-0">
+        <div className="col-2 d-flex flex-column mt-4">
           <ul className="list-unstyled norifications mr-auto bg-light p-2 rounded">
             <p class="h4 text-dark">Notifications</p>
             {notifications &&
               notifications.map(item => {
                 return (
                   <li key={item.id} className="p-2 bg-dark text-light mt-4 rounded">
-                    <div className="text-capitalize">{item.user}</div>
-                    <div className="">{item.content}</div>
-                    <div className="font-weight-light">
-                      {moment(item.time.toDate()).fromNow()}
+                    <div>
+                      <span className="text-capitalize">{item.user} </span>
+                      <span className="text-lowercase">{item.content}</span>
                     </div>
+                    <div className="font-weight-light">{moment(item.time.toDate()).fromNow()}</div>
                   </li>
                 );
               })}
