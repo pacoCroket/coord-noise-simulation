@@ -16,7 +16,7 @@ const createNotification = notification => {
     });
 };
 
-exports.projectCreated = functions.firestore.document("projects/{projectId}").onCreate(doc => {
+exports.projectCreated = functions.firestore.document("users/{uid}/projects/{projectId}").onCreate(doc => {
   const project = doc.data();
   const notification = {
     content: "Added a new project: " + project.title,
@@ -29,7 +29,7 @@ exports.projectCreated = functions.firestore.document("projects/{projectId}").on
 
 exports.userJoined = functions.auth.user().onCreate(user => {
   return admin.firestore()
-    .collection("user")
+    .collection("users")
     .doc(user.uid)
     .get()
     .then(doc => {

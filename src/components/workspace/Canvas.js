@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import Draggable from "./Draggable";
 import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
-import { connect } from "react-redux";
 import { isEmpty } from "underscore";
-import { addLed, setLed } from "../../store/actions/projectActions";
+import Dropzone from "./Dropzone";
 
 class Canvas extends Component {
   constructor() {
@@ -44,6 +43,7 @@ class Canvas extends Component {
   };
 
   handleMouseDown = ({ clientX, clientY }) => {
+    if (isEmpty(this.props.imgURL)) return;
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
@@ -54,6 +54,7 @@ class Canvas extends Component {
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
+    if (isEmpty(this.props.imgURL)) return;
     this.setState({ isDragging: true });
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
@@ -92,6 +93,7 @@ class Canvas extends Component {
   };
 
   handleMouseUp = ({ clientX, clientY }) => {
+    if (isEmpty(this.props.imgURL)) return;
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
 
@@ -129,7 +131,7 @@ class Canvas extends Component {
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
-    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds, setLed, clickedLed } = this.props;
+    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds, setLed, clickedLed, handleUploadImage } = this.props;
 
     return (
       <div className="paintArea" onMouseDown={this.handleMouseDown} id="paintArea">
@@ -146,7 +148,11 @@ class Canvas extends Component {
                 alt="reference for leds"
                 fluid={true}
               ></Image>
-            ) : null}
+            ) : (
+              <div className="Card mx-auto">
+                <Dropzone handleUploadImage={handleUploadImage} />
+              </div>
+            )}
           </div>
 
           {/* Show current LEDs */}

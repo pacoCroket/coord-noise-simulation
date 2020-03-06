@@ -19,6 +19,10 @@ class Workspace extends Component {
     imgPos: { imgX: 0, imgY: 0 }
   };
 
+  redirectToNewProject() {
+    this.props.history.push("/newproject");
+  }
+
   handleSetProject = project => {
     if (project) {
       this.props.setLocalProject(project);
@@ -97,7 +101,14 @@ class Workspace extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (!isEmpty(this.props.projects) && this.props.match.params.id === "last") {
+    if (isEmpty(this.props.projects)) {
+      // redirect to new project if there are no projects, but consider download delay
+      setTimeout(() => {
+        if (isEmpty(this.props.projects)) {
+          this.redirectToNewProject();
+        }
+      }, 500);
+    } else if (this.props.match.params.id === "last") {
       const project = this.props.projects[0];
       this.handleSetProject(project);
       return <Redirect to={"/project/" + project.id} />;
@@ -106,7 +117,7 @@ class Workspace extends Component {
     // loading if not local project
     if (isEmpty(this.props.localProject))
       return (
-        <div className="d-flex justify-content-center align-items-center h-75">
+        <div className="loadSpinner">
           <Spinner animation="border" />
         </div>
       );
@@ -145,6 +156,7 @@ class Workspace extends Component {
           addLed={this.addLed}
           setLed={this.setLed}
           clickedLed={this.clickedLed}
+          handleUploadImage={this.handleUploadImage}
           updateImageDimensions={this.updateImageDimensions}
           onImgLoaded={this.onImgLoaded}
           clickedLed={this.clickedLed}
@@ -158,7 +170,7 @@ class Workspace extends Component {
             {description}
           </p>
           <p className="project-info">
-            <span className="font-weight-bold">Updated:</span>
+            <span className="font-weight-bold">Last save:</span>
             <br />
             {!isEmpty(lastEdit) && moment(lastEdit.toDate()).calendar()}
           </p>
@@ -180,7 +192,7 @@ class Workspace extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
   const { data, ordered } = state.firestore;
-  const onlineProject = data.projects && (id === "last" ? ordered[0] : data.projects[id]);
+  const onlineProject = data.projects && data.projects[id];
   const localProject = state.project.localProject;
   return {
     onlineProject,

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { uploadImg } from "../../store/actions/projectActions";
 
 class Dropzone extends Component {
   constructor(props) {
@@ -26,7 +24,6 @@ class Dropzone extends Component {
         onClick={this.openFileDialog}
         style={{ cursor: this.props.disabled ? "default" : "pointer" }}
       >
-        {/* <img alt="upload" className="Icon" src="../assets/cloud_upload-24px.svg" /> */}
         <i className="fas fa-file-upload"></i>
         <input ref={this.fileInputRef} className="FileInput" type="file" onChange={this.onFilesAdded} />
       </div>

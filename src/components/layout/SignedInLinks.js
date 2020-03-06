@@ -7,7 +7,6 @@ import { signOut } from "../../store/actions/authActions";
 import { getUserProjects, delProject, setLocalProject } from "../../store/actions/projectActions";
 import { Button } from "react-bootstrap";
 import { isEmpty } from "underscore";
-import { Redirect } from "react-router-dom";
 
 class SignedInLinks extends Component {
 
@@ -16,7 +15,7 @@ class SignedInLinks extends Component {
       this.props.setLocalProject(project);
     } else if (!isEmpty(this.props.projects)) {
       this.props.setLocalProject(this.props.projects[0]);
-    }
+    } 
   };
 
   render() {
@@ -25,8 +24,8 @@ class SignedInLinks extends Component {
     return (
       <div className="container-fluid px-5">
         <div
-          className="container-fluid navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2"
-          id="navbarSupportedContent"
+          className="navbar-collapse collapse w-100 order-3 dual-collapse2"
+          id="navbarNavDropdown"
         >
           {/* start items */}
           <ul className="navbar-nav mr-auto">
@@ -77,7 +76,7 @@ class SignedInLinks extends Component {
           {/* </div> */}
 
           <div className="navbar-brand mx-auto order-0 text-capitalize">
-            {this.props.localProject && this.props.localProject.title}
+            Current project: {this.props.localProject && this.props.localProject.title}
           </div>
 
           {/* Right */}

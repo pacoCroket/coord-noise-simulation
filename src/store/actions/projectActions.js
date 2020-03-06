@@ -56,6 +56,11 @@ export const getUserProjects = () => {
 export const delProject = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const project = getState().project.localProject;
+    if (!project.id) {
+      console.log("There seems to be no local project loaded");
+      return;
+    }
+
     const uid = getState().firebase.auth.uid;
     const firestore = getFirestore();
     const projDocRef = firestore
@@ -75,7 +80,7 @@ export const delProject = () => {
         });
       })
       .then(res => {
-        dispatch({ type: "PROJECT_DELETED", project });
+        dispatch({ type: "DELETED_PROJECT" });
 
         console.log("Project deleted, " + res);
       })

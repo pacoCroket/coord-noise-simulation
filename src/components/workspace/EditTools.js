@@ -5,7 +5,6 @@ import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 import Utils from "../../Utils";
-import { connect } from "react-redux";
 
 class EditTools extends Component {
   constructor(props) {
@@ -87,7 +86,6 @@ class EditTools extends Component {
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
           <Dropzone handleUploadImage={handleUploadImage} />
-          {/* <Uploader/> */}
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">

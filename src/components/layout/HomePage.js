@@ -79,7 +79,7 @@ class HomePage extends Component {
 
         {/* <div className="col-2 d-flex flex-column"> */}
         <ul className="notification-area mb-auto mt-5">
-          <p className="h4 text-dark px-3">Notifications</p>
+          <p className="h4 text-dark px-3">Latest Activity</p>
           {notifications &&
             notifications.map(item => {
               return (

@@ -10,10 +10,9 @@ const projectReducer = (state = initState, action) => {
     case "CREATE_PROJECT_ERROR":
       console.log("Create project error ", action.err);
       return state;
-    case "LOAD_PROJECTS":
-      // USELESS
-      console.log("Load projects success ", action.projects);
-      return { ...state, projects: [...action.projects] };
+    case "DELETED_PROJECT":
+      console.log("Load projects success ", action.project);
+      return { localProject: {}};
     case "SET_LOCAL_PROJECT":
       console.log("Current project ID: ", action.project.id);
       return { localProject: action.project };

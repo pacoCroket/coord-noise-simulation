@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Utils from "../../Utils";
-import { connect } from "react-redux";
 
 class Draggable extends Component {
   // all coordinates in this component state are
