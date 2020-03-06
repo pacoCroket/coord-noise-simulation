@@ -12,6 +12,7 @@ export const createProject = newProject => {
       authorId: uid,
       leds: [],
       imgURL: "",
+      imgFileName: "",
       createdAt: new Date(),
       lastEdit: new Date()
     };
@@ -81,8 +82,6 @@ export const delProject = () => {
       })
       .then(res => {
         dispatch({ type: "DELETED_PROJECT" });
-
-        console.log("Project deleted, " + res);
       })
       .catch(err => {
         console.log("project delete error: ", err.message);
@@ -103,8 +102,8 @@ export const uploadImg = img => {
     const uid = getState().firebase.auth.uid;
     const currentProject = getState().project.localProject;
     const storagePath = "projectImages/" + uid;
-    const fileName = currentProject.id + "_" + Date.now();
-    const renamedImg = new File([img], fileName, { type: img.type });
+    const imgFileName = currentProject.id + "_" + Date.now();
+    const renamedImg = new File([img], imgFileName, { type: img.type });
     // TODO metadata not working
     // const dbPath = "projectFilesInfo/" + authorId;
     // const fileMetadata = { authorId, projectId, fileName};
@@ -125,14 +124,14 @@ export const uploadImg = img => {
             .doc(currentProject.id);
 
           firestore
-            .runTransaction(function(transaction) {
+            .runTransaction(transaction => {
               // This code may get re-run multiple times if there are conflicts.
-              return transaction.get(projDocRef).then(function(projDoc) {
+              return transaction.get(projDocRef).then(projDoc => {
                 if (!projDoc.exists) {
                   throw "Document does not exist!";
                 }
                 // set instead of update, in case there is no imgURL field
-                projDocRef.set({ imgURL, lastEdit: new Date() }, { merge: true });
+                projDocRef.set({ imgURL, imgFileName, lastEdit: new Date() }, { merge: true });
               });
             })
             .then(res => {
@@ -143,12 +142,30 @@ export const uploadImg = img => {
             .catch(err => {
               console.log("project update error: ", err.message);
             });
-
-          dispatch({ type: "UPLOAD_IMG", imgURL });
+          // TODO delete previous images
+          dispatch({ type: "UPLOAD_IMG", imgURL, imgFileName });
         });
       })
       .catch(error => {
         console.log("Error uploading image: ", error.message);
+      });
+  };
+};
+
+export const delImage = imgFileName => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    console.log("trying to delete", imgFileName);
+    const firebase = getFirebase();
+    const uid = getState().firebase.auth.uid;
+    const storagePath = "projectImages/" + uid + "/" + imgFileName;
+
+    firebase
+      .deleteFile(storagePath, imgFileName)
+      .then(res => {
+        console.log("Image deleted from storage", res);
+      })
+      .catch(err => {
+        console.log("Error deleting image", err);
       });
   };
 };

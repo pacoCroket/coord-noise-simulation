@@ -11,23 +11,25 @@ import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
-import { uploadImg, delProject, updateProject } from "../../store/actions/projectActions";
+import { uploadImg, delProject, updateProject, delImage } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 },
-    uploading: false
+    uploading: false,
+    changesSaved: false
   };
 
   componentDidUpdate = prevProps => {
     if (prevProps.localProject.id !== this.props.localProject.id) {
-      setTimeout(() => {
-        this.updateImageDimensions();
-      }, 300);
+      this.updateImageDimensions();
     }
+
+    // if (prevProps.onlineProject !== this.props.localProject) {
+    //   this.setState({ changesSaved: false });
+    // }
 
     if (
       this.props.projects &&
@@ -53,6 +55,7 @@ class Workspace extends Component {
 
   handleDeleteProject = () => {
     this.props.delProject();
+    this.props.delImage(this.props.localProject.imgFileName);
     this.props.history.push("/");
   };
 
@@ -66,24 +69,13 @@ class Workspace extends Component {
   };
 
   updateImageDimensions = () => {
-    const canvas = document.getElementById("canvas");
     const paintArea = document.getElementById("paintArea");
 
-    let canvasWidth = canvas.clientWidth;
-    let canvasHeight = canvas.clientHeight;
     const paintAreaWidth = paintArea.clientWidth;
     const paintAreaHeight = paintArea.clientHeight;
 
-    canvasWidth = canvasWidth > paintAreaWidth ? paintAreaWidth : canvasWidth;
-    canvasHeight = canvasHeight > paintAreaHeight ? paintAreaHeight : canvasHeight;
-    const imgPos = {
-      imgX: canvas.getBoundingClientRect().left,
-      imgY: canvas.getBoundingClientRect().top
-    };
-
     this.setState({
-      imgSize: { width: canvasWidth, height: canvasHeight },
-      imgPos
+      imgSize: { width: paintAreaWidth, height: paintAreaHeight }
     });
   };
 
@@ -144,7 +136,7 @@ class Workspace extends Component {
 
     const { leds, imgURL, description, createdAt } = this.props.localProject;
     const { lastEdit } = this.props.onlineProject;
-    const { paintMode, ledSize, imgSize, imgPos, uploading } = this.state;
+    const { paintMode, ledSize, imgSize, uploading } = this.state;
 
     return (
       <>
@@ -153,7 +145,6 @@ class Workspace extends Component {
           paintMode={paintMode}
           ledSize={ledSize}
           imgSize={imgSize}
-          imgPos={imgPos}
           handleUploadImage={this.handleUploadImage}
           paintModeChanged={this.paintModeChanged}
           ledSizeChanged={this.ledSizeChanged}
@@ -167,7 +158,6 @@ class Workspace extends Component {
           paintMode={paintMode}
           ledSize={ledSize}
           imgSize={imgSize}
-          imgPos={imgPos}
           uploading={uploading}
           addLed={this.addLed}
           setLed={this.setLed}
@@ -175,7 +165,6 @@ class Workspace extends Component {
           handleUploadImage={this.handleUploadImage}
           updateImageDimensions={this.updateImageDimensions}
           onImgLoaded={this.onImgLoaded}
-          clickedLed={this.clickedLed}
         ></Canvas>
 
         <div className="sidebar">
@@ -237,6 +226,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project }),
     uploadImg: imgFile => dispatch(uploadImg(imgFile)),
+    delImage: imgFileName => dispatch(delImage(imgFileName)),
     updateProject: () => dispatch(updateProject()),
     delProject: () => dispatch(delProject()),
     addLed: led => dispatch({ type: "ADD_LED", led }),

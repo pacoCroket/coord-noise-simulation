@@ -12,13 +12,21 @@ class Canvas extends Component {
     this.state = {
       isDragging: false,
       isDraggingLed: false,
-      tempLeds: []
+      tempLeds: [],
+      imgPos: { imgX: 0, imgY: 0 }
     };
   }
 
   // Update image dimensions when resizing window
   updateImageDimensions = () => {
+    const canvas = document.getElementById("canvas");
+
+    const imgPos = {
+      imgX: canvas.getBoundingClientRect().left,
+      imgY: canvas.getBoundingClientRect().top
+    };
     this.props.updateImageDimensions();
+    this.setState({ imgPos });
   };
 
   componentDidMount() {
@@ -33,7 +41,7 @@ class Canvas extends Component {
   }
 
   getRelativeFractionPos = (xPos, yPos) => {
-    const { imgX, imgY } = this.props.imgPos;
+    const { imgX, imgY } = this.state.imgPos;
     // scale x and y to be fractions of the image
     const { width, height } = this.props.imgSize;
     const x = (xPos - imgX) / width;
@@ -174,7 +182,6 @@ class Canvas extends Component {
       paintMode,
       ledSize,
       imgSize,
-      imgPos,
       imgURL,
       leds,
       setLed,
@@ -223,7 +230,6 @@ class Canvas extends Component {
               isDragging={this.state.isDragging}
               led={led}
               imgSize={imgSize}
-              imgPos={imgPos}
               ledSize={ledSize}
               clickedLed={clickedLed}
               setLed={setLed}
@@ -242,7 +248,6 @@ class Canvas extends Component {
               isDragging={this.state.isDragging}
               led={led}
               imgSize={imgSize}
-              imgPos={imgPos}
               ledSize={ledSize}
               clickedLed={clickedLed}
               setLed={setLed}

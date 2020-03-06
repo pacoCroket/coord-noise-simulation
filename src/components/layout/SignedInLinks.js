@@ -4,18 +4,17 @@ import { firestoreConnect } from "react-redux-firebase";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { signOut } from "../../store/actions/authActions";
-import { getUserProjects, delProject, setLocalProject } from "../../store/actions/projectActions";
+import { getUserProjects } from "../../store/actions/projectActions";
 import { Button } from "react-bootstrap";
 import { isEmpty } from "underscore";
 
 class SignedInLinks extends Component {
-
   handleSetProject = project => {
     if (project) {
       this.props.setLocalProject(project);
     } else if (!isEmpty(this.props.projects)) {
       this.props.setLocalProject(this.props.projects[0]);
-    } 
+    }
   };
 
   render() {
@@ -23,10 +22,7 @@ class SignedInLinks extends Component {
 
     return (
       <div className="container-fluid px-5">
-        <div
-          className="navbar-collapse collapse w-100 order-3 dual-collapse2"
-          id="navbarNavDropdown"
-        >
+        <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNavDropdown">
           {/* start items */}
           <ul className="navbar-nav mr-auto">
             {/* Project dropdown */}
@@ -74,9 +70,17 @@ class SignedInLinks extends Component {
             </li>
           </ul>
           {/* </div> */}
-                    
           <div className="navbar-brand mx-auto order-0 text-capitalize">
-            <span className="text-secondary">Current project: </span>{this.props.localProject && this.props.localProject.title}
+            {!isEmpty(this.props.localProject) ? (
+              <>
+                <span className="text-secondary">Current project: </span>
+                {this.props.localProject.title}
+              </>
+            ) : (
+              <>
+                Noise2LED
+              </>
+            )}
           </div>
 
           {/* Right */}
@@ -136,12 +140,19 @@ const mapDispatchToProps = dispatch => {
   return {
     signOut: () => dispatch(signOut()),
     getUserProjects: () => dispatch(getUserProjects()),
-    setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project }),
+    setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project })
     // delProject: () => dispatch(delProject())
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect(props => [{ collection: `users/${props.auth.uid}/projects/`, storeAs: 'projects', limit: 10, orderBy: ["createdAt", "desc"] }])
+  firestoreConnect(props => [
+    {
+      collection: `users/${props.auth.uid}/projects/`,
+      storeAs: "projects",
+      limit: 10,
+      orderBy: ["lastEdit", "desc"]
+    }
+  ])
 )(SignedInLinks);

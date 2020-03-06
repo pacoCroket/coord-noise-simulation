@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 class NavBar extends Component {
   render() {
-    const { auth, profile } = this.props;
+    const { auth } = this.props;
     const links = auth.uid ? <SignedInLinks /> : <SignedOutLinks />;
 
     return (

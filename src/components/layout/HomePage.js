@@ -35,7 +35,7 @@ for (uint8_t i = 0; i < NUM_LEDS; i++)
 
 class HomePage extends Component {
   render() {
-    const { auth, notifications } = this.props;
+    const { notifications } = this.props;
 
     return (
       <>

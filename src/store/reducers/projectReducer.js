@@ -11,17 +11,14 @@ const projectReducer = (state = initState, action) => {
       console.log("Create project error ", action.err);
       return state;
     case "DELETED_PROJECT":
-      console.log("Load projects success ", action.project);
+      console.log("delete projects success ", action.project);
       return { localProject: {} };
     case "SET_LOCAL_PROJECT":
-      console.log("Current project ID: ", action.project.id);
+      // console.log("Current project ID: ", action.project.id);
       return { localProject: action.project };
     case "UPLOAD_IMG":
       console.log("Image uploaded: ", action.imgURL);
-      return { localProject: { ...state.localProject, imgURL: action.imgURL } };
-    case "ADD_IMG":
-      console.log("Img added ", action.imgUrl);
-      return state;
+      return { localProject: { ...state.localProject, imgURL: action.imgURL, imgFileName: action.imgFileName } };
     case "ADD_LED":
       var newLeds = [...state.localProject.leds, action.led];
       return { localProject: { ...state.localProject, leds: newLeds } };
