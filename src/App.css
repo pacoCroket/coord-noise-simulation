@@ -1,0 +1,270 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* max-width: 100vw; */
+  background-color: #1b1e24;
+  /* overflow-x: hidden; */
+}
+
+/* NAVBAR */
+
+.navbar {
+  background-color: whitesmoke;
+  z-index: 999 !important;
+  grid-area: header;
+  width: 100vw;
+  padding: 0.5rem 4rem !important; 
+}
+
+.nav-link {
+  margin: 0 0.5rem;
+}
+
+/* APP */
+
+.App {
+  min-height: 100vh;
+  /* max-height: 100%; */
+  color: white;
+  background-color: #1b1e24;
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "leftside center rightside"
+    "footer footer footer";
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-rows: 4rem auto 2rem;
+  gap: 0 50px;
+  align-items: center;
+  justify-items: center;
+  /* grid-auto-rows: minmax(0, auto); */
+  padding: 0 2rem;
+  /* grid-template-rows: 70px auto 50px; */
+}
+
+/* NavBar */
+.user-profile {
+  margin-right: 0;
+}
+
+/* End NavBar */
+/* Workspace */
+.workspace {
+  background-color: #1e2127;
+  /* position: absolute; */
+  /* bottom:0; */
+  margin: 1rem 2rem;
+  height: 100%;
+  /* max-height: 100%; */
+  /* align-items: stretch; */
+  padding: 2rem 0;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  font-size: calc(10px + 2vmin);
+}
+
+.paintArea {
+  /* max-height: 100%; */
+  grid-area: center;
+  touch-action: none;
+}
+
+/* End Workspace */
+/* EditTools */
+
+.editTools {
+  grid-area: leftside;
+  border-radius: 8px;
+  padding: 1rem .5rem;
+  color: #282c34;
+  background-color: aliceblue;
+  max-height: 90%;
+  width: 100%;
+  max-width: 160px;
+}
+
+.FileInput {
+  display: none;
+}
+
+.Card {
+  background-color: none;
+  padding: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08); */
+  box-sizing: border-box;
+}
+
+.Dropzone {
+  height: 100px;
+  width: 100px;
+  background-color: #fff;
+  color: #282c34;
+  border: 2px dashed rgb(187, 186, 186);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 2rem;
+}
+
+.Icon {
+  opacity: 0.3;
+  height: 64px;
+  width: 64px;
+}
+
+#uploadImg {
+  width: 100px;
+}
+
+.btn-toolbar {
+  width: 100%;
+  padding: .5rem 1rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toolbox-btn {
+  height: 60px;
+  font-size: 100%;
+  border-color: aliceblue; 
+  border-width: 1px;
+}
+
+.outputField {
+  /* height: 300px; */
+  resize: none;
+  /* width: 110px; */
+  font-size: 1rem;
+}
+
+/* End EditTools */
+
+/* Start info col */
+
+.sidebar {
+  grid-area: rightside;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 70%;
+}
+
+.project-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #31353d;
+  border-radius: 1rem;
+  font-size: 1rem;
+}
+
+/* Startr Canvas */
+.canvas {
+  background: none;
+  /* border: 2px solid black; */
+  /* max-height: 100%; */
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  /* background: none; */
+  /* height: 200px; */
+  /* padding: 0; */
+  margin: 0 2rem;
+}
+
+.backImg {
+  pointer-events: none;
+  max-height: 83vh;
+  width: auto;
+}
+
+.led {
+  position: absolute;
+  z-index: 900 !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.253);
+  background: firebrick;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* End canvas */
+
+/* Home Page */
+.homepage {
+  /* background-color: #1b1e24; */
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.notification-area {
+  grid-area: rightside;
+  margin: 0 auto;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  background-color: #fff;
+  list-style: none;
+  list-style-type: none;
+}
+
+.notification {
+  margin: 1rem 0.5rem;
+  padding: 1rem;
+  background-color: #31353d;
+  border-radius: 1rem;
+}
+
+/* End Home Page */
+
+/* New Project */
+
+.newProject {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.signUp {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.signIn {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.about {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.loadSpinner {
+  grid-area: center;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.noSel {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -o-user-select: none;
+}
