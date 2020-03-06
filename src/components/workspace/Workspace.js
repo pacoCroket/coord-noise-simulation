@@ -167,7 +167,7 @@ class Workspace extends Component {
             <br />
             {!isEmpty(createdAt) && moment(createdAt.toDate()).calendar()}
           </p>
-          <Button className="btn btn-primary w-auto mx-auto" onClick={this.handleDeleteProject}>
+          <Button className="btn btn-primary w-auto mx-auto my-3" onClick={this.handleDeleteProject}>
             Delete Project
           </Button>
         </div>

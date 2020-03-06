@@ -17,6 +17,8 @@ export const createProject = newProject => {
     };
 
     firestore
+      .collection("users")
+      .doc(uid)
       .collection("projects")
       .add(project)
       .then(() => {
@@ -54,8 +56,13 @@ export const getUserProjects = () => {
 export const delProject = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const project = getState().project.localProject;
+    const uid = getState().firebase.auth.uid;
     const firestore = getFirestore();
-    const projDocRef = firestore.collection("projects").doc(project.id);
+    const projDocRef = firestore
+      .collection("users")
+      .doc(uid)
+      .collection("projects")
+      .doc(project.id);
 
     firestore
       .runTransaction(transaction => {
@@ -88,9 +95,9 @@ export const uploadImg = img => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     // Path within Database for metadata (also used for file Storage path)
-    const authorId = getState().firebase.auth.uid;
+    const uid = getState().firebase.auth.uid;
     const currentProject = getState().project.localProject;
-    const storagePath = "projectImages/" + authorId;
+    const storagePath = "projectImages/" + uid;
     const fileName = currentProject.id + "_" + Date.now();
     const renamedImg = new File([img], fileName, { type: img.type });
     // TODO metadata not working
@@ -104,7 +111,11 @@ export const uploadImg = img => {
         res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
           // add to the project in firestore
           const firestore = getFirestore();
-          const projDocRef = firestore.collection("projects").doc(currentProject.id);
+          const projDocRef = firestore
+            .collection("users")
+            .doc(uid)
+            .collection("projects")
+            .doc(currentProject.id);
 
           firestore
             .runTransaction(function(transaction) {
@@ -139,8 +150,13 @@ export const updateProject = () => {
   // TODO fix setting the project!!
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const project = getState().project.localProject;
+    const uid = getState().firebase.auth.uid;
     const firestore = getFirestore();
-    const projDocRef = firestore.collection("projects").doc(project.id);
+    const projDocRef = firestore
+      .collection("users")
+      .doc(uid)
+      .collection("projects")
+      .doc(project.id);
 
     firestore
       .runTransaction(transaction => {
@@ -162,57 +178,3 @@ export const updateProject = () => {
       });
   };
 };
-
-export const addImg = backImg => {
-  return (dispatch, getState) => {
-    const { currrentProjectId } = getState().project;
-    // make async call to DB
-    dispatch({ type: "ADD_IMG", backImg });
-  };
-};
-
-export const addLed = led => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    // make async call to DB
-    // add to the project in firestore
-    const firestore = getFirestore();
-    const currentProject = getState().project.currentProject;
-    const projDocRef = firestore.collection("projects").doc(currentProject.id);
-
-    firestore
-      .runTransaction(transaction => {
-        // This code may get re-run multiple times if there are conflicts.
-        return transaction.get(projDocRef).then(projDoc => {
-          if (!projDoc.exists) {
-            throw "Document does not exist!";
-          }
-          const newLeds = [...currentProject.leds, led];
-          projDocRef.set({ leds: newLeds, lastEdit: new Date() }, { merge: true });
-        });
-      })
-      .then(res => {
-        dispatch({ type: "ADD_LED", led });
-
-        console.log("LED added, " + res);
-      })
-      .catch(err => {
-        console.log("LED add error: ", err.message);
-      });
-  };
-};
-
-export const delLed = led => {
-  return (dispatch, getState) => {
-    // make async call to DB
-    dispatch({ type: "DEL_LED", led });
-  };
-};
-
-export const setLed = led => {
-  return (dispatch, getState) => {
-    // make async call to DB
-    dispatch({ type: "SET_LED", led });
-  };
-};
-
-// Sing up user

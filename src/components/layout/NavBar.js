@@ -9,10 +9,10 @@ class NavBar extends Component {
     const links = auth.uid ? <SignedInLinks /> : <SignedOutLinks />;
 
     return (
-      <header className="navbar navbar-expand-md navbar-light bg-faded mb-auto">
+      <header className="navbar navbar-expand-sm navbar-light bg-faded mb-auto">
         {/* Brand */}
         <a
-          className="navbar-brand mr-5"
+          className="navbar-brand"
           href="https://github.com/pacoCroket/coord-noise-simulation"
           target="_blank"
           rel="noopener noreferrer"

@@ -23,7 +23,7 @@ class SignedInLinks extends Component {
     const { profile, projects } = this.props;
 
     return (
-      <div className="container-fluid">
+      <div className="container-fluid px-5">
         <div
           className="container-fluid navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2"
           id="navbarSupportedContent"
@@ -65,10 +65,6 @@ class SignedInLinks extends Component {
                       </NavLink>
                     ))
                   : null}
-                <div className="dropdown-divider"></div>
-                {/* <a onClick={this.delProject} className="dropdown-item">
-                  Delete this Project
-                </a> */}
               </div>
             </li>
 
@@ -86,7 +82,7 @@ class SignedInLinks extends Component {
 
           {/* Right */}
           {/* <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarSupportedContent"> */}
-          <ul className="navbar-nav ml-auto mr-5">
+          <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <NavLink exact to="/" className="nav-link">
                 Home
@@ -99,7 +95,7 @@ class SignedInLinks extends Component {
             </li>
             <li className="nav-item dropdown">
               <a
-                className="nav-link dropdown-toggle"
+                className="nav-link dropdown-toggle text-capitalize"
                 href="#"
                 id="navbarDropdown"
                 role="button"
@@ -107,7 +103,7 @@ class SignedInLinks extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                {profile.initials ? profile.initials.toUpperCase() + " Profile" : "My profile"}
+                {profile.firstName ? profile.firstName + "'s Profile" : "My profile"}
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <NavLink to="/" className="dropdown-item">
@@ -148,5 +144,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: "projects", limit: 10, orderBy: ["createdAt", "desc"] }])
+  firestoreConnect(props => [{ collection: `users/${props.auth.uid}/projects/`, storeAs: 'projects', limit: 10, orderBy: ["createdAt", "desc"] }])
 )(SignedInLinks);
