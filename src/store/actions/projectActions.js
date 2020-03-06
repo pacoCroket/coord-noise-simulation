@@ -21,8 +21,8 @@ export const createProject = newProject => {
       .doc(uid)
       .collection("projects")
       .add(project)
-      .then(() => {
-        dispatch({ type: "CREATE_PROJECT", project });
+      .then(res => {
+        dispatch({ type: "CREATE_PROJECT", project: { ...project, id: res.id } });
       })
       .catch(err => {
         dispatch({ type: "CREATE_PROJECT_ERROR", err });

@@ -7,6 +7,8 @@ export default class SignedOutLinks extends Component {
       <div className="container-fluid">
         {/* Right */}
         <div className="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarNavDropdown">
+          <div className="navbar-brand mx-auto order-0 text-capitalize" style={{position: 'absolute', left: "50%"}}>Noise2LED</div>
+
           <ul className="navbar-nav ml-auto mr-5">
             <li className="nav-item">
               <NavLink exact to="/" className="nav-link">

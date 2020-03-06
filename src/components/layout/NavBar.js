@@ -20,7 +20,7 @@ class NavBar extends Component {
           By Paco Croket
         </a>
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
           data-target="#navbarNavDropdown"

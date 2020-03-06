@@ -74,7 +74,7 @@ class SignedInLinks extends Component {
             </li>
           </ul>
           {/* </div> */}
-
+                    
           <div className="navbar-brand mx-auto order-0 text-capitalize">
             <span className="text-secondary">Current project: </span>{this.props.localProject && this.props.localProject.title}
           </div>
