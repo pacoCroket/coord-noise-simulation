@@ -34,7 +34,7 @@ class SignedInLinks extends Component {
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
-                id="navbarDropdown"
+                id="navbarDropdownProjects"
                 role="button"
                 data-toggle="dropdown"
                 aria-haspopup="true"
@@ -42,7 +42,7 @@ class SignedInLinks extends Component {
               >
                 Projects
               </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <div className="dropdown-menu" aria-labelledby="navbarDropdownProjects">
                 <NavLink
                   exact
                   to="/project/last"
@@ -76,7 +76,7 @@ class SignedInLinks extends Component {
           {/* </div> */}
 
           <div className="navbar-brand mx-auto order-0 text-capitalize">
-            Current project: {this.props.localProject && this.props.localProject.title}
+            <span className="text-secondary">Current project: </span>{this.props.localProject && this.props.localProject.title}
           </div>
 
           {/* Right */}

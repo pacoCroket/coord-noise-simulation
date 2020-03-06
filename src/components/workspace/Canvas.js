@@ -4,6 +4,7 @@ import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
 import { isEmpty } from "underscore";
 import Dropzone from "./Dropzone";
+import Spinner from "react-bootstrap/Spinner";
 
 class Canvas extends Component {
   constructor() {
@@ -131,10 +132,21 @@ class Canvas extends Component {
   onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
   render() {
-    const { paintMode, ledSize, imgSize, imgPos, imgURL, leds, setLed, clickedLed, handleUploadImage } = this.props;
+    const {
+      paintMode,
+      ledSize,
+      imgSize,
+      imgPos,
+      imgURL,
+      leds,
+      setLed,
+      clickedLed,
+      handleUploadImage,
+      uploading
+    } = this.props;
 
     return (
-      <div className="paintArea" onMouseDown={this.handleMouseDown} id="paintArea">
+      <div className="paintArea noSel" onMouseDown={this.handleMouseDown} id="paintArea">
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <div id="canvas">
@@ -148,6 +160,10 @@ class Canvas extends Component {
                 alt="reference for leds"
                 fluid={true}
               ></Image>
+            ) : uploading ? (
+              <div className="loadSpinner">
+                <Spinner animation="border" />
+              </div>
             ) : (
               <div className="Card mx-auto">
                 <Dropzone handleUploadImage={handleUploadImage} />

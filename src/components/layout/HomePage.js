@@ -46,18 +46,20 @@ class HomePage extends Component {
             The idea here is to paint the position of your LEDs in ther order and then get an custom output to
             copy into your code. These can be mapped to 2D or 3D noise values.
           </span>
-          <span className="w-75 m-2">1 - Upload a picture of your LED project showing all the LEDs.</span>
           <span className="w-75 m-2">
-            2 - Following the actual id of your LEDs, mark their position in order with the paint tool. Adjust
+            1 - Upload a picture of your LED project showing all the LEDs. Keep in mind their order.
+          </span>
+          <span className="w-75 m-2">
+            2 - Following the actual id of your LEDs, progessively mark their position with the paint tool. Adjust
             the LED distance and use the line tool to cover large straight areas
           </span>
           <span className="w-75 m-2">
             3 - Grab the LEDs to fine tune their position. Use the erase tool to remove an LED. Notice that
-            the id of the LED is kept continuous.
+            the id of the LEDs is automatically kept continuous.
           </span>
           <span className="w-75 m-2">
             4 - Copy the output from the outout area into your code. Set the output scaling to fit your
-            microcontroller needs. 255 corresponds to 8-bit values, great for Arduino projects.
+            microcontroller needs. A value of 255 corresponds to 8-bit values, great for Arduino projects.
           </span>
 
           <span className="w-75 my-4">

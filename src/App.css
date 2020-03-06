@@ -188,7 +188,7 @@ body, html {
 
 .led {
   position: absolute;
-  z-index: 999 !important;
+  z-index: 900 !important;
   margin: 0;
   display: flex;
   align-items: center;

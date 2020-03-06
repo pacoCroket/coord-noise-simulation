@@ -116,6 +116,8 @@ export const uploadImg = img => {
         res.uploadTaskSnapshot.ref.getDownloadURL().then(imgURL => {
           // add to the project in firestore
           const firestore = getFirestore();
+          // TODO BUG next line shows error if trying to upload a picture right after creating a project
+          // FirebaseError: Function CollectionReference.doc() requires its first argument to be of type non-empty string, but it was: undefined
           const projDocRef = firestore
             .collection("users")
             .doc(uid)

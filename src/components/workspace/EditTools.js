@@ -82,7 +82,7 @@ class EditTools extends Component {
     const { handleUploadImage, paintMode } = this.props;
 
     return (
-      <div className="editTools d-flex flex-column">
+      <div className="editTools noSel d-flex flex-column">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
           <Dropzone handleUploadImage={handleUploadImage} />
@@ -151,7 +151,7 @@ class EditTools extends Component {
             readOnly
           ></textarea>
 
-          <div className="mx-auto mt-1">
+          <div className="mx-auto mt-3">
             <Button className="btn btn-primary" onClick={this.props.handleUpdateProject}>
               Save Project
             </Button>

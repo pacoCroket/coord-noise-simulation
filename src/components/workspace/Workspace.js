@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import Utils from "../../Utils";
 import { isEmpty } from "underscore";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
@@ -16,7 +18,8 @@ class Workspace extends Component {
     paintMode: Utils.paintModes.paint,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
-    imgPos: { imgX: 0, imgY: 0 }
+    imgPos: { imgX: 0, imgY: 0 },
+    uploading: false
   };
 
   redirectToNewProject() {
@@ -42,6 +45,7 @@ class Workspace extends Component {
 
   handleUploadImage = imgFile => {
     this.props.uploadImg(imgFile);
+    this.setState({ uploading: true });
   };
 
   updateImageDimensions = () => {
@@ -124,14 +128,10 @@ class Workspace extends Component {
 
     const { leds, imgURL, description, createdAt } = this.props.localProject;
     const { lastEdit } = this.props.onlineProject;
-    const { paintMode, ledSize, imgSize, imgPos } = this.state;
+    const { paintMode, ledSize, imgSize, imgPos, uploading } = this.state;
 
-    // return <h2> In Progress</h2>;
     return (
-      // <div className="workspace">
       <>
-        {/* <div className="row noSel mw-100 h-100 mx-0 ">
-          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1"> */}
         <EditTools
           leds={leds}
           paintMode={paintMode}
@@ -144,8 +144,7 @@ class Workspace extends Component {
           outputScalingChanged={this.outputScalingChanged}
           handleUpdateProject={this.handleUpdateProject}
         ></EditTools>
-        {/* </div>
-          <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea"> */}
+
         <Canvas
           leds={leds}
           imgURL={imgURL}
@@ -153,6 +152,7 @@ class Workspace extends Component {
           ledSize={ledSize}
           imgSize={imgSize}
           imgPos={imgPos}
+          uploading={uploading}
           addLed={this.addLed}
           setLed={this.setLed}
           clickedLed={this.clickedLed}
@@ -161,8 +161,7 @@ class Workspace extends Component {
           onImgLoaded={this.onImgLoaded}
           clickedLed={this.clickedLed}
         ></Canvas>
-        {/* </div> */}
-        {/* <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1 m-2 d-flex flex-column justify-content-center text-light"> */}
+
         <div className="sidebar">
           <p className="project-info">
             <span className="font-weight-bold">Description:</span>
@@ -179,9 +178,25 @@ class Workspace extends Component {
             <br />
             {!isEmpty(createdAt) && moment(createdAt.toDate()).calendar()}
           </p>
-          <Button className="btn btn-primary w-auto mx-auto my-3" onClick={this.handleDeleteProject}>
-            Delete Project
-          </Button>
+          <OverlayTrigger
+            key="bottom"
+            trigger="click"
+            placement="bottom"
+            overlay={
+              <Popover>
+                <Popover.Content>
+                  <Button
+                    className="btn btn-secondary w-auto mx-auto my-3"
+                    onClick={this.handleDeleteProject}
+                  >
+                    Sure?
+                  </Button>
+                </Popover.Content>
+              </Popover>
+            }
+          >
+            <Button className="btn btn-primary w-auto mx-auto my-3">Delete Project</Button>
+          </OverlayTrigger>{" "}
         </div>
       </>
       // </div>
