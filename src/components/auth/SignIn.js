@@ -24,7 +24,7 @@ class SignIn extends Component {
     if (auth.uid) return <Redirect to="/project/last" />;
 
     return (
-      <div className="container my-5 w-50">
+      <div className="signIn my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
           <h5>Log In</h5>
           <Form.Group controlId="formBasicEmail">

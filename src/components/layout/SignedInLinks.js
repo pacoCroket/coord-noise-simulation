@@ -7,6 +7,7 @@ import { signOut } from "../../store/actions/authActions";
 import { getUserProjects, delProject, setLocalProject } from "../../store/actions/projectActions";
 import { Button } from "react-bootstrap";
 import { isEmpty } from "underscore";
+import { Redirect } from "react-router-dom";
 
 class SignedInLinks extends Component {
 
@@ -16,10 +17,6 @@ class SignedInLinks extends Component {
     } else if (!isEmpty(this.props.projects)) {
       this.props.setLocalProject(this.props.projects[0]);
     }
-  };
-
-  delProject = () => {
-    this.props.delProject(this.props.currentProject.id);
   };
 
   render() {
@@ -69,9 +66,9 @@ class SignedInLinks extends Component {
                     ))
                   : null}
                 <div className="dropdown-divider"></div>
-                <a onClick={this.delProject} className="dropdown-item">
+                {/* <a onClick={this.delProject} className="dropdown-item">
                   Delete this Project
-                </a>
+                </a> */}
               </div>
             </li>
 
@@ -83,7 +80,7 @@ class SignedInLinks extends Component {
           </ul>
           {/* </div> */}
 
-          <div className="navbar-brand mx-auto order-0">
+          <div className="navbar-brand mx-auto order-0 text-capitalize">
             {this.props.localProject && this.props.localProject.title}
           </div>
 
@@ -145,11 +142,11 @@ const mapDispatchToProps = dispatch => {
     signOut: () => dispatch(signOut()),
     getUserProjects: () => dispatch(getUserProjects()),
     setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project }),
-    delProject: projectId => dispatch(delProject(projectId))
+    // delProject: () => dispatch(delProject())
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: "projects", limit: 10, orderBy: ['createdAt', 'desc']}])
+  firestoreConnect([{ collection: "projects", limit: 10, orderBy: ["createdAt", "desc"] }])
 )(SignedInLinks);

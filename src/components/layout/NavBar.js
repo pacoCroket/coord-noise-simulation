@@ -9,7 +9,7 @@ class NavBar extends Component {
     const links = auth.uid ? <SignedInLinks /> : <SignedOutLinks />;
 
     return (
-      <div className="navbar navbar-expand-md navbar-light bg-faded">
+      <header className="navbar navbar-expand-md navbar-light bg-faded mb-auto">
         {/* Brand */}
         <a
           className="navbar-brand mr-5"
@@ -20,23 +20,8 @@ class NavBar extends Component {
           By Paco Croket
         </a>
 
-        {/* Center TODO*/}
-        {/* <div className="mx-auto order-0">
-          <Link to={auth.uid ?"/project":"/"} className="navbar-brand">
-            Noise2LED
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target=".dual-collapse2"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-        </div> */}
-
         {auth.isLoaded && links}
-      </div>
+      </header>
     );
   }
 }

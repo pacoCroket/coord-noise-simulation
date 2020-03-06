@@ -30,7 +30,7 @@ class SingUp extends Component {
     if (auth.uid) return <Redirect to="/newproject" />;
 
     return (
-      <div className="container my-5 w-50">
+      <div className="signUp my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
           <h5>Sing Up</h5>
           <Form.Group controlId="formBasicEmail">

@@ -132,7 +132,7 @@ class Canvas extends Component {
     const { paintMode, ledSize, imgSize, imgPos, imgURL, leds, setLed, clickedLed } = this.props;
 
     return (
-      <div onMouseDown={this.handleMouseDown}>
+      <div className="paintArea" onMouseDown={this.handleMouseDown} id="paintArea">
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <div id="canvas">

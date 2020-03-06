@@ -19,12 +19,12 @@ class NewProject extends Component {
   };
 
   render() {
-    const { auth, submitted } = this.props;
+    const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
-    if (submitted) return <Redirect to="/project/last" />;
+    if (this.state.submitted) return <Redirect to="/project/last" />;
 
     return (
-      <div className="container my-5 w-50">
+      <div className="newProject my-5 w-50">
         <Form onSubmit={this.handleSubmit}>
           <h5>New Project</h5>
           <Form.Group>

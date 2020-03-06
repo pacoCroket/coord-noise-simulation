@@ -11,9 +11,10 @@ export const createProject = newProject => {
       authorLastName: profile.lastName,
       authorId: uid,
       leds: [],
+      imgURL: "",
       createdAt: new Date(),
       lastEdit: new Date()
-    }
+    };
 
     firestore
       .collection("projects")
@@ -50,11 +51,30 @@ export const getUserProjects = () => {
   };
 };
 
-export const delProject = projectId => {
+export const delProject = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    // make async call to DB
+    const project = getState().project.localProject;
     const firestore = getFirestore();
-    console.log("delete Project");
+    const projDocRef = firestore.collection("projects").doc(project.id);
+
+    firestore
+      .runTransaction(transaction => {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(projDocRef).then(projDoc => {
+          if (!projDoc.exists) {
+            throw "Document does not exist!";
+          }
+          projDocRef.delete();
+        });
+      })
+      .then(res => {
+        dispatch({ type: "PROJECT_DELETED", project });
+
+        console.log("Project deleted, " + res);
+      })
+      .catch(err => {
+        console.log("project delete error: ", err.message);
+      });
   };
 };
 
@@ -119,10 +139,8 @@ export const updateProject = () => {
   // TODO fix setting the project!!
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const project = getState().project.localProject;
-    console.log("updating project, ", project);
     const firestore = getFirestore();
     const projDocRef = firestore.collection("projects").doc(project.id);
-    console.log(projDocRef);
 
     firestore
       .runTransaction(transaction => {
@@ -168,7 +186,7 @@ export const addLed = led => {
           if (!projDoc.exists) {
             throw "Document does not exist!";
           }
-          const newLeds = [...currentProject.leds, led]
+          const newLeds = [...currentProject.leds, led];
           projDocRef.set({ leds: newLeds, lastEdit: new Date() }, { merge: true });
         });
       })

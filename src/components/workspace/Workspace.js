@@ -8,14 +8,8 @@ import { isEmpty } from "underscore";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
-import {
-  uploadImg,
-  addLed,
-  setLed,
-  delLed,
-  setLocalProject,
-  updateProject
-} from "../../store/actions/projectActions";
+import Button from "react-bootstrap/Button";
+import { uploadImg, delProject, updateProject } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
   state = {
@@ -31,6 +25,11 @@ class Workspace extends Component {
     } else if (!isEmpty(this.props.projects)) {
       this.props.setLocalProject(this.props.projects[0]);
     }
+  };
+
+  handleDeleteProject = () => {
+    this.props.delProject();
+    this.props.history.push("/");
   };
 
   handleUpdateProject = () => {
@@ -118,57 +117,62 @@ class Workspace extends Component {
 
     // return <h2> In Progress</h2>;
     return (
-      <div className="workspace">
-        <div className="row noSel mw-100 h-100 mx-0 ">
-          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1">
-            <EditTools
-              leds={leds}
-              paintMode={paintMode}
-              ledSize={ledSize}
-              imgSize={imgSize}
-              imgPos={imgPos}
-              handleUploadImage={this.handleUploadImage}
-              paintModeChanged={this.paintModeChanged}
-              ledSizeChanged={this.ledSizeChanged}
-              outputScalingChanged={this.outputScalingChanged}
-              handleUpdateProject={this.handleUpdateProject}
-            ></EditTools>
-          </div>
-          <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea">
-            <Canvas
-              leds={leds}
-              imgURL={imgURL}
-              paintMode={paintMode}
-              ledSize={ledSize}
-              imgSize={imgSize}
-              imgPos={imgPos}
-              addLed={this.addLed}
-              setLed={this.setLed}
-              clickedLed={this.clickedLed}
-              updateImageDimensions={this.updateImageDimensions}
-              onImgLoaded={this.onImgLoaded}
-              clickedLed={this.clickedLed}
-            ></Canvas>
-          </div>
-          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1 m-2 d-flex flex-column justify-content-center text-light">
-            <p className="project-info">
-              <span className="font-weight-bold">Description:</span>
-              <br />
-              {description}
-            </p>
-            <p className="project-info">
-              <span className="font-weight-bold">Updated:</span>
-              <br />
-              {lastEdit && moment(lastEdit.toDate()).calendar()}
-            </p>
-            <p className="project-info">
-              <span className="font-weight-bold">Created:</span>
-              <br />
-              {moment(createdAt.toDate()).calendar()}
-            </p>
-          </div>
+      // <div className="workspace">
+      <>
+        {/* <div className="row noSel mw-100 h-100 mx-0 ">
+          <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1"> */}
+        <EditTools
+          leds={leds}
+          paintMode={paintMode}
+          ledSize={ledSize}
+          imgSize={imgSize}
+          imgPos={imgPos}
+          handleUploadImage={this.handleUploadImage}
+          paintModeChanged={this.paintModeChanged}
+          ledSizeChanged={this.ledSizeChanged}
+          outputScalingChanged={this.outputScalingChanged}
+          handleUpdateProject={this.handleUpdateProject}
+        ></EditTools>
+        {/* </div>
+          <div className="col p-0 canvas d-flex align-items-center paintArea" id="paintArea"> */}
+        <Canvas
+          leds={leds}
+          imgURL={imgURL}
+          paintMode={paintMode}
+          ledSize={ledSize}
+          imgSize={imgSize}
+          imgPos={imgPos}
+          addLed={this.addLed}
+          setLed={this.setLed}
+          clickedLed={this.clickedLed}
+          updateImageDimensions={this.updateImageDimensions}
+          onImgLoaded={this.onImgLoaded}
+          clickedLed={this.clickedLed}
+        ></Canvas>
+        {/* </div> */}
+        {/* <div className="col-lg-1 col-md-2 col-sm-3 col-xs-4 p-1 m-2 d-flex flex-column justify-content-center text-light"> */}
+        <div className="sidebar">
+          <p className="project-info">
+            <span className="font-weight-bold">Description:</span>
+            <br />
+            {description}
+          </p>
+          <p className="project-info">
+            <span className="font-weight-bold">Updated:</span>
+            <br />
+            {!isEmpty(lastEdit) && moment(lastEdit.toDate()).calendar()}
+          </p>
+          <p className="project-info">
+            <span className="font-weight-bold">Created:</span>
+            <br />
+            {!isEmpty(createdAt) && moment(createdAt.toDate()).calendar()}
+          </p>
+          <Button className="btn btn-primary w-auto mx-auto" onClick={this.handleDeleteProject}>
+            Delete Project
+          </Button>
         </div>
-      </div>
+      </>
+      // </div>
     );
   }
 }
@@ -191,6 +195,7 @@ const mapDispatchToProps = dispatch => {
     setLocalProject: project => dispatch({ type: "SET_LOCAL_PROJECT", project }),
     uploadImg: imgFile => dispatch(uploadImg(imgFile)),
     updateProject: () => dispatch(updateProject()),
+    delProject: () => dispatch(delProject()),
     addLed: led => dispatch({ type: "ADD_LED", led }),
     setLed: led => dispatch({ type: "SET_LED", led }),
     delLed: led => dispatch({ type: "DEL_LED", led })

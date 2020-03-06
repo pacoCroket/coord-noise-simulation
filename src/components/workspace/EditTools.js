@@ -83,7 +83,7 @@ class EditTools extends Component {
     const { handleUploadImage, paintMode } = this.props;
 
     return (
-      <div className="d-flex flex-column editTools h-100 py-3">
+      <div className="editTools d-flex flex-column">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
           <Dropzone handleUploadImage={handleUploadImage} />

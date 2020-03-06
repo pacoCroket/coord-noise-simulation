@@ -1,8 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* height: 100vh; */
@@ -11,9 +11,13 @@ body {
 }
 
 /* NAVBAR */
+
 .navbar {
   background-color: whitesmoke;
   z-index: 999 !important;
+  grid-area: header;
+  width: 100vw;
+  padding: 0.5rem 2rem;
 }
 
 .nav-link {
@@ -23,9 +27,23 @@ body {
 /* APP */
 
 .App {
-  height: 100vh;
+  min-height: 100vh;
+  /* max-height: 100%; */
   color: white;
   background-color: #1b1e24;
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "leftside center rightside"
+    "footer footer footer";
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-rows: 4rem auto 2rem;
+  gap: 0 50px;
+  align-items: center;
+  justify-items: center;
+  /* grid-auto-rows: minmax(0, auto); */
+  padding: 0 2rem;
+  /* grid-template-rows: 70px auto 50px; */
 }
 
 /* NavBar */
@@ -40,7 +58,7 @@ body {
   /* position: absolute; */
   /* bottom:0; */
   margin: 1rem 2rem;
-  height: 90%;
+  height: 100%;
   /* max-height: 100%; */
   /* align-items: stretch; */
   padding: 2rem 0;
@@ -50,24 +68,23 @@ body {
   font-size: calc(10px + 2vmin);
 }
 
-.paintArea {  
-  max-height: 100%;
+.paintArea {
+  /* max-height: 100%; */
+  grid-area: center;
 }
 
 /* End Workspace */
 /* EditTools */
 
 .editTools {
-  /* margin: 1rem 0; */
-  /* padding: .5rem 0; */
+  grid-area: leftside;
   border-radius: 8px;
+  padding: 1rem .5rem;
   color: #282c34;
   background-color: aliceblue;
-  max-height: 100%;
+  max-height: 90%;
+  width: 100%;
   max-width: 160px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
 }
 
 .FileInput {
@@ -76,7 +93,7 @@ body {
 
 .Card {
   background-color: none;
-  padding: .5rem;
+  padding: 0.5rem;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -107,6 +124,20 @@ body {
   width: 100px;
 }
 
+.btn-toolbar {
+  width: 100%;
+  padding: .5rem 1rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toolbox-btn {
+  height: 60px;
+  font-size: 100%;
+  border-color: aliceblue; 
+  border-width: 3px;
+}
+
 .outputField {
   /* height: 300px; */
   resize: none;
@@ -118,12 +149,19 @@ body {
 
 /* Start info col */
 
+.sidebar {
+  grid-area: rightside;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .project-info {
-    margin: 1rem 0;
-    padding: 1rem;
-    background-color: #31353d;
-    border-radius: 1rem;
-    font-size: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #31353d;
+  border-radius: 1rem;
+  font-size: 1rem;
 }
 
 /* Startr Canvas */
@@ -166,10 +204,13 @@ body {
 
 /* Home Page */
 .homepage {
-  background-color: #1b1e24;
+  /* background-color: #1b1e24; */
+  grid-area: center;
+  align-self: flex-start;
 }
 
 .notification-area {
+  grid-area: rightside;
   margin: 0 auto;
   padding: 1rem 0;
   border-radius: 1rem;
@@ -179,7 +220,7 @@ body {
 }
 
 .notification {
-  margin: 1rem .5rem;
+  margin: 1rem 0.5rem;
   padding: 1rem;
   background-color: #31353d;
   border-radius: 1rem;
@@ -187,21 +228,30 @@ body {
 
 /* End Home Page */
 
+/* New Project */
+
+.newProject {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.signUp {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.signIn {
+  grid-area: center;
+  align-self: flex-start;
+}
+
+.about {
+  grid-area: center;
+  align-self: flex-start;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-.btn-toolbar {
-  width: 80%;
-  padding: 1rem;
-  align-items: center;
-  justify-content: flex-start;
-  
-}
-
-.toolbox-btn {
-  height: 50px;
-  font-size: 100%;
 }
 
 .noSel {
@@ -211,4 +261,3 @@ code {
   user-select: none;
   -o-user-select: none;
 }
-
