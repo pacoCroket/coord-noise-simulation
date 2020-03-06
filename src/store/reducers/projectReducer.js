@@ -12,7 +12,7 @@ const projectReducer = (state = initState, action) => {
       return state;
     case "DELETED_PROJECT":
       console.log("Load projects success ", action.project);
-      return { localProject: {}};
+      return { localProject: {} };
     case "SET_LOCAL_PROJECT":
       console.log("Current project ID: ", action.project.id);
       return { localProject: action.project };
@@ -27,6 +27,7 @@ const projectReducer = (state = initState, action) => {
       return { localProject: { ...state.localProject, leds: newLeds } };
     case "DEL_LED":
       var newLeds = state.localProject.leds.filter(led => led.id !== action.led.id);
+      newLeds = newLeds.map(led => (led.id > action.led.id ? { ...led, id: led.id - 1 } : led));
       return { localProject: { ...state.localProject, leds: newLeds } };
     case "SET_LED":
       var newLeds = state.localProject.leds.map(led => (led.id === action.led.id ? action.led : led));

@@ -26,21 +26,34 @@ class Canvas extends Component {
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateImageDimensions);
+    window.removeEventListener("mousemove", this.handleMouseMove);
+    window.removeEventListener("mouseup", this.handleMouseUp);
+    window.removeEventListener("touchmove", this.handleTouchMove);
+    window.removeEventListener("touchend", this.handleTouchEnd);
   }
 
-  getRelativeFractionPos = ({ clientX, clientY }) => {
+  getRelativeFractionPos = (xPos, yPos) => {
     const { imgX, imgY } = this.props.imgPos;
     // scale x and y to be fractions of the image
     const { width, height } = this.props.imgSize;
-    const x = (clientX - imgX) / width;
-    const y = (clientY - imgY) / height;
+    const x = (xPos - imgX) / width;
+    const y = (yPos - imgY) / height;
     return { x, y };
   };
 
   setLed = led => {
     // TODO this led could be already relative to the canvas, not window
-    const { x, y } = this.getRelativeFractionPos({ clientX: led.x, clientY: led.y });
+    const { x, y } = this.getRelativeFractionPos(led.x, led.y);
     this.props.setLed(x, y);
+  };
+
+  handleTouchStart = evt => {
+    window.addEventListener("touchmove", this.handleTouchMove);
+    window.addEventListener("touchend", this.handleTouchEnd);
+    evt.preventDefault();
+    const touch = evt.changedTouches[0];
+    const { pageX, pageY } = touch;
+    this.handleStartOrDown(pageX, pageY);
   };
 
   handleMouseDown = ({ clientX, clientY }) => {
@@ -48,18 +61,33 @@ class Canvas extends Component {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("mouseup", this.handleMouseUp);
 
+    this.handleStartOrDown(clientX, clientY);
+  };
+
+  handleStartOrDown = (xPos, yPos) => {
     if (this.props.paintMode !== Utils.paintModes.erase && !this.state.isDraggingLed) {
-      const { x, y } = this.getRelativeFractionPos({ clientX, clientY });
+      const { x, y } = this.getRelativeFractionPos(xPos, yPos);
       this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true });
     }
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
+    this.handleMove(clientX, clientY);
+  };
+
+  handleTouchMove = evt => {
+    evt.preventDefault();
+    const touch = evt.changedTouches[0];
+    const { pageX, pageY } = touch;
+    this.handleMove(pageX, pageY);
+  };
+
+  handleMove = (xPos, yPos) => {
     if (isEmpty(this.props.imgURL)) return;
     this.setState({ isDragging: true });
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
-      let { x, y } = this.getRelativeFractionPos({ clientX, clientY });
+      let { x, y } = this.getRelativeFractionPos(xPos, yPos);
       const { width, height } = this.props.imgSize;
 
       // append new Leds to tempLeds and update their pos
@@ -93,11 +121,21 @@ class Canvas extends Component {
     }
   };
 
-  handleMouseUp = ({ clientX, clientY }) => {
-    if (isEmpty(this.props.imgURL)) return;
+  handleMouseUp = () => {
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
+    this.handleUpOrEnd();
+  };
 
+  handleTouchEnd = evt => {
+    window.removeEventListener("touchmove", this.handleTouchMove);
+    window.removeEventListener("touchend", this.handleTouchEnd);
+    evt.preventDefault();
+    this.handleUpOrEnd();
+  };
+
+  handleUpOrEnd = () => {
+    if (isEmpty(this.props.imgURL)) return;
     // add the single first tempLed if paintMode === 'paint'
     if (
       this.props.paintMode === Utils.paintModes.paint &&
@@ -146,7 +184,12 @@ class Canvas extends Component {
     } = this.props;
 
     return (
-      <div className="paintArea noSel" onMouseDown={this.handleMouseDown} id="paintArea">
+      <div
+        className="paintArea noSel"
+        onMouseDown={this.handleMouseDown}
+        onTouchStart={this.handleTouchStart}
+        id="paintArea"
+      >
         {/* TODO fit img to screen for all cases */}
         <div className="d-flex">
           <div id="canvas">

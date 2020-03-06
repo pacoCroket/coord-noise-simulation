@@ -23,9 +23,26 @@ class Draggable extends Component {
   componentWillUnmount() {
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
+    window.removeEventListener("touchmove", this.handleMouseMove);
+    window.removeEventListener("touchend", this.handleMouseUp);
   }
 
+  handleTouchStart = evt => {
+    window.addEventListener("touchmove", this.handleTouchMove);
+    window.addEventListener("touchend", this.handleTouchEnd);
+    evt.preventDefault();
+    const touch = evt.changedTouches[0];
+    const { pageX, pageY } = touch;
+    this.handleStartOrDown(pageX, pageY);
+  };
+
   handleMouseDown = ({ clientX, clientY }) => {
+    window.addEventListener("mousemove", this.handleMouseMove);
+    window.addEventListener("mouseup", this.handleMouseUp);
+    this.handleStartOrDown(clientX, clientY);
+  };
+
+  handleStartOrDown = (xPos, yPos) => {
     const { width, height } = this.props.imgSize;
 
     // Skip if paintMode is 'erase'
@@ -33,23 +50,30 @@ class Draggable extends Component {
       this.props.clickedLed(this.props.led);
       return;
     }
-
-    window.addEventListener("mousemove", this.handleMouseMove);
-    window.addEventListener("mouseup", this.handleMouseUp);
-
     // tell canvas that we are dragging something
     if (this.props.onDragStart) {
       this.props.onDragStart();
     }
 
     this.setState({
-      originalX: clientX / width,
-      originalY: clientY / height,
+      originalX: xPos / width,
+      originalY: yPos / height,
       isDragging: true
     });
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
+    this.handleMove(clientX, clientY);
+  };
+
+  handleTouchMove = evt => {
+    evt.preventDefault();
+    const touch = evt.changedTouches[0];
+    const { pageX, pageY } = touch;
+    this.handleMove(pageX, pageY);
+  };
+
+  handleMove = (xPos, yPos) => {
     const { isDragging } = this.state;
     // const { onDrag } = this.props;
     const { width, height } = this.props.imgSize;
@@ -62,10 +86,10 @@ class Draggable extends Component {
       // this.props.onDrag();
     }
 
-    let led2set = {id: this.props.led.id}; 
+    let led2set = { id: this.props.led.id };
 
-    led2set.x = clientX / width - this.state.originalX + this.state.lastTranslateX;
-    led2set.y = clientY / height - this.state.originalY + this.state.lastTranslateY;
+    led2set.x = xPos / width - this.state.originalX + this.state.lastTranslateX;
+    led2set.y = yPos / height - this.state.originalY + this.state.lastTranslateY;
     // constrain values
     led2set.x = Utils.constrain(led2set.x, 0, 1);
     led2set.y = Utils.constrain(led2set.y, 0, 1);
@@ -76,7 +100,17 @@ class Draggable extends Component {
   handleMouseUp = () => {
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
+    this.handleUpOrEnd();
+  };
 
+  handleTouchEnd = evt => {
+    window.removeEventListener("touchmove", this.handleTouchMove);
+    window.removeEventListener("touchend", this.handleTouchEnd);
+    evt.preventDefault();
+    this.handleUpOrEnd();
+  };
+
+  handleUpOrEnd = () => {
     this.setState(
       {
         originalX: 0,
@@ -110,11 +144,16 @@ class Draggable extends Component {
 
   render() {
     return (
-      <div className="led" onMouseDown={this.handleMouseDown} style={this.getStyle()}>
+      <div
+        className="led"
+        onMouseDown={this.handleMouseDown}
+        onTouchStart={this.handleTouchStart}
+        style={this.getStyle()}
+      >
         <p className="m-0">{this.props.led.id}</p>
       </div>
     );
   }
 }
 
-export default (Draggable);
+export default Draggable;

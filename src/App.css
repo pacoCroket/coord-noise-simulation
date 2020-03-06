@@ -71,6 +71,7 @@ body, html {
 .paintArea {
   /* max-height: 100%; */
   grid-area: center;
+  touch-action: none;
 }
 
 /* End Workspace */
