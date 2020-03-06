@@ -1,23 +1,27 @@
 import React, { Component } from "react";
 import Dropzone from "./Dropzone";
 import { ToggleButtonGroup, Button, ButtonToolbar } from "react-bootstrap";
-import App from "../App";
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
-import Utilities from "../Utilities";
+import Utils from "../../Utils";
 
-export default class EditTools extends Component {
+class EditTools extends Component {
   constructor(props) {
     super();
-    this.state = { outputScaling: props.tooling.outputScaling };
+    this.state = { outputScaling: 255 };
   }
 
-  getActive = btnName => btnName === this.props.tooling.paintMode;
-
   handlePaintChange = event => {
-    // TODO BUG sometimes value == undefined
     const { value } = event.target;
+
+    // remove active state from other buttons
+    var active = document.getElementsByClassName("toolbox-btn active");
+    if (active[0]) {
+      active[0].className = active[0].className.replace(" active", "");
+    }
+    // set this button to active
+    event.target.className += " active";
     if (value === undefined) return;
     this.props.paintModeChanged(value);
   };
@@ -32,15 +36,18 @@ export default class EditTools extends Component {
   };
 
   getOutput = () => {
-    const { outputScaling } = this.props.tooling;
+    const { leds } = this.props;
+    if (leds.length === 0) return;
+
     const { width, height } = this.props.imgSize;
+    const { outputScaling } = this.state;
 
     let xMin = outputScaling;
     let yMin = outputScaling;
     let xMax = 0;
     let yMax = 0;
 
-    this.props.leds.forEach(led => {
+    leds.forEach(led => {
       if (led.x > xMax) xMax = led.x;
       if (led.y > yMax) yMax = led.y;
       if (led.x < xMin) xMin = led.x;
@@ -50,8 +57,8 @@ export default class EditTools extends Component {
     // maintain w/h relationship. Values are still fractions
     let widthActual = (xMax - xMin) * width; // scale up to real values
     let heightActual = (yMax - yMin) * height;
-    let widthRefactor = widthActual > heightActual ? 1 : (widthActual / heightActual); // scale back down to fractions
-    let heightRefactor = heightActual > widthActual ? 1 : (heightActual / widthActual);
+    let widthRefactor = widthActual > heightActual ? 1 : widthActual / heightActual; // scale back down to fractions
+    let heightRefactor = heightActual > widthActual ? 1 : heightActual / widthActual;
 
     // const scaleFactor = Math.max(xMax - xMin, yMax - yMin) / outputScaling;
 
@@ -59,56 +66,60 @@ export default class EditTools extends Component {
     // TODO
     this.props.leds.forEach(led => {
       array.push(
-        `{${Utilities.map(led.x, xMin, xMax, 0, outputScaling*widthRefactor).toFixed(0)}, ${Utilities.map(led.y, yMin, yMax, 0, outputScaling*heightRefactor).toFixed(0)}}`);
+        `{${Utils.map(led.x, xMin, xMax, 0, outputScaling * widthRefactor).toFixed(0)}, ${Utils.map(
+          led.y,
+          yMin,
+          yMax,
+          0,
+          outputScaling * heightRefactor
+        ).toFixed(0)}}`
+      );
     });
     return `{${array.join(", ")}}`;
   };
 
   render() {
-    const { onImgAdded, tooling } = this.props;
+    const { handleUploadImage, paintMode } = this.props;
 
     return (
-      <div className="d-flex flex-column editTools">
+      <div className="editTools noSel d-flex flex-column">
         {/* <input type="file" className="myButton" id="uploadImg" name="imgFile"></input> */}
         <div className="Card mx-auto">
-          <Dropzone onImgAdded={onImgAdded} />
+          <Dropzone handleUploadImage={handleUploadImage} />
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
-        <h4 className="mx-auto">{tooling.paintMode}</h4>
+          <h4 className="mx-auto">{paintMode}</h4>
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
             <Button
-              className="btn btn-primary toolbox-btn"
-              value={App.paintModes.paint}
+              className="btn btn-primary toolbox-btn active"
+              value={Utils.paintModes.paint}
               id="paintBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.paint)}
             >
               <i className="fas fa-paint-brush"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              value={App.paintModes.line}
+              value={Utils.paintModes.line}
               id="lineBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.line)}
             >
               <i className="fas fa-sort-numeric-down"></i>
             </Button>
             <Button
               className="btn btn-primary toolbox-btn"
-              value={App.paintModes.erase}
+              value={Utils.paintModes.erase}
               id="eraseBtn"
               onClick={this.handlePaintChange}
-              active={this.getActive(App.paintModes.erase)}
             >
               <i className="fas fa-eraser"></i>
             </Button>
           </ToggleButtonGroup>
         </ButtonToolbar>
 
-        <div className="mx-4">
-          <h4 className="mx-auto">LED size</h4>
+        <div className="mx-auto d-flex flex-column p-2">
+          <h4 className="mx-1">LED size</h4>
           {/* TODO feature to estimate real LED size */}
           <Slider
             onChange={this.handleSliderChange}
@@ -140,20 +151,16 @@ export default class EditTools extends Component {
             readOnly
           ></textarea>
 
-          {/* <Button className="btn btn-primary toolbox-btn w-100 mx-auto" value="output" id="output" onClick={this.handleOutput}>
-            <i className="fas fa-microchip"></i>
-          </Button> */}
+          <div className="mx-auto mt-3">
+            <Button className="btn btn-primary" onClick={this.props.handleUpdateProject}>
+              Save Project
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 }
-
-EditTools.propTypes = {
-  tooling: PropTypes.object.isRequired,
-  onImgAdded: PropTypes.func.isRequired,
-  paintModeChanged: PropTypes.func.isRequired
-};
 
 function ValueLabelComponent(props) {
   const { children, open, value } = props;
@@ -170,3 +177,5 @@ ValueLabelComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   value: PropTypes.number.isRequired
 };
+
+export default EditTools;
