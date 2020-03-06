@@ -22,6 +22,23 @@ class Workspace extends Component {
     uploading: false
   };
 
+  componentDidUpdate = prevProps => {
+    if (prevProps.localProject.id !== this.props.localProject.id) {
+      setTimeout(() => {
+        this.updateImageDimensions();
+      }, 300);
+    }
+
+    if (
+      this.props.projects &&
+      prevProps.match.params.id !== this.props.match.params.id &&
+      this.props.match.params.id !== "last"
+    ) {
+      const project = this.props.projects.find(project => project.id === this.props.match.params.id);
+      this.handleSetProject(project);
+    }
+  };
+
   redirectToNewProject() {
     this.props.history.push("/newproject");
   }
@@ -114,7 +131,6 @@ class Workspace extends Component {
       }, 500);
     } else if (this.props.match.params.id === "last") {
       const project = this.props.projects[0];
-      this.handleSetProject(project);
       return <Redirect to={"/project/" + project.id} />;
     }
 

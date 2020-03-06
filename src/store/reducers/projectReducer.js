@@ -24,15 +24,12 @@ const projectReducer = (state = initState, action) => {
       return state;
     case "ADD_LED":
       var newLeds = [...state.localProject.leds, action.led];
-      // console.log("LED added", action.led);
       return { localProject: { ...state.localProject, leds: newLeds } };
     case "DEL_LED":
       var newLeds = state.localProject.leds.filter(led => led.id !== action.led.id);
-      console.log("LED deleted", action.led);
       return { localProject: { ...state.localProject, leds: newLeds } };
     case "SET_LED":
       var newLeds = state.localProject.leds.map(led => (led.id === action.led.id ? action.led : led));
-      console.log("LED changed", action.led);
       return { localProject: { ...state.localProject, leds: newLeds } };
     default:
       return state;

@@ -9,12 +9,13 @@ service cloud.firestore {
     allow create
     allow read: if request.auth.uid != null
     allow write: if request.auth.uid == userId
-    }
-    match /projectFilesInfo {
-    allow read, create: if request.auth.uid  != null
+    	match /projects/{project} {
+      	allow read, create: if request.auth.uid != null
+    		allow write, delete: if resource.data.authorId == request.auth.uid
+      }
     }
     match /notifications/{notification} {
-      allow read: if true
+      allow read
     }
   }
 }
