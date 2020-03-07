@@ -35,9 +35,15 @@ class Draggable extends Component {
             this.setState({ isSelected: false });
         }
 
-        if (prevProps.imgSize !== this.props.imgSize) {
-          this.setState({xRelative: this.props.led.x * this.props.imgSize.width,
-          yRelative: this.props.led.y * this.props.imgSize.height})
+        if (
+            prevProps.imgSize !== this.props.imgSize ||
+            (this.props.paintMode === Utils.paintModes.erase &&
+                (prevProps.led.x !== this.props.led.x || prevProps.led.y !== this.props.led.y))
+        ) {
+            this.setState({
+                xRelative: this.props.led.x * this.props.imgSize.width,
+                yRelative: this.props.led.y * this.props.imgSize.height
+            });
         }
     };
 
@@ -90,15 +96,12 @@ class Draggable extends Component {
     };
 
     handleMove = (xPos, yPos) => {
-
         const { isDragging } = this.state;
         const { width, height } = this.props.imgSize;
 
-              
-      if (this.props.paintMode === Utils.paintModes.erase) {
-        if (this.props.led.x*width)
-        return;
-      }
+        if (this.props.paintMode === Utils.paintModes.erase) {
+            if (this.props.led.x * width) return;
+        }
 
         if (!isDragging) {
             return;
