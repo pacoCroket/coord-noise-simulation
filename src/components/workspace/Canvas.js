@@ -3,8 +3,6 @@ import Draggable from "./Draggable";
 import Image from "react-bootstrap/Image";
 import Utils from "../../Utils";
 import { isEmpty } from "underscore";
-import Dropzone from "./Dropzone";
-import Spinner from "react-bootstrap/Spinner";
 
 class Canvas extends Component {
     constructor() {
@@ -152,7 +150,8 @@ class Canvas extends Component {
                 // constrain to canvas
                 xFraction = Utils.constrain(xFraction, 0, 1);
                 yFraction = Utils.constrain(yFraction, 0, 1);
-                this.setState({ tempLeds: [{ id: this.props.leds.length, x: xFraction, y: yFraction }] });
+                const tempLeds = [{ id: this.props.leds.length, x: xFraction, y: yFraction }];
+                this.setState({ tempLeds });
             }
         } else if (paintMode === Utils.paintModes.grab || paintMode === Utils.paintModes.erase) {
             const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
@@ -231,9 +230,7 @@ class Canvas extends Component {
             imgURL,
             leds,
             setLed,
-            clickedLed,
-            handleUploadImage,
-            uploading
+            clickedLed
         } = this.props;
 
         const { dragArea, isDragging, isDraggingLed, tempLeds } = this.state;
@@ -255,25 +252,15 @@ class Canvas extends Component {
                 {/* TODO fit img to screen for all cases */}
                 <div className="d-flex canvas">
                     <div id="canvas">
-                        {!isEmpty(imgURL) ? (
-                            <Image
-                                src={imgURL}
-                                className="img-fluid backImg"
-                                // style={this.setImgStyle()}
-                                onLoad={this.updateImageDimensions}
-                                onLoadedData={this.updateImageDimensions}
-                                alt="reference for leds"
-                                fluid={true}
-                            ></Image>
-                        ) : uploading ? (
-                            <div className="loadSpinner">
-                                <Spinner animation="border" />
-                            </div>
-                        ) : (
-                            <div className="Card mx-auto">
-                                <Dropzone handleUploadImage={handleUploadImage} />
-                            </div>
-                        )}
+                        <Image
+                            src={imgURL}
+                            className="img-fluid backImg"
+                            // style={this.setImgStyle()}
+                            onLoad={this.updateImageDimensions}
+                            onLoadedData={this.updateImageDimensions}
+                            alt="reference for leds"
+                            fluid={true}
+                        ></Image>
                     </div>
 
                     {/* Show current LEDs */}

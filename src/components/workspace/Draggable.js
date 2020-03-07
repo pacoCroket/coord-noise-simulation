@@ -10,7 +10,8 @@ class Draggable extends Component {
     constructor(props) {
         super();
         this.state = {
-            isDragging: false,
+            isDragging: false,            
+            isSelected: false,
 
             originalX: 0,
             originalY: 0,
@@ -21,17 +22,16 @@ class Draggable extends Component {
             xRelative: props.led.x * props.imgSize.width, // TODO save position in state (instead of only calculate at getStyle)
             yRelative: props.led.y * props.imgSize.height,
 
-            isSelected: false,
             isTemp: props.isTemp
         };
     }
 
     componentDidUpdate = (prevProps, prevState) => {
         const { left, top, width, height } = this.props.dragArea;
-        const { xRelative, yRelative, isSelected } = this.state;
+        const { xRelative, yRelative, isSelected, isDragging } = this.state;
         if (xRelative > left && xRelative < left + width && yRelative > top && yRelative < top + height) {
             if (!isSelected) this.setState({ isSelected: true });
-        } else if (isSelected) {
+        } else if (isSelected && !isDragging) {
             this.setState({ isSelected: false });
         }
 
