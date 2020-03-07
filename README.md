@@ -66,3 +66,4 @@ for (uint8_t i = 0; i < NUM_LEDS; i++)
 ## BUGS
 
 + Update dimensions when switching projects
++ paintMode not alaways set when clicking the toolbar buttons

@@ -19,8 +19,8 @@ class Workspace extends Component {
     changesSaved: false
   };
 
-  componentDidUpdate = prevProps => {
-    if (prevProps.localProject.id !== this.props.localProject.id) {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.imgSize !== this.props.imgSize) {
       this.updateImageDimensions();
     }
 
@@ -108,7 +108,7 @@ class Workspace extends Component {
   };
 
   render() {
-    const { auth } = this.props;
+    const { auth, saved } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (isEmpty(this.props.projects)) {
@@ -142,6 +142,7 @@ class Workspace extends Component {
           paintMode={paintMode}
           ledSize={ledSize}
           imgSize={imgSize}
+          saved={saved}
           handleUploadImage={this.handleUploadImage}
           paintModeChanged={this.paintModeChanged}
           ledSizeChanged={this.ledSizeChanged}
@@ -195,6 +196,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     onlineProject,
     localProject,
+    saved: state.project.saved,
     projects: ordered.projects,
     auth: state.firebase.auth
   };
