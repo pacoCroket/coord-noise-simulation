@@ -7,13 +7,12 @@ import Dropzone from "./Dropzone";
 import Spinner from "react-bootstrap/Spinner";
 
 class Canvas extends Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             isDragging: false,
             isDraggingLed: false,
-            tempDraggables: [],
-            draggables: [...props.leds],
+            tempLeds: [],
             imgPos: { imgX: 0, imgY: 0 },
             dragArea: { top: 0, left: 0, width: 0, height: 0 },
             dragStart: { top: 0, left: 0 }
@@ -80,7 +79,6 @@ class Canvas extends Component {
     };
 
     handleMouseDown = ({ clientX, clientY }) => {
-        if (isEmpty(this.props.imgURL)) return;
         window.addEventListener("mousemove", this.handleMouseMove);
         window.addEventListener("mouseup", this.handleMouseUp);
 
@@ -90,20 +88,19 @@ class Canvas extends Component {
     handleStartOrDown = (xPos, yPos) => {
         if (isEmpty(this.props.imgURL) || this.state.isDraggingLed) return;
         const { paintMode } = this.props;
-        console.log(this.props, this.state);
+        // reset dragArea
+        this.resetDragArea();
 
         if (paintMode === Utils.paintModes.paint || paintMode === Utils.paintModes.line) {
             const { xFraction, yFraction } = this.getRelativeFractionPos(xPos, yPos);
             this.setState({
-                tempDraggables: [{ id: this.props.leds.length, x: xFraction, y: yFraction, isSelected: false }]
+                tempLeds: [{ id: this.props.leds.length, x: xFraction, y: yFraction }]
             });
-        } else if (paintMode === Utils.paintModes.drag || paintMode === Utils.paintModes.erase) {
-            const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
-            this.setState({ dragStart: { left: xRelative, top: yRelative } });
+            return;
         }
 
-        // reset dragArea
-        this.resetDragArea();
+        const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
+        this.setState({ dragStart: { left: xRelative, top: yRelative } });
     };
 
     handleMouseMove = ({ clientX, clientY }) => {
@@ -120,12 +117,11 @@ class Canvas extends Component {
     handleMove = (xPos, yPos) => {
         if (isEmpty(this.props.imgURL) || this.state.isDraggingLed) return;
         const { paintMode } = this.props;
-        const { tempDraggables} = this.state;
         this.setState({ isDragging: true });
 
         if (
             (paintMode === Utils.paintModes.line || paintMode === Utils.paintModes.paint) &&
-            tempDraggables[0]
+            this.state.tempLeds[0]
         ) {
             let { xFraction, yFraction } = this.getRelativeFractionPos(xPos, yPos);
             const { width, height } = this.props.imgSize;
@@ -133,30 +129,30 @@ class Canvas extends Component {
             // append new Leds to tempLeds and update their pos
             if (paintMode === Utils.paintModes.line) {
                 // scale fractional coordinates back to 'regular' coordinates
-                const dX = (xFraction - tempDraggables[0].x) * width;
-                const dY = (yFraction - tempDraggables[0].y) * height;
+                const dX = (xFraction - this.state.tempLeds[0].x) * width;
+                const dY = (yFraction - this.state.tempLeds[0].y) * height;
                 const dist = Math.sqrt(dX * dX + dY * dY);
                 const fittingCount = dist / this.props.ledSize;
-                let newTempDraggables = [];
+                let tempLeds = [];
 
                 // fit LEDs between original mouseDown and current mouse position
                 for (var j = 0; j < fittingCount; j++) {
                     // scale back down to fractional coordinates
                     let fract = (j * this.props.ledSize) / dist;
-                    let newX = (tempDraggables[0].x * width + dX * fract) / width;
-                    let newY = (tempDraggables[0].y * height + dY * fract) / height;
+                    let newX = (this.state.tempLeds[0].x * width + dX * fract) / width;
+                    let newY = (this.state.tempLeds[0].y * height + dY * fract) / height;
                     // skip if out of canvas
                     if (newX < 0 || newX > 1 || newY < 0 || newY > 1) continue;
 
-                    newTempDraggables.push({ id: this.props.leds.length + j, x: newX, y: newY, isSelected: false });
+                    tempLeds.push({ id: this.props.leds.length + j, x: newX, y: newY });
                 }
                 // add the calculated leds to state
-                this.setState({ tempLeds: newTempDraggables });
+                this.setState({ tempLeds });
             } else if (paintMode === Utils.paintModes.paint) {
                 // constrain to canvas
                 xFraction = Utils.constrain(xFraction, 0, 1);
                 yFraction = Utils.constrain(yFraction, 0, 1);
-                this.setState({ tempDraggables: [{ id: this.props.leds.length, x: xFraction, y: yFraction, isSelected: false }] });
+                this.setState({ tempLeds: [{ id: this.props.leds.length, x: xFraction, y: yFraction }] });
             }
         } else if (paintMode === Utils.paintModes.grab || paintMode === Utils.paintModes.erase) {
             const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
@@ -194,15 +190,14 @@ class Canvas extends Component {
     handleUpOrEnd = () => {
         if (isEmpty(this.props.imgURL) || this.state.isDraggingLed) return;
         const { paintMode, leds } = this.props;
-        const { tempDraggables} = this.state;
 
-        if (paintMode === Utils.paintModes.paint && this.state.tempDraggables[0]) {
+        if (paintMode === Utils.paintModes.paint && this.state.tempLeds[0]) {
             // const led = { id: this.props.leds.length, x: this.state.tempLeds[0].x, y: this.state.tempLeds[0].y };
-            this.props.addLed(this.draggableToLed(tempDraggables[0]));
+            this.props.addLed(this.state.tempLeds[0]);
         } else if (paintMode === Utils.paintModes.line) {
             // add all of tempLeds
-            tempDraggables.forEach(led => {
-                this.props.addLed(this.draggableToLed(led));
+            this.state.tempLeds.forEach(led => {
+                this.props.addLed(led);
             });
         } else if (paintMode === Utils.paintModes.erase) {
             // Erase all selected LEDs/Draggables
@@ -214,14 +209,10 @@ class Canvas extends Component {
         // this.resetDragArea();
     };
 
-    draggableToLed = draggable => {
-      return {id: draggable.id, x: draggable.x, y: draggable.y} 
-    }
-
     onDragStart = () => {
         this.setState({ isDraggingLed: true });
         // also update it within this render loop REACT COMPLAINS
-        // this.state.isDraggingLed = true;
+        this.state.isDraggingLed = true;
     };
 
     // unused
@@ -245,7 +236,7 @@ class Canvas extends Component {
             uploading
         } = this.props;
 
-        const { dragArea, isDragging, isDraggingLed, tempDraggables, draggables } = this.state;
+        const { dragArea, isDragging, isDraggingLed, tempLeds } = this.state;
 
         let dragAreaElement = null;
         if (isDragging && !isDraggingLed) {
@@ -286,7 +277,7 @@ class Canvas extends Component {
                     </div>
 
                     {/* Show current LEDs */}
-                    {draggables.map(led => (
+                    {leds.map(led => (
                         <Draggable
                             className=""
                             key={led.id}
@@ -306,7 +297,7 @@ class Canvas extends Component {
                     ))}
 
                     {/* Show tempLeds */}
-                    {tempDraggables.map(led => (
+                    {tempLeds.map(led => (
                         <Draggable
                             className=""
                             key={led.id}
