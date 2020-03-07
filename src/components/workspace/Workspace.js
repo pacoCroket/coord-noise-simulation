@@ -5,12 +5,9 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import Utils from "../../Utils";
 import { isEmpty } from "underscore";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import moment from "moment";
-import Button from "react-bootstrap/Button";
 import { uploadImg, delProject, updateProject, delImage } from "../../store/actions/projectActions";
 
 class Workspace extends Component {
@@ -150,6 +147,7 @@ class Workspace extends Component {
           ledSizeChanged={this.ledSizeChanged}
           outputScalingChanged={this.outputScalingChanged}
           handleUpdateProject={this.handleUpdateProject}
+          handleDeleteProject={this.handleDeleteProject}
         ></EditTools>
 
         <Canvas
@@ -183,28 +181,8 @@ class Workspace extends Component {
             <br />
             {!isEmpty(createdAt) && moment(createdAt.toDate()).calendar()}
           </p>
-          <OverlayTrigger
-            key="bottom"
-            trigger="click"
-            placement="bottom"
-            overlay={
-              <Popover>
-                <Popover.Content>
-                  <Button
-                    className="btn btn-secondary w-auto mx-auto my-3"
-                    onClick={this.handleDeleteProject}
-                  >
-                    Sure?
-                  </Button>
-                </Popover.Content>
-              </Popover>
-            }
-          >
-            <Button className="btn btn-primary w-auto mx-auto my-3">Delete Project</Button>
-          </OverlayTrigger>{" "}
         </div>
       </>
-      // </div>
     );
   }
 }

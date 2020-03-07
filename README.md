@@ -50,3 +50,19 @@ for (uint8_t i = 0; i < NUM_LEDS; i++)
     x -= speed;
 }
 ```
+
+## TODOS
+
++ Save notification
++ Grab paintMode button > area grab
++ Documentation
++ LED stripes as own entity
++ Undo feature
++ Erase all
++ Insert portfolio in About
++ Compress images 
+
+
+## BUGS
+
++ Update dimensions when switching projects

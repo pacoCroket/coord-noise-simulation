@@ -13,7 +13,10 @@ class Canvas extends Component {
       isDragging: false,
       isDraggingLed: false,
       tempLeds: [],
-      imgPos: { imgX: 0, imgY: 0 }
+      imgPos: { imgX: 0, imgY: 0 },
+      dragElement: null,
+      dragStart: { x: 0, y: 0 },
+      dragEnd: { x: 0, y: 0 }
     };
   }
 
@@ -40,19 +43,26 @@ class Canvas extends Component {
     window.removeEventListener("touchend", this.handleTouchEnd);
   }
 
-  getRelativeFractionPos = (xPos, yPos) => {
+  getRelativePos = (xPos, yPos) => {
     const { imgX, imgY } = this.state.imgPos;
+    const xRelative = xPos - imgX;
+    const yRelative = yPos - imgY;
+    return { xRelative, yRelative };
+  };
+
+  getRelativeFractionPos = (xPos, yPos) => {
+    const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
     // scale x and y to be fractions of the image
     const { width, height } = this.props.imgSize;
-    const x = (xPos - imgX) / width;
-    const y = (yPos - imgY) / height;
-    return { x, y };
+    const xFraction = xRelative / width;
+    const yFraction = yRelative / height;
+    return { xFraction, yFraction };
   };
 
   setLed = led => {
     // TODO this led could be already relative to the canvas, not window
-    const { x, y } = this.getRelativeFractionPos(led.x, led.y);
-    this.props.setLed(x, y);
+    const { xFraction, yFraction } = this.getRelativeFractionPos(led.x, led.y);
+    this.props.setLed(xFraction, yFraction);
   };
 
   handleTouchStart = evt => {
@@ -73,10 +83,20 @@ class Canvas extends Component {
   };
 
   handleStartOrDown = (xPos, yPos) => {
-    if (this.props.paintMode !== Utils.paintModes.erase && !this.state.isDraggingLed) {
-      const { x, y } = this.getRelativeFractionPos(xPos, yPos);
-      this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }], isDragging: true });
+    const { paintMode } = this.props;
+    if (
+      (paintMode === Utils.paintModes.paint || paintMode === Utils.paintModes.line) &&
+      !this.state.isDraggingLed
+    ) {
+      const { xFraction, yFraction } = this.getRelativeFractionPos(xPos, yPos);
+      this.setState({
+        tempLeds: [{ id: this.props.leds.length, x: xFraction, y: yFraction }]
+      });
     }
+    // else if (paintMode === Utils.paintModes.drag && !this.state.isDraggingLed) {
+    const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
+    this.setState({ dragStart: { x: xRelative, y: yRelative }, dragEnd: { x: xRelative, y: yRelative } });
+    // }
   };
 
   handleMouseMove = ({ clientX, clientY }) => {
@@ -95,14 +115,14 @@ class Canvas extends Component {
     this.setState({ isDragging: true });
 
     if (this.state.tempLeds[0] && !this.state.isDraggingLed) {
-      let { x, y } = this.getRelativeFractionPos(xPos, yPos);
+      let { xFraction, yFraction } = this.getRelativeFractionPos(xPos, yPos);
       const { width, height } = this.props.imgSize;
 
       // append new Leds to tempLeds and update their pos
       if (this.props.paintMode === Utils.paintModes.line) {
         // scale fractional coordinates back to 'regular' coordinates
-        const dX = (x - this.state.tempLeds[0].x) * width;
-        const dY = (y - this.state.tempLeds[0].y) * height;
+        const dX = (xFraction - this.state.tempLeds[0].x) * width;
+        const dY = (yFraction - this.state.tempLeds[0].y) * height;
         const dist = Math.sqrt(dX * dX + dY * dY);
         const fittingCount = dist / this.props.ledSize;
         let tempLeds = [];
@@ -122,10 +142,13 @@ class Canvas extends Component {
         this.setState({ tempLeds });
       } else if (this.props.paintMode === Utils.paintModes.paint) {
         // constrain to canvas
-        x = Utils.constrain(x, 0, 1);
-        y = Utils.constrain(y, 0, 1);
-        this.setState({ tempLeds: [{ id: this.props.leds.length, x, y }] });
+        xFraction = Utils.constrain(xFraction, 0, 1);
+        yFraction = Utils.constrain(yFraction, 0, 1);
+        this.setState({ tempLeds: [{ id: this.props.leds.length, x: xFraction, y: yFraction }] });
       }
+    } else if (this.props.paintMode === Utils.paintModes.grab) {
+      const { xRelative, yRelative } = this.getRelativePos(xPos, yPos);
+      this.setState({ dragEnd: { x: xRelative, y: yRelative } });
     }
   };
 
@@ -190,6 +213,14 @@ class Canvas extends Component {
       uploading
     } = this.props;
 
+    let dragElement = null;
+    if (this.state.isDragging && !this.state.isDraggingLed) {
+      const { dragStart, dragEnd } = this.state;
+      if (this.props.paintMode === Utils.paintModes.grab) {
+        dragElement = SelectArea({ dragStart, dragEnd });
+      }
+    }
+
     return (
       <div
         className="paintArea noSel"
@@ -198,7 +229,7 @@ class Canvas extends Component {
         id="paintArea"
       >
         {/* TODO fit img to screen for all cases */}
-        <div className="d-flex">
+        <div className="d-flex canvas">
           <div id="canvas">
             {!isEmpty(imgURL) ? (
               <Image
@@ -256,6 +287,7 @@ class Canvas extends Component {
               onDragEnd={this.onDragEnd}
             ></Draggable>
           ))}
+          {dragElement}
         </div>
       </div>
     );
@@ -263,3 +295,29 @@ class Canvas extends Component {
 }
 
 export default Canvas;
+
+function Stripe(props) {
+  return <div></div>;
+}
+
+function SelectArea(props) {
+  const { dragStart, dragEnd } = props;
+  let left = dragStart.x;
+  let top = dragStart.y;
+  let width = dragEnd.x - left;
+  let height = dragEnd.y - top;
+
+  // consider negative width or height
+  if (width<0) {
+    left += width;
+    width = Math.abs(width)
+  }
+  if (height<0) {
+    top += height;
+    height = Math.abs(height)
+  }
+
+  return (
+    <div className="selectArea" style={{ transform: `translate(${left}px, ${top}px)`, width, height }}></div>
+  );
+}

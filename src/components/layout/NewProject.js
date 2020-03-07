@@ -24,7 +24,7 @@ class NewProject extends Component {
     if (this.state.submitted) return <Redirect to="/project/last" />;
 
     return (
-      <div className="newProject my-5 w-50">
+      <div className="newProject my-5">
         <Form onSubmit={this.handleSubmit}>
           <h5>New Project</h5>
           <Form.Group>

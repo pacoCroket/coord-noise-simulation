@@ -5,6 +5,8 @@ import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PropTypes from "prop-types";
 import Utils from "../../Utils";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 
 class EditTools extends Component {
   constructor(props) {
@@ -79,7 +81,7 @@ class EditTools extends Component {
   };
 
   render() {
-    const { handleUploadImage, paintMode } = this.props;
+    const { handleUploadImage, paintMode, handleDeleteProject, handleUpdateProject } = this.props;
 
     return (
       <div className="editTools noSel d-flex flex-column">
@@ -89,8 +91,16 @@ class EditTools extends Component {
         </div>
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
-          <h4 className="mx-auto">{paintMode}</h4>
+          <label className="mx-auto text-capitalize">{paintMode}</label>
           <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
+            <Button
+              className="btn btn-primary toolbox-btn"
+              value={Utils.paintModes.grab}
+              id="grabBtn"
+              onClick={this.handlePaintChange}
+            >
+              <i className="fas fa-hand-pointer"></i>
+            </Button>
             <Button
               className="btn btn-primary toolbox-btn active"
               value={Utils.paintModes.paint}
@@ -119,42 +129,58 @@ class EditTools extends Component {
         </ButtonToolbar>
 
         <div className="mx-auto d-flex flex-column p-2">
-          <h4 className="mx-1">LED size</h4>
+          <label className="mx-auto">LED size</label>
           {/* TODO feature to estimate real LED size */}
           <Slider
             onChange={this.handleSliderChange}
+            className="w-75 mx-auto"
             ValueLabelComponent={ValueLabelComponent}
             aria-label="custom thumb label"
             defaultValue={20}
             min={0}
             max={100}
           />
-          <hr className="my-2"></hr>
+          {/* <hr className="my-2"></hr> */}
 
-          <h4 className="mx-auto">Scale out</h4>
+          <label className="mx-auto">Scale Out</label>
           <textarea
             value={this.state.outputScaling}
             onChange={e => this.handleOutputScaling(e.target.value.replace(/\D/g, ""))}
             cols={12}
             rows={1}
-            className="outputField"
+            className="outputField w-75 mx-auto"
           ></textarea>
 
-          <h4 className="mx-auto">Output</h4>
+          <label className="mx-auto">Output</label>
           <textarea
             value={this.getOutput()}
-            className="outputField"
+            className="outputField w-100 mx-auto"
             id="ouputField"
             placeholder="output"
-            cols={12}
-            rows={5}
+            // cols={12}
+            // rows={5}
             readOnly
           ></textarea>
 
-          <div className="mx-auto mt-3">
-            <Button className="btn btn-primary" onClick={this.props.handleUpdateProject}>
+          <div className="d-flex flex-column mt-3">
+            <Button className="btn btn-primary my-1 py-1" onClick={handleUpdateProject}>
               Save Project
             </Button>
+            <OverlayTrigger
+              trigger="click"
+              placement="right"
+              overlay={
+                <Popover>
+                  <Popover.Content>
+                    <Button className="btn btn-secondary" onClick={handleDeleteProject}>
+                      Sure?
+                    </Button>
+                  </Popover.Content>
+                </Popover>
+              }
+            >
+              <Button className="btn btn-primary w-auto mx-auto my-1 py-1">Delete Project</Button>
+            </OverlayTrigger>{" "}
           </div>
         </div>
       </div>

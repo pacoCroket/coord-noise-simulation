@@ -4,7 +4,8 @@ class Utils {
   static paintModes = {
     paint: "paint",
     line: "line",
-    erase: "erase"
+    erase: "erase",
+    grab: "grab"
   };
 
   /**

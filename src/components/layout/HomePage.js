@@ -39,30 +39,30 @@ class HomePage extends Component {
 
     return (
       <>
-        <div className="homepage mw-100 mx-0 mt-5 d-flex flex-column justify-content-center align-items-center">
+        <div className="homepage mx-0 mt-5 d-flex flex-column justify-content-center align-items-center">
           {/* <div className="col d-flex flex-column justify-content-center align-items-center"> */}
           <h1>Noise2LED - by Paco Croket</h1>
-          <span className="w-75 m-2">
+          <label>
             The idea here is to paint the position of your LEDs in ther order and then get an custom output to
             copy into your code. These can be mapped to 2D or 3D noise values.
-          </span>
-          <span className="w-75 m-2">
+          </label>
+          <label>
             1 - Upload a picture of your LED project showing all the LEDs. Keep in mind their order.
-          </span>
-          <span className="w-75 m-2">
+          </label>
+          <label>
             2 - Following the actual id of your LEDs, progessively mark their position with the paint tool. Adjust
             the LED distance and use the line tool to cover large straight areas
-          </span>
-          <span className="w-75 m-2">
+          </label>
+          <label>
             3 - Grab the LEDs to fine tune their position. Use the erase tool to remove an LED. Notice that
             the id of the LEDs is automatically kept continuous.
-          </span>
-          <span className="w-75 m-2">
+          </label>
+          <label>
             4 - Copy the output from the outout area into your code. Set the output scaling to fit your
             microcontroller needs. A value of 255 corresponds to 8-bit values, great for Arduino projects.
-          </span>
+          </label>
 
-          <span className="w-75 my-4">
+          <label>
             Here is an example of how you could implement the noise feature with C++. More details in{" "}
             <a
               href="https://github.com/pacoCroket/arduino-neopixel/blob/master/mandala1/mandala1.ino"
@@ -72,7 +72,7 @@ class HomePage extends Component {
               this full project
             </a>
             .
-          </span>
+          </label>
 
           <pre className="m-2 p-3 border border-info">
             <code className="text-info">{code}</code>
@@ -80,7 +80,7 @@ class HomePage extends Component {
         </div>
 
         {/* <div className="col-2 d-flex flex-column"> */}
-        <ul className="notification-area mb-auto mt-5">
+        <ul className="notification-area mb-auto">
           <p className="h4 text-dark px-3">Latest Activity</p>
           {notifications &&
             notifications.map(item => {

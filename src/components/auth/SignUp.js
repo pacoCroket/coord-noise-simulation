@@ -30,7 +30,7 @@ class SingUp extends Component {
     if (auth.uid) return <Redirect to="/newproject" />;
 
     return (
-      <div className="signUp my-5 w-50">
+      <div className="signUp my-5">
         <Form onSubmit={this.handleSubmit}>
           <h5>Sing Up</h5>
           <Form.Group controlId="formBasicEmail">
@@ -56,7 +56,7 @@ class SingUp extends Component {
           </Form.Group>
 
           <Button variant="primary" type="submit">
-            Sing Up
+            Sign Up
           </Button>
 
           {this.state.error ? <h3>Passwords don't match!</h3> : null}
