@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { signOut } from "../../store/actions/authActions";
 import { getUserProjects } from "../../store/actions/projectActions";
-import { Link } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
 import { isEmpty } from "underscore";
 
 class SignedInLinks extends Component {
@@ -47,6 +47,10 @@ class SignedInLinks extends Component {
             New Project
           </NavLink>
         </Nav>
+
+        <Navbar.Text className="position-absolute text-capitalize" style={{left: "50%"}}>
+                {!isEmpty(this.props.localProject)?`Current Project: ${this.props.localProject.title}`:"Noise2LED"}
+        </Navbar.Text>
 
         <Nav className="ml-auto">
           <NavLink to="/" className="nav-link">
