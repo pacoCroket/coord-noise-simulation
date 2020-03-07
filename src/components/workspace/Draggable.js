@@ -16,9 +16,24 @@ class Draggable extends Component {
       originalY: 0,
 
       lastTranslateX: props.led.x,
-      lastTranslateY: props.led.y
+      lastTranslateY: props.led.y,
+
+      xRelative: props.led.x * props.imgSize.width, // TODO save position in state (instead of only calculate at getStyle)
+      yRelative: props.led.y * props.imgSize.height,
+
+      isSelected: false
     };
   }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { left, top, width, height } = this.props.dragArea;
+    const { xRelative, yRelative, isSelected } = this.state;
+    if (xRelative > left && xRelative < left + width && yRelative > top && yRelative < top + height) {
+      if (!isSelected) this.setState({ isSelected: true });
+    } else if (isSelected) {
+      this.setState({ isSelected: false });
+    }
+  };
 
   componentWillUnmount() {
     window.removeEventListener("mousemove", this.handleMouseMove);
@@ -75,7 +90,6 @@ class Draggable extends Component {
 
   handleMove = (xPos, yPos) => {
     const { isDragging } = this.state;
-    // const { onDrag } = this.props;
     const { width, height } = this.props.imgSize;
 
     if (!isDragging) {
@@ -95,6 +109,10 @@ class Draggable extends Component {
     led2set.y = Utils.constrain(led2set.y, 0, 1);
 
     this.props.setLed(led2set);
+    this.setState({
+      xRelative: led2set.x * width,
+      yRelative: led2set.y * height
+    });
   };
 
   handleMouseUp = () => {
@@ -129,14 +147,14 @@ class Draggable extends Component {
   };
 
   getStyle = () => {
-    const { x, y } = this.props.led;
     const { ledSize } = this.props;
-    const { width, height } = this.props.imgSize;
+    const { xRelative, yRelative, isSelected, isDragging } = this.state;
 
     return {
-      transform: `translate(${x * width - ledSize / 2}px, ${y * height - ledSize / 2}px)`,
-      cursor: `${this.state.isDragging ? "grabbing" : "grab"}`,
-      opacity: `${this.state.isDragging ? "0.5" : "0.8"}`,
+      transform: `translate(${xRelative - ledSize / 2}px, ${yRelative - ledSize / 2}px)`,
+      cursor: `${isDragging ? "grabbing" : "grab"}`,
+      ...(isDragging && { opacity: "0.5" }),
+      ...(isSelected && { backgroundColor: "blue" }),
       width: ledSize,
       height: ledSize
     };

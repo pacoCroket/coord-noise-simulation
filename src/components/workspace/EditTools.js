@@ -92,17 +92,17 @@ class EditTools extends Component {
 
         <ButtonToolbar className="btn-toolbar mx-auto px-3">
           <label className="mx-auto text-capitalize">{paintMode}</label>
-          <ToggleButtonGroup className="mx-auto w-100" vertical type="radio" name="toolbar">
+          <ToggleButtonGroup className="mx-auto w-100" vertical name="toolbar">
             <Button
-              className="btn btn-primary toolbox-btn"
+              className="btn btn-primary toolbox-btn active"
               value={Utils.paintModes.grab}
               id="grabBtn"
               onClick={this.handlePaintChange}
             >
-              <i className="fas fa-hand-pointer"></i>
+              <i className="fas fa-vector-square"></i>
             </Button>
             <Button
-              className="btn btn-primary toolbox-btn active"
+              className="btn btn-primary toolbox-btn"
               value={Utils.paintModes.paint}
               id="paintBtn"
               onClick={this.handlePaintChange}

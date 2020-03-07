@@ -12,7 +12,7 @@ import { uploadImg, delProject, updateProject, delImage } from "../../store/acti
 
 class Workspace extends Component {
   state = {
-    paintMode: Utils.paintModes.paint,
+    paintMode: Utils.paintModes.grab,
     ledSize: 50,
     imgSize: { width: 0, height: 0 },
     uploading: false,
