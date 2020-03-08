@@ -17,16 +17,10 @@ class Canvas extends Component {
         };
     }
 
-    // Update image dimensions when resizing window
-    updateImageDimensions = () => {
-        const canvas = document.getElementById("canvas");
-
-        const imgPos = {
-            imgX: canvas.getBoundingClientRect().left,
-            imgY: canvas.getBoundingClientRect().top
-        };
-        this.props.updateImageDimensions();
-        this.setState({ imgPos });
+    componentDidUpdate = prevProps => {
+        if (prevProps.paintMode !== this.props.paintMode) {
+            this.resetDragArea();
+        }
     };
 
     componentDidMount() {
@@ -40,6 +34,18 @@ class Canvas extends Component {
         window.removeEventListener("touchmove", this.handleTouchMove);
         window.removeEventListener("touchend", this.handleTouchEnd);
     }
+
+    // Update image dimensions when resizing window
+    updateImageDimensions = () => {
+        const canvas = document.getElementById("canvas");
+
+        const imgPos = {
+            imgX: canvas.getBoundingClientRect().left,
+            imgY: canvas.getBoundingClientRect().top
+        };
+        this.props.updateImageDimensions();
+        this.setState({ imgPos });
+    };
 
     getRelativePos = (xPos, yPos) => {
         const { imgX, imgY } = this.state.imgPos;
@@ -223,15 +229,7 @@ class Canvas extends Component {
     onDragEnd = () => setTimeout(() => this.setState({ isDraggingLed: false }), 200);
 
     render() {
-        const {
-            paintMode,
-            ledSize,
-            imgSize,
-            imgURL,
-            leds,
-            setLed,
-            clickedLed
-        } = this.props;
+        const { paintMode, ledSize, imgSize, imgURL, leds, setLed, clickedLed } = this.props;
 
         const { dragArea, isDragging, isDraggingLed, tempLeds } = this.state;
 

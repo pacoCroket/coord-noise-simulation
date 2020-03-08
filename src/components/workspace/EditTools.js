@@ -9,10 +9,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 
 class EditTools extends Component {
-    constructor(props) {
-        super();
-        this.state = { outputScaling: 255 };
-    }
+    state = { outputScaling: 255 };
 
     handlePaintChange = event => {
         const { value } = event.target;
@@ -164,7 +161,7 @@ class EditTools extends Component {
 
                     <div className="d-flex flex-column mt-3">
                         <Button
-                            className="btn btn-primary my-1 py-1"
+                            className="btn btn-primary my-1 py-1 m-100"
                             onClick={handleUpdateProject}
                             disabled={saved ? true : false}
                         >
@@ -183,7 +180,7 @@ class EditTools extends Component {
                                 </Popover>
                             }
                         >
-                            <Button className="btn btn-primary w-auto mx-auto my-1 py-1">
+                            <Button className="btn btn-primary w-100 mx-auto my-1 py-1 ">
                                 Delete Project
                             </Button>
                         </OverlayTrigger>{" "}

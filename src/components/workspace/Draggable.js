@@ -10,7 +10,7 @@ class Draggable extends Component {
     constructor(props) {
         super();
         this.state = {
-            isDragging: false,            
+            isDragging: false,
             isSelected: false,
 
             originalX: 0,
@@ -29,16 +29,19 @@ class Draggable extends Component {
     componentDidUpdate = (prevProps, prevState) => {
         const { left, top, width, height } = this.props.dragArea;
         const { xRelative, yRelative, isSelected, isDragging } = this.state;
+
+        // check if this draggable/LED is within the dragArea and toogle isSelected
         if (xRelative > left && xRelative < left + width && yRelative > top && yRelative < top + height) {
             if (!isSelected) this.setState({ isSelected: true });
         } else if (isSelected && !isDragging) {
             this.setState({ isSelected: false });
         }
 
+        // reset the relative coordinates when imgSize changed (happens every first image load too)
+        // Or when parent temp LED's coordinates changed (relative pos won't be handled here)
         if (
-            prevProps.imgSize !== this.props.imgSize ||
-            (this.props.paintMode === Utils.paintModes.erase &&
-                (prevProps.led.x !== this.props.led.x || prevProps.led.y !== this.props.led.y))
+            prevProps.imgSize !== this.props.imgSize || (this.state.isTemp &&
+              (prevProps.led.x !== this.props.led.x || prevProps.led.y !== this.props.led.y))
         ) {
             this.setState({
                 xRelative: this.props.led.x * this.props.imgSize.width,

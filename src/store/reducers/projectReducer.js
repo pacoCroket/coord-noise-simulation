@@ -7,7 +7,7 @@ const projectReducer = (state = initState, action) => {
     switch (action.type) {
         case "CREATE_PROJECT":
             console.log("Create project success ", action.project);
-            return { ...state, localProject: action.project };
+            return { ...state, localProject: action.project, saved: true  };
         case "CREATE_PROJECT_ERROR":
             console.log("Create project error ", action.err);
             return state;
@@ -16,10 +16,10 @@ const projectReducer = (state = initState, action) => {
             return { ...state, saved: true };
         case "DELETED_PROJECT":
             console.log("delete projects success ", action.project);
-            return { ...state, localProject: {} };
+            return { ...state, localProject: {}, saved: true };
         case "SET_LOCAL_PROJECT":
             // console.log("Current project ID: ", action.project.id);
-            return { ...state, localProject: action.project };
+            return { ...state, localProject: action.project, saved: true  };
         case "UPLOAD_IMG":
             console.log("Image uploaded: ", action.imgURL);
             return {

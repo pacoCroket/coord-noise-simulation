@@ -47,16 +47,6 @@ html {
     /* grid-template-rows: 70px auto 50px; */
 }
 
-/* NavBar */
-.navbar {
-    grid-area: header;
-}
-
-.user-profile {
-    margin-right: 0;
-}
-
-/* End NavBar */
 /* Workspace */
 .workspace {
     background-color: #1e2127;
@@ -221,6 +211,7 @@ html {
 .homepage label {
     width: 80%;
     margin: 1rem;
+    text-align: justify;
 }
 
 .notification-area {
@@ -265,7 +256,7 @@ html {
 .about {
     grid-area: center;
     align-self: flex-start;
-    width: 50%;
+    width: 75%;
 }
 
 .loadSpinner {
